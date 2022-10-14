@@ -1337,7 +1337,7 @@ Public Class POS
                       , '" & DISCGUESTCOUNT & "'
                       , '" & DISCIDCOUNT & "'
                       , '" & SeniorPhoneNumber & "'
-                      , 'Unsynced')"
+                      , 'N')"
             GLOBAL_INSERT_FUNCTION(table, fields, value)
         Catch ex As Exception
             AuditTrail.LogToAuditTrail("System", ex.ToString, "Critical")

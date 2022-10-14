@@ -1305,7 +1305,7 @@ Public Class SynctoCloud
                     '====================================================================
                     Dim table = " loc_daily_transaction "
                     Dim where = " transaction_number = '" & .Rows(i).Cells(1).Value.ToString & "'"
-                    Dim fields = "`synced`='Synced' "
+                    Dim fields = "`synced`='Y' "
                     Dim sql = "UPDATE " & table & " SET " & fields & " WHERE " & where
                     cmdloc = New MySqlCommand(sql, local)
                     cmdloc.ExecuteNonQuery()
@@ -1380,7 +1380,7 @@ Public Class SynctoCloud
                     '====================================================================
                     Dim table = " loc_daily_transaction_details "
                     Dim where = " details_id =" & .Rows(i).Cells(0).Value.ToString
-                    Dim fields = "`synced`='Synced' "
+                    Dim fields = "`synced`='Y' "
                     Dim sql = "UPDATE " & table & " SET " & fields & " WHERE " & where
                     cmdloc = New MySqlCommand(sql, local)
                     cmdloc.ExecuteNonQuery()
@@ -1451,7 +1451,7 @@ Public Class SynctoCloud
                     cmd.ExecuteNonQuery()
                     Dim table = " loc_expense_list "
                     Dim where = " expense_id = '" & .Rows(i).Cells(0).Value.ToString & "'"
-                    Dim fields = "`synced`='Synced' "
+                    Dim fields = "`synced`='Y' "
                     Dim sql = "UPDATE " & table & " SET " & fields & " WHERE " & where
                     cmdloc = New MySqlCommand(sql, local)
                     cmdloc.ExecuteNonQuery()
@@ -1534,7 +1534,7 @@ Public Class SynctoCloud
                     cmd.ExecuteNonQuery()
                     '====================================================================
                     Dim table = " loc_expense_details "
-                    Dim fields = "`synced`='Synced' "
+                    Dim fields = "`synced`='Y' "
                     Dim where = " expense_id = '" & .Rows(i).Cells(0).Value.ToString & "'"
                     Dim sql = "UPDATE " & table & " SET " & fields & " WHERE " & where
                     cmdloc = New MySqlCommand(sql, local)
@@ -1609,7 +1609,7 @@ Public Class SynctoCloud
                     '====================================================================
                     Dim table = " loc_users "
                     Dim where = " user_id = " & .Rows(i).Cells(0).Value.ToString
-                    Dim fields = "`synced`='Synced' "
+                    Dim fields = "`synced`='Y' "
                     Dim sql = "UPDATE " & table & " SET " & fields & " WHERE " & where
                     cmdloc = New MySqlCommand(sql, local)
                     cmdloc.ExecuteNonQuery()
@@ -1674,7 +1674,7 @@ Public Class SynctoCloud
 
                     Dim table = " loc_system_logs "
                     Dim where = " loc_systemlog_id = '" & .Rows(i).Cells(6).Value.ToString & "'"
-                    Dim fields = "`synced`='Synced' "
+                    Dim fields = "`synced`='Y' "
                     Dim sql = "UPDATE " & table & " SET " & fields & " WHERE " & where
                     cmdloc = New MySqlCommand(sql, local)
                     cmdloc.ExecuteNonQuery()
@@ -1740,7 +1740,7 @@ Public Class SynctoCloud
 
                     Dim table = " loc_refund_return_details "
                     Dim where = " refret_id = '" & .Rows(i).Cells(0).Value.ToString & "'"
-                    Dim fields = "`synced`='Synced' "
+                    Dim fields = "`synced`='Y' "
                     sql = "UPDATE " & table & " SET " & fields & " WHERE " & where
                     cmdloc = New MySqlCommand(sql, local)
                     cmdloc.ExecuteNonQuery()
@@ -1813,7 +1813,7 @@ Public Class SynctoCloud
                     cmd.ExecuteNonQuery()
                     Dim table = " loc_admin_products "
                     Dim where = " product_id = '" & .Rows(i).Cells(0).Value.ToString & "'"
-                    Dim fields = " `synced`='Synced' "
+                    Dim fields = " `synced`='Y' "
                     sql = "UPDATE " & table & " SET " & fields & " WHERE " & where
                     cmdloc = New MySqlCommand(sql, local)
                     cmdloc.ExecuteNonQuery()
@@ -1880,7 +1880,7 @@ Public Class SynctoCloud
                     cmd.ExecuteNonQuery()
                     Dim table = " loc_transaction_mode_details "
                     Dim where = " mode_id = '" & .Rows(i).Cells(0).Value.ToString & "'"
-                    Dim fields = " `synced`='Synced' "
+                    Dim fields = " `synced`='Y' "
                     sql = "UPDATE " & table & " SET " & fields & " WHERE " & where
                     cmdloc = New MySqlCommand(sql, local)
                     cmdloc.ExecuteNonQuery()
@@ -1947,7 +1947,7 @@ Public Class SynctoCloud
                     cmd.ExecuteNonQuery()
                     Dim table = " loc_deposit "
                     Dim where = " dep_id = '" & .Rows(i).Cells(0).Value.ToString & "'"
-                    Dim fields = " `synced`='Synced' "
+                    Dim fields = " `synced`='Y' "
                     sql = "UPDATE " & table & " SET " & fields & " WHERE " & where
                     cmdloc = New MySqlCommand(sql, local)
                     cmdloc.ExecuteNonQuery()
@@ -2013,7 +2013,7 @@ Public Class SynctoCloud
                     cmd.ExecuteNonQuery()
                     Dim table = " loc_price_request_change "
                     Dim where = " request_id = " & .Rows(i).Cells(0).Value.ToString & ""
-                    Dim fields = " `synced`='Synced' "
+                    Dim fields = " `synced`='Y' "
                     sql = "UPDATE " & table & " SET " & fields & " WHERE " & where
                     cmdloc = New MySqlCommand(sql, local)
                     cmdloc.ExecuteNonQuery()
@@ -2086,7 +2086,7 @@ Public Class SynctoCloud
                     cmd.ExecuteNonQuery()
                     Dim table = " tbcoupon "
                     Dim where = " ID = " & .Rows(i).Cells(0).Value.ToString & ""
-                    Dim fields = " `synced`='Synced' "
+                    Dim fields = " `synced`='Y' "
                     sql = "UPDATE " & table & " SET " & fields & " WHERE " & where
                     cmdloc = New MySqlCommand(sql, local)
                     cmdloc.ExecuteNonQuery()
@@ -2150,7 +2150,7 @@ Public Class SynctoCloud
                     cmd.ExecuteNonQuery()
                     Dim table = " loc_send_bug_report "
                     Dim where = " bug_id = " & .Rows(i).Cells(0).Value.ToString & ""
-                    Dim fields = " `synced`='Synced' "
+                    Dim fields = " `synced`='Y' "
                     sql = "UPDATE " & table & " SET " & fields & " WHERE " & where
                     cmdloc = New MySqlCommand(sql, local)
                     cmdloc.ExecuteNonQuery()
@@ -2216,7 +2216,7 @@ Public Class SynctoCloud
                     cmd.ExecuteNonQuery()
                     Dim table = " loc_senior_details "
                     Dim where = " id = " & .Rows(i).Cells(0).Value.ToString & ""
-                    Dim fields = " `synced`='Synced' "
+                    Dim fields = " `synced`='Y' "
                     sql = "UPDATE " & table & " SET " & fields & " WHERE " & where
                     cmdloc = New MySqlCommand(sql, local)
                     cmdloc.ExecuteNonQuery()
@@ -2292,7 +2292,7 @@ Public Class SynctoCloud
 
                     Label1.Text = "Syncing " & LabelRowtoSync.Text & " of " & LabelTTLRowtoSync.Text & " "
 
-                    Dim sql = "UPDATE loc_pos_inventory SET `synced`='Synced' WHERE inventory_id = " & .Rows(i).Cells(0).Value.ToString
+                    Dim sql = "UPDATE loc_pos_inventory SET `synced`='Y' WHERE inventory_id = " & .Rows(i).Cells(0).Value.ToString
                     cmdloc = New MySqlCommand(sql, local)
                     cmdloc.ExecuteNonQuery()
                 Next
@@ -2359,7 +2359,7 @@ Public Class SynctoCloud
                     ProgressBar1.Value = CInt(LabelRowtoSync.Text)
                     Label1.Text = "Syncing " & LabelRowtoSync.Text & " of " & LabelTTLRowtoSync.Text & " "
                     cmd.ExecuteNonQuery()
-                    Dim sql = "UPDATE loc_zread_inventory SET `synced`='Synced' WHERE zreadinv_id = " & .Rows(i).Cells(0).Value.ToString
+                    Dim sql = "UPDATE loc_zread_inventory SET `synced`='Y' WHERE zreadinv_id = " & .Rows(i).Cells(0).Value.ToString
                     cmdloc = New MySqlCommand(sql, local)
                     cmdloc.ExecuteNonQuery()
                 Next
@@ -2421,7 +2421,7 @@ Public Class SynctoCloud
                     ProgressBar1.Value = CInt(LabelRowtoSync.Text)
                     Label1.Text = "Syncing " & LabelRowtoSync.Text & " of " & LabelTTLRowtoSync.Text & " "
                     cmd.ExecuteNonQuery()
-                    Dim sql = "UPDATE loc_customer_info SET `synced`='Synced' WHERE id = " & .Rows(i).Cells(0).Value.ToString
+                    Dim sql = "UPDATE loc_customer_info SET `synced`='Y' WHERE id = " & .Rows(i).Cells(0).Value.ToString
                     cmdloc = New MySqlCommand(sql, local)
                     cmdloc.ExecuteNonQuery()
                 Next
@@ -2483,7 +2483,7 @@ Public Class SynctoCloud
                     ProgressBar1.Value = CInt(LabelRowtoSync.Text)
                     Label1.Text = "Syncing " & LabelRowtoSync.Text & " of " & LabelTTLRowtoSync.Text & " "
                     cmd.ExecuteNonQuery()
-                    Dim sql = "UPDATE loc_coupon_data SET `synced`='Synced' WHERE id = " & .Rows(i).Cells(0).Value
+                    Dim sql = "UPDATE loc_coupon_data SET `synced`='Y' WHERE id = " & .Rows(i).Cells(0).Value
                     cmdloc = New MySqlCommand(sql, local)
                     cmdloc.ExecuteNonQuery()
                 Next
