@@ -1,0 +1,487 @@
+D:\repos\POS-05-21-2022\POS\bin\Debug\POS.exe.config
+D:\repos\POS-05-21-2022\POS\obj\Debug\POS.AuditTrail.resources
+D:\repos\POS-05-21-2022\POS\obj\Debug\POS.Auth.resources
+D:\repos\POS-05-21-2022\POS\obj\Debug\POS.ConfigManager.resources
+D:\repos\POS-05-21-2022\POS\obj\Debug\POS.ChooseLayout.resources
+D:\repos\POS-05-21-2022\POS\obj\Debug\POS.ConfirmRefund.resources
+D:\repos\POS-05-21-2022\POS\obj\Debug\POS.Grocery.resources
+D:\repos\POS-05-21-2022\POS\obj\Debug\POS.SettingsForm.resources
+D:\repos\POS-05-21-2022\POS\obj\Debug\POS.AddBank.resources
+D:\repos\POS-05-21-2022\POS\obj\Debug\POS.AddEditProducts.resources
+D:\repos\POS-05-21-2022\POS\obj\Debug\POS.AddUser.resources
+D:\repos\POS-05-21-2022\POS\obj\Debug\POS.Loading.resources
+D:\repos\POS-05-21-2022\POS\obj\Debug\POS.MDIFORM.resources
+D:\repos\POS-05-21-2022\POS\obj\Debug\POS.ManageProducts.resources
+D:\repos\POS-05-21-2022\POS\obj\Debug\POS.Reports.resources
+D:\repos\POS-05-21-2022\POS\obj\Debug\POS.SynctoCloud.resources
+D:\repos\POS-05-21-2022\POS\obj\Debug\POS.About.resources
+D:\repos\POS-05-21-2022\POS\obj\Debug\POS.AdvancedCustomReport.resources
+D:\repos\POS-05-21-2022\POS\obj\Debug\POS.AuditTrailFilter.resources
+D:\repos\POS-05-21-2022\POS\obj\Debug\POS.BegBalance.resources
+D:\repos\POS-05-21-2022\POS\obj\Debug\POS.CashBreakdown.resources
+D:\repos\POS-05-21-2022\POS\obj\Debug\POS.ChangePrice.resources
+D:\repos\POS-05-21-2022\POS\obj\Debug\POS.Changeproductformula.resources
+D:\repos\POS-05-21-2022\POS\obj\Debug\POS.CheckingForUpdates.resources
+D:\repos\POS-05-21-2022\POS\obj\Debug\POS.CustomerInfo.resources
+D:\repos\POS-05-21-2022\POS\obj\Debug\POS.Discounts.resources
+D:\repos\POS-05-21-2022\POS\obj\Debug\POS.ExpenseImage.resources
+D:\repos\POS-05-21-2022\POS\obj\Debug\POS.ForgotPassword.resources
+D:\repos\POS-05-21-2022\POS\obj\Debug\POS.Message.resources
+D:\repos\POS-05-21-2022\POS\obj\Debug\POS.NewStockEntry.resources
+D:\repos\POS-05-21-2022\POS\obj\Debug\POS.PanelReasonCat.resources
+D:\repos\POS-05-21-2022\POS\obj\Debug\POS.ResetPassword.resources
+D:\repos\POS-05-21-2022\POS\obj\Debug\POS.SelectNewFormula.resources
+D:\repos\POS-05-21-2022\POS\obj\Debug\POS.SeniorDetails.resources
+D:\repos\POS-05-21-2022\POS\obj\Debug\POS.StockAdjustment.resources
+D:\repos\POS-05-21-2022\POS\obj\Debug\POS.TakeOut.resources
+D:\repos\POS-05-21-2022\POS\obj\Debug\POS.TransactionTypeInfo.resources
+D:\repos\POS-05-21-2022\POS\obj\Debug\POS.Addexpense.resources
+D:\repos\POS-05-21-2022\POS\obj\Debug\POS.Expenses.resources
+D:\repos\POS-05-21-2022\POS\obj\Debug\POS.Login.resources
+D:\repos\POS-05-21-2022\POS\obj\Debug\POS.POS.resources
+D:\repos\POS-05-21-2022\POS\obj\Debug\POS.Inventory.resources
+D:\repos\POS-05-21-2022\POS\obj\Debug\POS.CouponCode.resources
+D:\repos\POS-05-21-2022\POS\obj\Debug\POS.HoldOrder.resources
+D:\repos\POS-05-21-2022\POS\obj\Debug\POS.PaymentForm.resources
+D:\repos\POS-05-21-2022\POS\obj\Debug\POS.Leaderboards.resources
+D:\repos\POS-05-21-2022\POS\obj\Debug\POS.PendingOrders.resources
+D:\repos\POS-05-21-2022\POS\obj\Debug\POS.DepositSlip.resources
+D:\repos\POS-05-21-2022\POS\obj\Debug\POS.Resources.resources
+D:\repos\POS-05-21-2022\POS\obj\Debug\POS.Registration.resources
+D:\repos\POS-05-21-2022\POS\obj\Debug\POS.TransactionType.resources
+D:\repos\POS-05-21-2022\POS\obj\Debug\POS.UserSettings.resources
+D:\repos\POS-05-21-2022\POS\obj\Debug\POS.WaitFrm.resources
+D:\repos\POS-05-21-2022\POS\obj\Debug\POS.vbproj.GenerateResource.Cache
+D:\repos\POS-05-21-2022\POS\bin\Debug\POS.exe.manifest
+D:\repos\POS-05-21-2022\POS\bin\Debug\POS.application
+D:\repos\POS-05-21-2022\POS\bin\Debug\POS.exe
+D:\repos\POS-05-21-2022\POS\bin\Debug\POS.pdb
+D:\repos\POS-05-21-2022\POS\bin\Debug\POS.xml
+D:\repos\POS-05-21-2022\POS\obj\Debug\POS.exe.manifest
+D:\repos\POS-05-21-2022\POS\obj\Debug\POS.application
+D:\repos\POS-05-21-2022\POS\obj\Debug\POS.exe
+D:\repos\POS-05-21-2022\POS\obj\Debug\POS.xml
+D:\repos\POS-05-21-2022\POS\obj\Debug\POS.pdb
+D:\repos\POS-05-21-2022\POS\obj\Debug\POS.vbprojResolveAssemblyReference.cache
+D:\repos\POS-05-21-2022\POS\bin\Debug\EJOURNAL_PDF.pdb
+D:\repos\POS-05-21-2022\POS\bin\Debug\EJOURNAL_PDF.xml
+D:\repos\POS-05-21-2022\POS\bin\Debug\EJOURNAL_PDF.dll
+D:\repos\POS-JUNE\POS\bin\Debug\POS.exe.config
+D:\repos\POS-JUNE\POS\obj\Debug\POS.exe
+D:\repos\POS-JUNE\POS\obj\Debug\POS.xml
+D:\repos\POS-JUNE\POS\obj\Debug\POS.pdb
+D:\repos\POS-JUNE\POS\bin\Debug\POS.exe.manifest
+D:\repos\POS-JUNE\POS\bin\Debug\POS.application
+D:\repos\POS-JUNE\POS\bin\Debug\POS.exe
+D:\repos\POS-JUNE\POS\bin\Debug\POS.pdb
+D:\repos\POS-JUNE\POS\bin\Debug\POS.xml
+D:\repos\POS-JUNE\POS\bin\Debug\EJOURNAL_PDF.dll
+D:\repos\POS-JUNE\POS\bin\Debug\EJOURNAL_PDF.pdb
+D:\repos\POS-JUNE\POS\bin\Debug\EJOURNAL_PDF.xml
+D:\repos\POS-JUNE\POS\obj\Debug\POS.AuditTrail.resources
+D:\repos\POS-JUNE\POS\obj\Debug\POS.Auth.resources
+D:\repos\POS-JUNE\POS\obj\Debug\POS.ConfigManager.resources
+D:\repos\POS-JUNE\POS\obj\Debug\POS.ChooseLayout.resources
+D:\repos\POS-JUNE\POS\obj\Debug\POS.ConfirmRefund.resources
+D:\repos\POS-JUNE\POS\obj\Debug\POS.Grocery.resources
+D:\repos\POS-JUNE\POS\obj\Debug\POS.SettingsForm.resources
+D:\repos\POS-JUNE\POS\obj\Debug\POS.AddBank.resources
+D:\repos\POS-JUNE\POS\obj\Debug\POS.AddEditProducts.resources
+D:\repos\POS-JUNE\POS\obj\Debug\POS.AddUser.resources
+D:\repos\POS-JUNE\POS\obj\Debug\POS.Loading.resources
+D:\repos\POS-JUNE\POS\obj\Debug\POS.MDIFORM.resources
+D:\repos\POS-JUNE\POS\obj\Debug\POS.ManageProducts.resources
+D:\repos\POS-JUNE\POS\obj\Debug\POS.Reports.resources
+D:\repos\POS-JUNE\POS\obj\Debug\POS.SynctoCloud.resources
+D:\repos\POS-JUNE\POS\obj\Debug\POS.About.resources
+D:\repos\POS-JUNE\POS\obj\Debug\POS.AdvancedCustomReport.resources
+D:\repos\POS-JUNE\POS\obj\Debug\POS.AuditTrailFilter.resources
+D:\repos\POS-JUNE\POS\obj\Debug\POS.BegBalance.resources
+D:\repos\POS-JUNE\POS\obj\Debug\POS.CashBreakdown.resources
+D:\repos\POS-JUNE\POS\obj\Debug\POS.ChangePrice.resources
+D:\repos\POS-JUNE\POS\obj\Debug\POS.Changeproductformula.resources
+D:\repos\POS-JUNE\POS\obj\Debug\POS.CheckingForUpdates.resources
+D:\repos\POS-JUNE\POS\obj\Debug\POS.CustomerInfo.resources
+D:\repos\POS-JUNE\POS\obj\Debug\POS.Discounts.resources
+D:\repos\POS-JUNE\POS\obj\Debug\POS.ExpenseImage.resources
+D:\repos\POS-JUNE\POS\obj\Debug\POS.ForgotPassword.resources
+D:\repos\POS-JUNE\POS\obj\Debug\POS.Message.resources
+D:\repos\POS-JUNE\POS\obj\Debug\POS.NewStockEntry.resources
+D:\repos\POS-JUNE\POS\obj\Debug\POS.PanelReasonCat.resources
+D:\repos\POS-JUNE\POS\obj\Debug\POS.ResetPassword.resources
+D:\repos\POS-JUNE\POS\obj\Debug\POS.SelectNewFormula.resources
+D:\repos\POS-JUNE\POS\obj\Debug\POS.SeniorDetails.resources
+D:\repos\POS-JUNE\POS\obj\Debug\POS.StockAdjustment.resources
+D:\repos\POS-JUNE\POS\obj\Debug\POS.TakeOut.resources
+D:\repos\POS-JUNE\POS\obj\Debug\POS.TransactionTypeInfo.resources
+D:\repos\POS-JUNE\POS\obj\Debug\POS.Addexpense.resources
+D:\repos\POS-JUNE\POS\obj\Debug\POS.Expenses.resources
+D:\repos\POS-JUNE\POS\obj\Debug\POS.Login.resources
+D:\repos\POS-JUNE\POS\obj\Debug\POS.POS.resources
+D:\repos\POS-JUNE\POS\obj\Debug\POS.Inventory.resources
+D:\repos\POS-JUNE\POS\obj\Debug\POS.CouponCode.resources
+D:\repos\POS-JUNE\POS\obj\Debug\POS.HoldOrder.resources
+D:\repos\POS-JUNE\POS\obj\Debug\POS.PaymentForm.resources
+D:\repos\POS-JUNE\POS\obj\Debug\POS.Leaderboards.resources
+D:\repos\POS-JUNE\POS\obj\Debug\POS.PendingOrders.resources
+D:\repos\POS-JUNE\POS\obj\Debug\POS.DepositSlip.resources
+D:\repos\POS-JUNE\POS\obj\Debug\POS.Resources.resources
+D:\repos\POS-JUNE\POS\obj\Debug\POS.Registration.resources
+D:\repos\POS-JUNE\POS\obj\Debug\POS.TransactionType.resources
+D:\repos\POS-JUNE\POS\obj\Debug\POS.UserSettings.resources
+D:\repos\POS-JUNE\POS\obj\Debug\POS.WaitFrm.resources
+D:\repos\POS-JUNE\POS\obj\Debug\POS.vbproj.GenerateResource.Cache
+D:\repos\POS-JUNE\POS\obj\Debug\POS.exe.manifest
+D:\repos\POS-JUNE\POS\obj\Debug\POS.application
+D:\repos\POS-JUNE\POS\obj\Debug\POS.vbprojResolveAssemblyReference.cache
+D:\repos\New folder\POS-JUNE\POS\bin\Debug\POS.exe.config
+D:\repos\New folder\POS-JUNE\POS\obj\Debug\POS.exe
+D:\repos\New folder\POS-JUNE\POS\obj\Debug\POS.xml
+D:\repos\New folder\POS-JUNE\POS\obj\Debug\POS.pdb
+D:\repos\New folder\POS-JUNE\POS\bin\Debug\POS.exe.manifest
+D:\repos\New folder\POS-JUNE\POS\bin\Debug\POS.application
+D:\repos\New folder\POS-JUNE\POS\bin\Debug\POS.exe
+D:\repos\New folder\POS-JUNE\POS\bin\Debug\POS.pdb
+D:\repos\New folder\POS-JUNE\POS\bin\Debug\POS.xml
+D:\repos\New folder\POS-JUNE\POS\bin\Debug\EJOURNAL_PDF.dll
+D:\repos\New folder\POS-JUNE\POS\bin\Debug\EJOURNAL_PDF.pdb
+D:\repos\New folder\POS-JUNE\POS\bin\Debug\EJOURNAL_PDF.xml
+D:\repos\New folder\POS-JUNE\POS\obj\Debug\POS.vbprojResolveAssemblyReference.cache
+D:\repos\New folder\POS-JUNE\POS\obj\Debug\POS.AuditTrail.resources
+D:\repos\New folder\POS-JUNE\POS\obj\Debug\POS.Auth.resources
+D:\repos\New folder\POS-JUNE\POS\obj\Debug\POS.ConfigManager.resources
+D:\repos\New folder\POS-JUNE\POS\obj\Debug\POS.ChooseLayout.resources
+D:\repos\New folder\POS-JUNE\POS\obj\Debug\POS.ConfirmRefund.resources
+D:\repos\New folder\POS-JUNE\POS\obj\Debug\POS.Grocery.resources
+D:\repos\New folder\POS-JUNE\POS\obj\Debug\POS.SettingsForm.resources
+D:\repos\New folder\POS-JUNE\POS\obj\Debug\POS.AddBank.resources
+D:\repos\New folder\POS-JUNE\POS\obj\Debug\POS.AddEditProducts.resources
+D:\repos\New folder\POS-JUNE\POS\obj\Debug\POS.AddUser.resources
+D:\repos\New folder\POS-JUNE\POS\obj\Debug\POS.Loading.resources
+D:\repos\New folder\POS-JUNE\POS\obj\Debug\POS.MDIFORM.resources
+D:\repos\New folder\POS-JUNE\POS\obj\Debug\POS.ManageProducts.resources
+D:\repos\New folder\POS-JUNE\POS\obj\Debug\POS.Reports.resources
+D:\repos\New folder\POS-JUNE\POS\obj\Debug\POS.SynctoCloud.resources
+D:\repos\New folder\POS-JUNE\POS\obj\Debug\POS.About.resources
+D:\repos\New folder\POS-JUNE\POS\obj\Debug\POS.AdvancedCustomReport.resources
+D:\repos\New folder\POS-JUNE\POS\obj\Debug\POS.AuditTrailFilter.resources
+D:\repos\New folder\POS-JUNE\POS\obj\Debug\POS.BegBalance.resources
+D:\repos\New folder\POS-JUNE\POS\obj\Debug\POS.CashBreakdown.resources
+D:\repos\New folder\POS-JUNE\POS\obj\Debug\POS.ChangePrice.resources
+D:\repos\New folder\POS-JUNE\POS\obj\Debug\POS.Changeproductformula.resources
+D:\repos\New folder\POS-JUNE\POS\obj\Debug\POS.CheckingForUpdates.resources
+D:\repos\New folder\POS-JUNE\POS\obj\Debug\POS.CustomerInfo.resources
+D:\repos\New folder\POS-JUNE\POS\obj\Debug\POS.Discounts.resources
+D:\repos\New folder\POS-JUNE\POS\obj\Debug\POS.ExpenseImage.resources
+D:\repos\New folder\POS-JUNE\POS\obj\Debug\POS.ForgotPassword.resources
+D:\repos\New folder\POS-JUNE\POS\obj\Debug\POS.Message.resources
+D:\repos\New folder\POS-JUNE\POS\obj\Debug\POS.NewStockEntry.resources
+D:\repos\New folder\POS-JUNE\POS\obj\Debug\POS.PanelReasonCat.resources
+D:\repos\New folder\POS-JUNE\POS\obj\Debug\POS.ResetPassword.resources
+D:\repos\New folder\POS-JUNE\POS\obj\Debug\POS.SelectNewFormula.resources
+D:\repos\New folder\POS-JUNE\POS\obj\Debug\POS.SeniorDetails.resources
+D:\repos\New folder\POS-JUNE\POS\obj\Debug\POS.StockAdjustment.resources
+D:\repos\New folder\POS-JUNE\POS\obj\Debug\POS.TakeOut.resources
+D:\repos\New folder\POS-JUNE\POS\obj\Debug\POS.TransactionTypeInfo.resources
+D:\repos\New folder\POS-JUNE\POS\obj\Debug\POS.Addexpense.resources
+D:\repos\New folder\POS-JUNE\POS\obj\Debug\POS.Expenses.resources
+D:\repos\New folder\POS-JUNE\POS\obj\Debug\POS.Login.resources
+D:\repos\New folder\POS-JUNE\POS\obj\Debug\POS.POS.resources
+D:\repos\New folder\POS-JUNE\POS\obj\Debug\POS.Inventory.resources
+D:\repos\New folder\POS-JUNE\POS\obj\Debug\POS.CouponCode.resources
+D:\repos\New folder\POS-JUNE\POS\obj\Debug\POS.HoldOrder.resources
+D:\repos\New folder\POS-JUNE\POS\obj\Debug\POS.PaymentForm.resources
+D:\repos\New folder\POS-JUNE\POS\obj\Debug\POS.Leaderboards.resources
+D:\repos\New folder\POS-JUNE\POS\obj\Debug\POS.PendingOrders.resources
+D:\repos\New folder\POS-JUNE\POS\obj\Debug\POS.DepositSlip.resources
+D:\repos\New folder\POS-JUNE\POS\obj\Debug\POS.Resources.resources
+D:\repos\New folder\POS-JUNE\POS\obj\Debug\POS.Registration.resources
+D:\repos\New folder\POS-JUNE\POS\obj\Debug\POS.TransactionType.resources
+D:\repos\New folder\POS-JUNE\POS\obj\Debug\POS.UserSettings.resources
+D:\repos\New folder\POS-JUNE\POS\obj\Debug\POS.WaitFrm.resources
+D:\repos\New folder\POS-JUNE\POS\obj\Debug\POS.vbproj.GenerateResource.Cache
+D:\repos\New folder\POS-JUNE\POS\obj\Debug\POS.exe.manifest
+D:\repos\New folder\POS-JUNE\POS\obj\Debug\POS.application
+D:\repos\New folder\POS-JUNE\POS\obj\Debug\POS.ViewLogs.resources
+D:\repos\POS-06-05-2022\POS\bin\Debug\POS.exe.config
+D:\repos\POS-06-05-2022\POS\obj\Debug\POS.exe
+D:\repos\POS-06-05-2022\POS\obj\Debug\POS.xml
+D:\repos\POS-06-05-2022\POS\obj\Debug\POS.pdb
+D:\repos\POS-06-05-2022\POS\bin\Debug\POS.exe.manifest
+D:\repos\POS-06-05-2022\POS\bin\Debug\POS.application
+D:\repos\POS-06-05-2022\POS\bin\Debug\POS.exe
+D:\repos\POS-06-05-2022\POS\bin\Debug\POS.pdb
+D:\repos\POS-06-05-2022\POS\bin\Debug\POS.xml
+D:\repos\POS-06-05-2022\POS\bin\Debug\EJOURNAL_PDF.dll
+D:\repos\POS-06-05-2022\POS\bin\Debug\EJOURNAL_PDF.pdb
+D:\repos\POS-06-05-2022\POS\bin\Debug\EJOURNAL_PDF.xml
+D:\repos\POS-06-05-2022\POS\obj\Debug\POS.vbprojResolveAssemblyReference.cache
+D:\repos\POS-06-05-2022\POS\obj\Debug\POS.AuditTrail.resources
+D:\repos\POS-06-05-2022\POS\obj\Debug\POS.Auth.resources
+D:\repos\POS-06-05-2022\POS\obj\Debug\POS.ConfigManager.resources
+D:\repos\POS-06-05-2022\POS\obj\Debug\POS.ChooseLayout.resources
+D:\repos\POS-06-05-2022\POS\obj\Debug\POS.ConfirmRefund.resources
+D:\repos\POS-06-05-2022\POS\obj\Debug\POS.Grocery.resources
+D:\repos\POS-06-05-2022\POS\obj\Debug\POS.SettingsForm.resources
+D:\repos\POS-06-05-2022\POS\obj\Debug\POS.AddBank.resources
+D:\repos\POS-06-05-2022\POS\obj\Debug\POS.AddEditProducts.resources
+D:\repos\POS-06-05-2022\POS\obj\Debug\POS.AddUser.resources
+D:\repos\POS-06-05-2022\POS\obj\Debug\POS.Loading.resources
+D:\repos\POS-06-05-2022\POS\obj\Debug\POS.MDIFORM.resources
+D:\repos\POS-06-05-2022\POS\obj\Debug\POS.ManageProducts.resources
+D:\repos\POS-06-05-2022\POS\obj\Debug\POS.Reports.resources
+D:\repos\POS-06-05-2022\POS\obj\Debug\POS.SynctoCloud.resources
+D:\repos\POS-06-05-2022\POS\obj\Debug\POS.About.resources
+D:\repos\POS-06-05-2022\POS\obj\Debug\POS.AdvancedCustomReport.resources
+D:\repos\POS-06-05-2022\POS\obj\Debug\POS.AuditTrailFilter.resources
+D:\repos\POS-06-05-2022\POS\obj\Debug\POS.BegBalance.resources
+D:\repos\POS-06-05-2022\POS\obj\Debug\POS.CashBreakdown.resources
+D:\repos\POS-06-05-2022\POS\obj\Debug\POS.ChangePrice.resources
+D:\repos\POS-06-05-2022\POS\obj\Debug\POS.Changeproductformula.resources
+D:\repos\POS-06-05-2022\POS\obj\Debug\POS.CheckingForUpdates.resources
+D:\repos\POS-06-05-2022\POS\obj\Debug\POS.CustomerInfo.resources
+D:\repos\POS-06-05-2022\POS\obj\Debug\POS.Discounts.resources
+D:\repos\POS-06-05-2022\POS\obj\Debug\POS.ExpenseImage.resources
+D:\repos\POS-06-05-2022\POS\obj\Debug\POS.ForgotPassword.resources
+D:\repos\POS-06-05-2022\POS\obj\Debug\POS.Message.resources
+D:\repos\POS-06-05-2022\POS\obj\Debug\POS.NewStockEntry.resources
+D:\repos\POS-06-05-2022\POS\obj\Debug\POS.PanelReasonCat.resources
+D:\repos\POS-06-05-2022\POS\obj\Debug\POS.ResetPassword.resources
+D:\repos\POS-06-05-2022\POS\obj\Debug\POS.SelectNewFormula.resources
+D:\repos\POS-06-05-2022\POS\obj\Debug\POS.SeniorDetails.resources
+D:\repos\POS-06-05-2022\POS\obj\Debug\POS.StockAdjustment.resources
+D:\repos\POS-06-05-2022\POS\obj\Debug\POS.TakeOut.resources
+D:\repos\POS-06-05-2022\POS\obj\Debug\POS.TransactionTypeInfo.resources
+D:\repos\POS-06-05-2022\POS\obj\Debug\POS.Addexpense.resources
+D:\repos\POS-06-05-2022\POS\obj\Debug\POS.Expenses.resources
+D:\repos\POS-06-05-2022\POS\obj\Debug\POS.Login.resources
+D:\repos\POS-06-05-2022\POS\obj\Debug\POS.POS.resources
+D:\repos\POS-06-05-2022\POS\obj\Debug\POS.Inventory.resources
+D:\repos\POS-06-05-2022\POS\obj\Debug\POS.CouponCode.resources
+D:\repos\POS-06-05-2022\POS\obj\Debug\POS.HoldOrder.resources
+D:\repos\POS-06-05-2022\POS\obj\Debug\POS.PaymentForm.resources
+D:\repos\POS-06-05-2022\POS\obj\Debug\POS.Leaderboards.resources
+D:\repos\POS-06-05-2022\POS\obj\Debug\POS.PendingOrders.resources
+D:\repos\POS-06-05-2022\POS\obj\Debug\POS.DepositSlip.resources
+D:\repos\POS-06-05-2022\POS\obj\Debug\POS.Resources.resources
+D:\repos\POS-06-05-2022\POS\obj\Debug\POS.Registration.resources
+D:\repos\POS-06-05-2022\POS\obj\Debug\POS.TransactionType.resources
+D:\repos\POS-06-05-2022\POS\obj\Debug\POS.UserSettings.resources
+D:\repos\POS-06-05-2022\POS\obj\Debug\POS.ViewLogs.resources
+D:\repos\POS-06-05-2022\POS\obj\Debug\POS.WaitFrm.resources
+D:\repos\POS-06-05-2022\POS\obj\Debug\POS.vbproj.GenerateResource.Cache
+D:\repos\POS-06-05-2022\POS\obj\Debug\POS.exe.manifest
+D:\repos\POS-06-05-2022\POS\obj\Debug\POS.application
+C:\repos\POS-06-05-2022\POS\bin\Debug\POS.exe.config
+C:\repos\POS-06-05-2022\POS\obj\Debug\POS.exe
+C:\repos\POS-06-05-2022\POS\obj\Debug\POS.xml
+C:\repos\POS-06-05-2022\POS\obj\Debug\POS.pdb
+C:\repos\MAIN\POS\bin\Debug\POS.exe.config
+C:\repos\MAIN\POS\obj\Debug\POS.exe
+C:\repos\MAIN\POS\obj\Debug\POS.xml
+C:\repos\MAIN\POS\obj\Debug\POS.pdb
+C:\repos\MAIN\POS\bin\Debug\POS.exe.manifest
+C:\repos\MAIN\POS\bin\Debug\POS.application
+C:\repos\MAIN\POS\bin\Debug\POS.exe
+C:\repos\MAIN\POS\bin\Debug\POS.pdb
+C:\repos\MAIN\POS\bin\Debug\POS.xml
+C:\repos\MAIN\POS\bin\Debug\EJOURNAL_PDF.dll
+C:\repos\MAIN\POS\bin\Debug\EJOURNAL_PDF.pdb
+C:\repos\MAIN\POS\bin\Debug\EJOURNAL_PDF.xml
+C:\repos\MAIN\POS\obj\Debug\POS.vbprojResolveAssemblyReference.cache
+C:\repos\MAIN\POS\obj\Debug\POS.AuditTrail.resources
+C:\repos\MAIN\POS\obj\Debug\POS.Auth.resources
+C:\repos\MAIN\POS\obj\Debug\POS.ConfigManager.resources
+C:\repos\MAIN\POS\obj\Debug\POS.ChooseLayout.resources
+C:\repos\MAIN\POS\obj\Debug\POS.ConfirmRefund.resources
+C:\repos\MAIN\POS\obj\Debug\POS.Grocery.resources
+C:\repos\MAIN\POS\obj\Debug\POS.SettingsForm.resources
+C:\repos\MAIN\POS\obj\Debug\POS.AddBank.resources
+C:\repos\MAIN\POS\obj\Debug\POS.AddEditProducts.resources
+C:\repos\MAIN\POS\obj\Debug\POS.AddUser.resources
+C:\repos\MAIN\POS\obj\Debug\POS.Loading.resources
+C:\repos\MAIN\POS\obj\Debug\POS.MDIFORM.resources
+C:\repos\MAIN\POS\obj\Debug\POS.ManageProducts.resources
+C:\repos\MAIN\POS\obj\Debug\POS.Reports.resources
+C:\repos\MAIN\POS\obj\Debug\POS.SynctoCloud.resources
+C:\repos\MAIN\POS\obj\Debug\POS.About.resources
+C:\repos\MAIN\POS\obj\Debug\POS.AdvancedCustomReport.resources
+C:\repos\MAIN\POS\obj\Debug\POS.AuditTrailFilter.resources
+C:\repos\MAIN\POS\obj\Debug\POS.BegBalance.resources
+C:\repos\MAIN\POS\obj\Debug\POS.CashBreakdown.resources
+C:\repos\MAIN\POS\obj\Debug\POS.ChangePrice.resources
+C:\repos\MAIN\POS\obj\Debug\POS.Changeproductformula.resources
+C:\repos\MAIN\POS\obj\Debug\POS.CheckingForUpdates.resources
+C:\repos\MAIN\POS\obj\Debug\POS.CustomerInfo.resources
+C:\repos\MAIN\POS\obj\Debug\POS.Discounts.resources
+C:\repos\MAIN\POS\obj\Debug\POS.ExpenseImage.resources
+C:\repos\MAIN\POS\obj\Debug\POS.ForgotPassword.resources
+C:\repos\MAIN\POS\obj\Debug\POS.Message.resources
+C:\repos\MAIN\POS\obj\Debug\POS.NewStockEntry.resources
+C:\repos\MAIN\POS\obj\Debug\POS.PanelReasonCat.resources
+C:\repos\MAIN\POS\obj\Debug\POS.ResetPassword.resources
+C:\repos\MAIN\POS\obj\Debug\POS.SelectNewFormula.resources
+C:\repos\MAIN\POS\obj\Debug\POS.SeniorDetails.resources
+C:\repos\MAIN\POS\obj\Debug\POS.StockAdjustment.resources
+C:\repos\MAIN\POS\obj\Debug\POS.TakeOut.resources
+C:\repos\MAIN\POS\obj\Debug\POS.TransactionTypeInfo.resources
+C:\repos\MAIN\POS\obj\Debug\POS.Addexpense.resources
+C:\repos\MAIN\POS\obj\Debug\POS.Expenses.resources
+C:\repos\MAIN\POS\obj\Debug\POS.Login.resources
+C:\repos\MAIN\POS\obj\Debug\POS.POS.resources
+C:\repos\MAIN\POS\obj\Debug\POS.Inventory.resources
+C:\repos\MAIN\POS\obj\Debug\POS.CouponCode.resources
+C:\repos\MAIN\POS\obj\Debug\POS.HoldOrder.resources
+C:\repos\MAIN\POS\obj\Debug\POS.PaymentForm.resources
+C:\repos\MAIN\POS\obj\Debug\POS.Leaderboards.resources
+C:\repos\MAIN\POS\obj\Debug\POS.PendingOrders.resources
+C:\repos\MAIN\POS\obj\Debug\POS.DepositSlip.resources
+C:\repos\MAIN\POS\obj\Debug\POS.Resources.resources
+C:\repos\MAIN\POS\obj\Debug\POS.Registration.resources
+C:\repos\MAIN\POS\obj\Debug\POS.TransactionType.resources
+C:\repos\MAIN\POS\obj\Debug\POS.UserSettings.resources
+C:\repos\MAIN\POS\obj\Debug\POS.ViewLogs.resources
+C:\repos\MAIN\POS\obj\Debug\POS.WaitFrm.resources
+C:\repos\MAIN\POS\obj\Debug\POS.vbproj.GenerateResource.Cache
+C:\repos\MAIN\POS\obj\Debug\POS.exe.manifest
+C:\repos\MAIN\POS\obj\Debug\POS.application
+C:\repos\POS and Utility\POS-06-18-2022\POS\bin\Debug\POS.exe.config
+C:\repos\POS and Utility\POS-06-18-2022\POS\bin\Debug\POS.exe.manifest
+C:\repos\POS and Utility\POS-06-18-2022\POS\bin\Debug\POS.application
+C:\repos\POS and Utility\POS-06-18-2022\POS\bin\Debug\POS.exe
+C:\repos\POS and Utility\POS-06-18-2022\POS\bin\Debug\POS.pdb
+C:\repos\POS and Utility\POS-06-18-2022\POS\bin\Debug\POS.xml
+C:\repos\POS and Utility\POS-06-18-2022\POS\bin\Debug\EJOURNAL_PDF.dll
+C:\repos\POS and Utility\POS-06-18-2022\POS\bin\Debug\EJOURNAL_PDF.pdb
+C:\repos\POS and Utility\POS-06-18-2022\POS\bin\Debug\EJOURNAL_PDF.xml
+C:\repos\POS and Utility\POS-06-18-2022\POS\obj\Debug\POS.AuditTrail.resources
+C:\repos\POS and Utility\POS-06-18-2022\POS\obj\Debug\POS.Auth.resources
+C:\repos\POS and Utility\POS-06-18-2022\POS\obj\Debug\POS.ConfigManager.resources
+C:\repos\POS and Utility\POS-06-18-2022\POS\obj\Debug\POS.ChooseLayout.resources
+C:\repos\POS and Utility\POS-06-18-2022\POS\obj\Debug\POS.ConfirmRefund.resources
+C:\repos\POS and Utility\POS-06-18-2022\POS\obj\Debug\POS.Grocery.resources
+C:\repos\POS and Utility\POS-06-18-2022\POS\obj\Debug\POS.SettingsForm.resources
+C:\repos\POS and Utility\POS-06-18-2022\POS\obj\Debug\POS.AddBank.resources
+C:\repos\POS and Utility\POS-06-18-2022\POS\obj\Debug\POS.AddEditProducts.resources
+C:\repos\POS and Utility\POS-06-18-2022\POS\obj\Debug\POS.AddUser.resources
+C:\repos\POS and Utility\POS-06-18-2022\POS\obj\Debug\POS.Loading.resources
+C:\repos\POS and Utility\POS-06-18-2022\POS\obj\Debug\POS.MDIFORM.resources
+C:\repos\POS and Utility\POS-06-18-2022\POS\obj\Debug\POS.ManageProducts.resources
+C:\repos\POS and Utility\POS-06-18-2022\POS\obj\Debug\POS.Reports.resources
+C:\repos\POS and Utility\POS-06-18-2022\POS\obj\Debug\POS.SynctoCloud.resources
+C:\repos\POS and Utility\POS-06-18-2022\POS\obj\Debug\POS.About.resources
+C:\repos\POS and Utility\POS-06-18-2022\POS\obj\Debug\POS.AdvancedCustomReport.resources
+C:\repos\POS and Utility\POS-06-18-2022\POS\obj\Debug\POS.AuditTrailFilter.resources
+C:\repos\POS and Utility\POS-06-18-2022\POS\obj\Debug\POS.BegBalance.resources
+C:\repos\POS and Utility\POS-06-18-2022\POS\obj\Debug\POS.CashBreakdown.resources
+C:\repos\POS and Utility\POS-06-18-2022\POS\obj\Debug\POS.ChangePrice.resources
+C:\repos\POS and Utility\POS-06-18-2022\POS\obj\Debug\POS.Changeproductformula.resources
+C:\repos\POS and Utility\POS-06-18-2022\POS\obj\Debug\POS.CheckingForUpdates.resources
+C:\repos\POS and Utility\POS-06-18-2022\POS\obj\Debug\POS.CustomerInfo.resources
+C:\repos\POS and Utility\POS-06-18-2022\POS\obj\Debug\POS.Discounts.resources
+C:\repos\POS and Utility\POS-06-18-2022\POS\obj\Debug\POS.EJournalLoadingScreen.resources
+C:\repos\POS and Utility\POS-06-18-2022\POS\obj\Debug\POS.ExpenseImage.resources
+C:\repos\POS and Utility\POS-06-18-2022\POS\obj\Debug\POS.ForgotPassword.resources
+C:\repos\POS and Utility\POS-06-18-2022\POS\obj\Debug\POS.Message.resources
+C:\repos\POS and Utility\POS-06-18-2022\POS\obj\Debug\POS.NewStockEntry.resources
+C:\repos\POS and Utility\POS-06-18-2022\POS\obj\Debug\POS.PanelReasonCat.resources
+C:\repos\POS and Utility\POS-06-18-2022\POS\obj\Debug\POS.ResetPassword.resources
+C:\repos\POS and Utility\POS-06-18-2022\POS\obj\Debug\POS.SelectNewFormula.resources
+C:\repos\POS and Utility\POS-06-18-2022\POS\obj\Debug\POS.SeniorDetails.resources
+C:\repos\POS and Utility\POS-06-18-2022\POS\obj\Debug\POS.StockAdjustment.resources
+C:\repos\POS and Utility\POS-06-18-2022\POS\obj\Debug\POS.TakeOut.resources
+C:\repos\POS and Utility\POS-06-18-2022\POS\obj\Debug\POS.TransactionTypeInfo.resources
+C:\repos\POS and Utility\POS-06-18-2022\POS\obj\Debug\POS.Addexpense.resources
+C:\repos\POS and Utility\POS-06-18-2022\POS\obj\Debug\POS.Expenses.resources
+C:\repos\POS and Utility\POS-06-18-2022\POS\obj\Debug\POS.Login.resources
+C:\repos\POS and Utility\POS-06-18-2022\POS\obj\Debug\POS.POS.resources
+C:\repos\POS and Utility\POS-06-18-2022\POS\obj\Debug\POS.Inventory.resources
+C:\repos\POS and Utility\POS-06-18-2022\POS\obj\Debug\POS.CouponCode.resources
+C:\repos\POS and Utility\POS-06-18-2022\POS\obj\Debug\POS.HoldOrder.resources
+C:\repos\POS and Utility\POS-06-18-2022\POS\obj\Debug\POS.PaymentForm.resources
+C:\repos\POS and Utility\POS-06-18-2022\POS\obj\Debug\POS.Leaderboards.resources
+C:\repos\POS and Utility\POS-06-18-2022\POS\obj\Debug\POS.PendingOrders.resources
+C:\repos\POS and Utility\POS-06-18-2022\POS\obj\Debug\POS.DepositSlip.resources
+C:\repos\POS and Utility\POS-06-18-2022\POS\obj\Debug\POS.Resources.resources
+C:\repos\POS and Utility\POS-06-18-2022\POS\obj\Debug\POS.Registration.resources
+C:\repos\POS and Utility\POS-06-18-2022\POS\obj\Debug\POS.TransactionType.resources
+C:\repos\POS and Utility\POS-06-18-2022\POS\obj\Debug\POS.UserSettings.resources
+C:\repos\POS and Utility\POS-06-18-2022\POS\obj\Debug\POS.ViewLogs.resources
+C:\repos\POS and Utility\POS-06-18-2022\POS\obj\Debug\POS.WaitFrm.resources
+C:\repos\POS and Utility\POS-06-18-2022\POS\obj\Debug\POS.vbproj.GenerateResource.Cache
+C:\repos\POS and Utility\POS-06-18-2022\POS\obj\Debug\POS.exe.manifest
+C:\repos\POS and Utility\POS-06-18-2022\POS\obj\Debug\POS.application
+C:\repos\POS and Utility\POS-06-18-2022\POS\obj\Debug\POS.exe
+C:\repos\POS and Utility\POS-06-18-2022\POS\obj\Debug\POS.xml
+C:\repos\POS and Utility\POS-06-18-2022\POS\obj\Debug\POS.pdb
+C:\repos\POS and Utility\POS-06-18-2022\POS\obj\Debug\POS.vbprojResolveAssemblyReference.cache
+C:\repos\POS and Utility\POS-06-18-2022 - Copy\POS\bin\Debug\POS.exe.config
+C:\repos\POS and Utility\POS-06-18-2022 - Copy\POS\obj\Debug\POS.exe
+C:\repos\POS and Utility\POS-06-18-2022 - Copy\POS\obj\Debug\POS.xml
+C:\repos\POS and Utility\POS-06-18-2022 - Copy\POS\obj\Debug\POS.pdb
+C:\repos\POS and Utility\POS-06-18-2022 - Copy\POS\obj\Debug\POS.vbprojResolveAssemblyReference.cache
+C:\repos\POS and Utility\POS-06-18-2022 - Copy\POS\obj\Debug\POS.AuditTrail.resources
+C:\repos\POS and Utility\POS-06-18-2022 - Copy\POS\obj\Debug\POS.Auth.resources
+C:\repos\POS and Utility\POS-06-18-2022 - Copy\POS\obj\Debug\POS.ConfigManager.resources
+C:\repos\POS and Utility\POS-06-18-2022 - Copy\POS\obj\Debug\POS.ChooseLayout.resources
+C:\repos\POS and Utility\POS-06-18-2022 - Copy\POS\obj\Debug\POS.ConfirmRefund.resources
+C:\repos\POS and Utility\POS-06-18-2022 - Copy\POS\obj\Debug\POS.Grocery.resources
+C:\repos\POS and Utility\POS-06-18-2022 - Copy\POS\obj\Debug\POS.SettingsForm.resources
+C:\repos\POS and Utility\POS-06-18-2022 - Copy\POS\obj\Debug\POS.AddBank.resources
+C:\repos\POS and Utility\POS-06-18-2022 - Copy\POS\obj\Debug\POS.AddEditProducts.resources
+C:\repos\POS and Utility\POS-06-18-2022 - Copy\POS\obj\Debug\POS.AddUser.resources
+C:\repos\POS and Utility\POS-06-18-2022 - Copy\POS\obj\Debug\POS.Loading.resources
+C:\repos\POS and Utility\POS-06-18-2022 - Copy\POS\obj\Debug\POS.MDIFORM.resources
+C:\repos\POS and Utility\POS-06-18-2022 - Copy\POS\obj\Debug\POS.ManageProducts.resources
+C:\repos\POS and Utility\POS-06-18-2022 - Copy\POS\obj\Debug\POS.Reports.resources
+C:\repos\POS and Utility\POS-06-18-2022 - Copy\POS\obj\Debug\POS.SynctoCloud.resources
+C:\repos\POS and Utility\POS-06-18-2022 - Copy\POS\obj\Debug\POS.About.resources
+C:\repos\POS and Utility\POS-06-18-2022 - Copy\POS\obj\Debug\POS.AdvancedCustomReport.resources
+C:\repos\POS and Utility\POS-06-18-2022 - Copy\POS\obj\Debug\POS.AuditTrailFilter.resources
+C:\repos\POS and Utility\POS-06-18-2022 - Copy\POS\obj\Debug\POS.BegBalance.resources
+C:\repos\POS and Utility\POS-06-18-2022 - Copy\POS\obj\Debug\POS.CashBreakdown.resources
+C:\repos\POS and Utility\POS-06-18-2022 - Copy\POS\obj\Debug\POS.ChangePrice.resources
+C:\repos\POS and Utility\POS-06-18-2022 - Copy\POS\obj\Debug\POS.Changeproductformula.resources
+C:\repos\POS and Utility\POS-06-18-2022 - Copy\POS\obj\Debug\POS.CheckingForUpdates.resources
+C:\repos\POS and Utility\POS-06-18-2022 - Copy\POS\obj\Debug\POS.CustomerInfo.resources
+C:\repos\POS and Utility\POS-06-18-2022 - Copy\POS\obj\Debug\POS.Discounts.resources
+C:\repos\POS and Utility\POS-06-18-2022 - Copy\POS\obj\Debug\POS.EJournalLoadingScreen.resources
+C:\repos\POS and Utility\POS-06-18-2022 - Copy\POS\obj\Debug\POS.ExpenseImage.resources
+C:\repos\POS and Utility\POS-06-18-2022 - Copy\POS\obj\Debug\POS.ForgotPassword.resources
+C:\repos\POS and Utility\POS-06-18-2022 - Copy\POS\obj\Debug\POS.Message.resources
+C:\repos\POS and Utility\POS-06-18-2022 - Copy\POS\obj\Debug\POS.NewStockEntry.resources
+C:\repos\POS and Utility\POS-06-18-2022 - Copy\POS\obj\Debug\POS.PanelReasonCat.resources
+C:\repos\POS and Utility\POS-06-18-2022 - Copy\POS\obj\Debug\POS.ResetPassword.resources
+C:\repos\POS and Utility\POS-06-18-2022 - Copy\POS\obj\Debug\POS.SelectNewFormula.resources
+C:\repos\POS and Utility\POS-06-18-2022 - Copy\POS\obj\Debug\POS.SeniorDetails.resources
+C:\repos\POS and Utility\POS-06-18-2022 - Copy\POS\obj\Debug\POS.StockAdjustment.resources
+C:\repos\POS and Utility\POS-06-18-2022 - Copy\POS\obj\Debug\POS.TakeOut.resources
+C:\repos\POS and Utility\POS-06-18-2022 - Copy\POS\obj\Debug\POS.TransactionTypeInfo.resources
+C:\repos\POS and Utility\POS-06-18-2022 - Copy\POS\obj\Debug\POS.Addexpense.resources
+C:\repos\POS and Utility\POS-06-18-2022 - Copy\POS\obj\Debug\POS.Expenses.resources
+C:\repos\POS and Utility\POS-06-18-2022 - Copy\POS\obj\Debug\POS.Login.resources
+C:\repos\POS and Utility\POS-06-18-2022 - Copy\POS\obj\Debug\POS.POS.resources
+C:\repos\POS and Utility\POS-06-18-2022 - Copy\POS\obj\Debug\POS.Inventory.resources
+C:\repos\POS and Utility\POS-06-18-2022 - Copy\POS\obj\Debug\POS.CouponCode.resources
+C:\repos\POS and Utility\POS-06-18-2022 - Copy\POS\obj\Debug\POS.HoldOrder.resources
+C:\repos\POS and Utility\POS-06-18-2022 - Copy\POS\obj\Debug\POS.PaymentForm.resources
+C:\repos\POS and Utility\POS-06-18-2022 - Copy\POS\obj\Debug\POS.Leaderboards.resources
+C:\repos\POS and Utility\POS-06-18-2022 - Copy\POS\obj\Debug\POS.PendingOrders.resources
+C:\repos\POS and Utility\POS-06-18-2022 - Copy\POS\obj\Debug\POS.DepositSlip.resources
+C:\repos\POS and Utility\POS-06-18-2022 - Copy\POS\obj\Debug\POS.Resources.resources
+C:\repos\POS and Utility\POS-06-18-2022 - Copy\POS\obj\Debug\POS.Registration.resources
+C:\repos\POS and Utility\POS-06-18-2022 - Copy\POS\obj\Debug\POS.TransactionType.resources
+C:\repos\POS and Utility\POS-06-18-2022 - Copy\POS\obj\Debug\POS.UserSettings.resources
+C:\repos\POS and Utility\POS-06-18-2022 - Copy\POS\obj\Debug\POS.ViewLogs.resources
+C:\repos\POS and Utility\POS-06-18-2022 - Copy\POS\obj\Debug\POS.WaitFrm.resources
+C:\repos\POS and Utility\POS-06-18-2022 - Copy\POS\obj\Debug\POS.vbproj.GenerateResource.Cache
+C:\repos\POS and Utility\POS-06-18-2022 - Copy\POS\bin\Debug\POS.exe.manifest
+C:\repos\POS and Utility\POS-06-18-2022 - Copy\POS\bin\Debug\POS.application
+C:\repos\POS and Utility\POS-06-18-2022 - Copy\POS\bin\Debug\POS.exe
+C:\repos\POS and Utility\POS-06-18-2022 - Copy\POS\bin\Debug\POS.pdb
+C:\repos\POS and Utility\POS-06-18-2022 - Copy\POS\bin\Debug\POS.xml
+C:\repos\POS and Utility\POS-06-18-2022 - Copy\POS\bin\Debug\EJOURNAL_PDF.dll
+C:\repos\POS and Utility\POS-06-18-2022 - Copy\POS\bin\Debug\EJOURNAL_PDF.pdb
+C:\repos\POS and Utility\POS-06-18-2022 - Copy\POS\bin\Debug\EJOURNAL_PDF.xml
+C:\repos\POS and Utility\POS-06-18-2022 - Copy\POS\obj\Debug\POS.exe.manifest
+C:\repos\POS and Utility\POS-06-18-2022 - Copy\POS\obj\Debug\POS.application

@@ -1,0 +1,15 @@
+ALTER TABLE `loc_zread_table` CHANGE `ZXOldGrandTotalSales` `ZXEndingBalance` double NOT NULL;
+ALTER TABLE `loc_zread_table` CHANGE `ZXNewGrandtotalSales` `ZXAccumulatedGT` double NOT NULL;
+ALTER TABLE `loc_zread_table` ADD `ZXTerminal` int(11) NOT NULL AFTER `id`;
+ALTER TABLE `loc_zread_table` ADD `ZXCBQtyTotal` int(11) NOT NULL AFTER `ZXTerminal`;
+ALTER TABLE `loc_zread_table` ADD `ZXCBGrandTotal` double NOT NULL AFTER `ZXCBQtyTotal`;
+ALTER TABLE `loc_zread_table` ADD `ZXDateFooter` varchar(20) NOT NULL AFTER `ZXCBGrandTotal`;
+ALTER TABLE `loc_zread_table` ADD `created_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp() AFTER `ZXDateFooter`;
+ALTER TABLE `loc_zread_table` ADD `ZXAddVat` double NOT NULL AFTER `ZXCBGrandTotal`;
+ALTER TABLE `loc_zread_table` ADD `ZXCompBegBal` double NOT NULL AFTER `ZXAddVat`;
+ALTER TABLE `loc_zread_table` ADD `ZXDiplomat` double NOT NULL AFTER `ZXCompBegBal`;
+ALTER TABLE `loc_zread_table` ADD `ZXDiscOthers` double NOT NULL AFTER `ZXDiplomat`;
+ALTER TABLE `loc_zread_table` ADD `ZXResetCounter` int(11) NOT NULL AFTER `ZXDiscOthers`;
+ALTER TABLE `loc_zread_table` ADD `ZXZCounter` int(11) NOT NULL AFTER `ZXResetCounter`;
+ALTER TABLE `loc_zread_table` CHANGE `status` `status` TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '1';
+UPDATE `loc_zread_table` SET `status`  =  '1';
