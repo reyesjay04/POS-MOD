@@ -1888,7 +1888,7 @@ Public Class Reports
             End If
 
             ReceiptHeaderOne(sender, e, False, "", False, False)
-            RECEIPTLINECOUNT = 30
+
             PrintSmallLine(sender, e, FontDefaultLine, RECEIPTLINECOUNT)
             RECEIPTLINECOUNT += 30
             With DataGridViewReturns

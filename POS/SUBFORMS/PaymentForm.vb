@@ -3,6 +3,7 @@
         POS.Enabled = True
         POS.BringToFront()
     End Sub
+
     Private Sub PaymentForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         TopMost = True
         TextBoxMONEY.Text = "0.00"
@@ -95,154 +96,82 @@
     End Sub
     Private Sub ButtonNo9_Click(sender As Object, e As EventArgs) Handles ButtonNo9.Click
         If payment = False Then
-            If TextBoxMONEY.Text.Length > 6 Then
-            Else
-                buttonpressedenter(btntext:=ButtonNo9.Text)
-            End If
+            buttonpressedenter(btntext:=ButtonNo9.Text)
         Else
-            If TextBoxMONEY.Text.Length > 6 Then
-            Else
-                buttonpressedenterpayment(btntext:=ButtonNo9.Text)
-            End If
-        End If
+            buttonpressedenterpayment(btntext:=ButtonNo9.Text)
 
+        End If
     End Sub
     Private Sub ButtonNo8_Click(sender As Object, e As EventArgs) Handles ButtonNo8.Click
         If payment = False Then
-            If TextBoxMONEY.Text.Length > 6 Then
-            Else
-                buttonpressedenter(btntext:=ButtonNo8.Text)
-            End If
+            buttonpressedenter(btntext:=ButtonNo8.Text)
         Else
-            If TextBoxMONEY.Text.Length > 6 Then
-            Else
-                buttonpressedenterpayment(btntext:=ButtonNo8.Text)
-            End If
+            buttonpressedenterpayment(btntext:=ButtonNo8.Text)
         End If
-
     End Sub
     Private Sub ButtonNo7_Click(sender As Object, e As EventArgs) Handles ButtonNo7.Click
         If payment = False Then
-            If TextBoxMONEY.Text.Length > 6 Then
-            Else
-                buttonpressedenter(btntext:=ButtonNo7.Text)
-            End If
+            buttonpressedenter(btntext:=ButtonNo7.Text)
         Else
-            If TextBoxMONEY.Text.Length > 6 Then
-            Else
-                buttonpressedenterpayment(btntext:=ButtonNo7.Text)
-            End If
+            buttonpressedenterpayment(btntext:=ButtonNo7.Text)
         End If
-
     End Sub
     Private Sub ButtonNo6_Click(sender As Object, e As EventArgs) Handles ButtonNo6.Click
         If payment = False Then
-            If TextBoxMONEY.Text.Length > 6 Then
-            Else
-                buttonpressedenter(btntext:=ButtonNo6.Text)
-            End If
+            buttonpressedenter(btntext:=ButtonNo6.Text)
         Else
-            If TextBoxMONEY.Text.Length > 6 Then
-            Else
-                buttonpressedenterpayment(btntext:=ButtonNo6.Text)
-            End If
+            buttonpressedenterpayment(btntext:=ButtonNo6.Text)
         End If
-
     End Sub
     Private Sub ButtonNo5_Click(sender As Object, e As EventArgs) Handles ButtonNo5.Click
         If payment = False Then
-            If TextBoxMONEY.Text.Length > 6 Then
-            Else
-                buttonpressedenter(btntext:=ButtonNo5.Text)
-            End If
+            buttonpressedenter(btntext:=ButtonNo5.Text)
         Else
-            If TextBoxMONEY.Text.Length > 6 Then
-            Else
-                buttonpressedenterpayment(btntext:=ButtonNo5.Text)
-            End If
+            buttonpressedenterpayment(btntext:=ButtonNo5.Text)
         End If
 
     End Sub
     Private Sub ButtonNo4_Click(sender As Object, e As EventArgs) Handles ButtonNo4.Click
         If payment = False Then
-            If TextBoxMONEY.Text.Length > 6 Then
-            Else
-                buttonpressedenter(btntext:=ButtonNo4.Text)
-            End If
+            buttonpressedenter(btntext:=ButtonNo4.Text)
         Else
-            If TextBoxMONEY.Text.Length > 6 Then
-            Else
-                buttonpressedenterpayment(btntext:=ButtonNo4.Text)
-            End If
+            buttonpressedenterpayment(btntext:=ButtonNo4.Text)
         End If
-
     End Sub
     Private Sub ButtonNo3_Click(sender As Object, e As EventArgs) Handles ButtonNo3.Click
         If payment = False Then
-            If TextBoxMONEY.Text.Length > 6 Then
-            Else
-                buttonpressedenter(btntext:=ButtonNo3.Text)
-            End If
+            buttonpressedenter(btntext:=ButtonNo3.Text)
         Else
-            If TextBoxMONEY.Text.Length > 6 Then
-            Else
-                buttonpressedenterpayment(btntext:=ButtonNo3.Text)
-            End If
+            buttonpressedenterpayment(btntext:=ButtonNo3.Text)
         End If
-
     End Sub
     Private Sub ButtonNo2_Click(sender As Object, e As EventArgs) Handles ButtonNo2.Click
         If payment = False Then
-            If TextBoxMONEY.Text.Length > 6 Then
-            Else
-                buttonpressedenter(btntext:=ButtonNo2.Text)
-            End If
+            buttonpressedenter(btntext:=ButtonNo2.Text)
         Else
-            If TextBoxMONEY.Text.Length > 6 Then
-            Else
-                buttonpressedenterpayment(btntext:=ButtonNo2.Text)
-            End If
+            buttonpressedenterpayment(btntext:=ButtonNo2.Text)
         End If
 
     End Sub
     Private Sub ButtonNo1_Click(sender As Object, e As EventArgs) Handles ButtonNo1.Click
         If payment = False Then
-            If TextBoxMONEY.Text.Length > 6 Then
-            Else
-                buttonpressedenter(btntext:=ButtonNo1.Text)
-            End If
+            buttonpressedenter(btntext:=ButtonNo1.Text)
         Else
-            If TextBoxMONEY.Text.Length > 6 Then
-            Else
-                buttonpressedenterpayment(btntext:=ButtonNo1.Text)
-            End If
+            buttonpressedenterpayment(btntext:=ButtonNo1.Text)
         End If
-
     End Sub
     Private Sub ButtonNo0_Click(sender As Object, e As EventArgs) Handles ButtonNo0.Click
         If payment = False Then
-            If TextBoxMONEY.Text.Length > 6 Then
-            Else
-                buttonpressedenter(btntext:=ButtonNo0.Text)
-            End If
+            buttonpressedenter(btntext:=ButtonNo0.Text)
         Else
-            If TextBoxMONEY.Text.Length > 6 Then
-            Else
-                buttonpressedenterpayment(btntext:=ButtonNo0.Text)
-            End If
+            buttonpressedenterpayment(btntext:=ButtonNo0.Text)
         End If
     End Sub
     Private Sub ButtonNo00_Click(sender As Object, e As EventArgs) Handles ButtonNo00.Click
         If payment = False Then
-            If TextBoxMONEY.Text.Length > 5 Then
-            Else
-                buttonpressedenter(btntext:=ButtonNo00.Text)
-            End If
+            buttonpressedenter(btntext:=ButtonNo00.Text)
         Else
-            If TextBoxMONEY.Text.Length > 5 Then
-            Else
-                buttonpressedenterpayment(btntext:=ButtonNo00.Text)
-            End If
+            buttonpressedenterpayment(btntext:=ButtonNo00.Text)
         End If
     End Sub
     Private Sub Buttondot_Click(sender As Object, e As EventArgs) Handles Buttondot.Click

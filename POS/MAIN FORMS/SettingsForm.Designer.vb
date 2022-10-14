@@ -1933,6 +1933,7 @@ Partial Class SettingsForm
         Me.DataGridViewITEMRETURN1.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically
         Me.DataGridViewITEMRETURN1.GridColor = System.Drawing.Color.White
         Me.DataGridViewITEMRETURN1.Location = New System.Drawing.Point(3, 49)
+        Me.DataGridViewITEMRETURN1.MultiSelect = False
         Me.DataGridViewITEMRETURN1.Name = "DataGridViewITEMRETURN1"
         Me.DataGridViewITEMRETURN1.Size = New System.Drawing.Size(648, 92)
         Me.DataGridViewITEMRETURN1.TabIndex = 0
@@ -2974,10 +2975,10 @@ Partial Class SettingsForm
         'TabPage8
         '
         Me.TabPage8.Controls.Add(Me.TableLayoutPanel8)
-        Me.TabPage8.Location = New System.Drawing.Point(4, 28)
+        Me.TabPage8.Location = New System.Drawing.Point(4, 22)
         Me.TabPage8.Name = "TabPage8"
         Me.TabPage8.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage8.Size = New System.Drawing.Size(1017, 443)
+        Me.TabPage8.Size = New System.Drawing.Size(1017, 449)
         Me.TabPage8.TabIndex = 1
         Me.TabPage8.Text = "TabPage8"
         Me.TabPage8.UseVisualStyleBackColor = True
@@ -2994,7 +2995,7 @@ Partial Class SettingsForm
         Me.TableLayoutPanel8.RowCount = 2
         Me.TableLayoutPanel8.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
         Me.TableLayoutPanel8.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 60.0!))
-        Me.TableLayoutPanel8.Size = New System.Drawing.Size(1011, 437)
+        Me.TableLayoutPanel8.Size = New System.Drawing.Size(1011, 443)
         Me.TableLayoutPanel8.TabIndex = 8
         '
         'GroupBox14
@@ -3004,7 +3005,7 @@ Partial Class SettingsForm
         Me.GroupBox14.Font = New System.Drawing.Font("Tahoma", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.GroupBox14.Location = New System.Drawing.Point(3, 3)
         Me.GroupBox14.Name = "GroupBox14"
-        Me.GroupBox14.Size = New System.Drawing.Size(1005, 371)
+        Me.GroupBox14.Size = New System.Drawing.Size(1005, 377)
         Me.GroupBox14.TabIndex = 164
         Me.GroupBox14.TabStop = False
         Me.GroupBox14.Text = "Deactivated Bank List"
@@ -3043,7 +3044,7 @@ Partial Class SettingsForm
         Me.DataGridViewPartnersDeact.EnableHeadersVisualStyles = False
         Me.DataGridViewPartnersDeact.Location = New System.Drawing.Point(3, 22)
         Me.DataGridViewPartnersDeact.Name = "DataGridViewPartnersDeact"
-        Me.DataGridViewPartnersDeact.Size = New System.Drawing.Size(999, 346)
+        Me.DataGridViewPartnersDeact.Size = New System.Drawing.Size(999, 352)
         Me.DataGridViewPartnersDeact.TabIndex = 6
         '
         'Column11
@@ -3102,7 +3103,7 @@ Partial Class SettingsForm
         Me.GroupBox15.Controls.Add(Me.Panel25)
         Me.GroupBox15.Dock = System.Windows.Forms.DockStyle.Fill
         Me.GroupBox15.Font = New System.Drawing.Font("Tahoma", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.GroupBox15.Location = New System.Drawing.Point(3, 380)
+        Me.GroupBox15.Location = New System.Drawing.Point(3, 386)
         Me.GroupBox15.Name = "GroupBox15"
         Me.GroupBox15.Size = New System.Drawing.Size(1005, 54)
         Me.GroupBox15.TabIndex = 166

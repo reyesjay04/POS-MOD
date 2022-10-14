@@ -5,8 +5,8 @@ Imports MySql.Data.MySqlClient
 
 Public Class ConfirmRefund
 
-    Public TRANSACTIONNUMBER As String
-    Public REFUNDTOTAL As Double = 0
+    Property TRANSACTIONNUMBER As String
+    Property REFUNDTOTAL As Double = 0
 
     Private WithEvents printdoc As PrintDocument = New PrintDocument
     Private PrintPreviewDialog As New PrintPreviewDialog
