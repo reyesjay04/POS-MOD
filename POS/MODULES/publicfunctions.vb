@@ -2039,4 +2039,42 @@ Module publicfunctions
             AuditTrail.LogToAuditTrail("System", "ModPubFunc/CreateXmlPath(): " & ex.ToString, "Critical")
         End Try
     End Sub
+
+    Public Sub FillDatatable()
+        Try
+            INVENTORY_DATATABLE = New DataTable
+            With INVENTORY_DATATABLE
+                .Columns.Add("SrvT")
+                .Columns.Add("FID")
+                .Columns.Add("Qty")
+                .Columns.Add("ID")
+                .Columns.Add("NM")
+                .Columns.Add("Srv")
+                .Columns.Add("COG")
+                .Columns.Add("OCOG")
+                .Columns.Add("PrdAddID")
+                .Columns.Add("Origin")
+                .Columns.Add("HalfBatch")
+            End With
+            With POS.DataGridViewInv
+                For i As Integer = 0 To .Rows.Count - 1 Step +1
+                    Dim Prod As DataRow = INVENTORY_DATATABLE.NewRow
+                    Prod("SrvT") = .Rows(i).Cells(0).Value
+                    Prod("FID") = .Rows(i).Cells(1).Value
+                    Prod("Qty") = .Rows(i).Cells(2).Value
+                    Prod("ID") = .Rows(i).Cells(3).Value
+                    Prod("NM") = .Rows(i).Cells(4).Value
+                    Prod("Srv") = .Rows(i).Cells(5).Value
+                    Prod("COG") = .Rows(i).Cells(6).Value
+                    Prod("OCOG") = .Rows(i).Cells(7).Value
+                    Prod("PrdAddID") = .Rows(i).Cells(8).Value
+                    Prod("Origin") = .Rows(i).Cells(9).Value
+                    Prod("HalfBatch") = .Rows(i).Cells(10).Value
+                    INVENTORY_DATATABLE.Rows.Add(Prod)
+                Next
+            End With
+        Catch ex As Exception
+            AuditTrail.LogToAuditTrail("System", "Confirm Refund/FillDatatable(): " & ex.ToString, "Critical")
+        End Try
+    End Sub
 End Module

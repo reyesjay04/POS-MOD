@@ -285,9 +285,15 @@ Public Class POS
                         MessageBox.Show("Z-read first", "Z-Reading", MessageBoxButtons.OK, MessageBoxIcon.Information)
                     End If
                 Else
-                    BackgroundWorkerInventory.WorkerReportsProgress = True
-                    BackgroundWorkerInventory.WorkerSupportsCancellation = True
-                    BackgroundWorkerInventory.RunWorkerAsync()
+                    If Not BackgroundWorkerInventory.IsBusy Then
+                        BackgroundWorkerInventory.WorkerReportsProgress = True
+                        BackgroundWorkerInventory.WorkerSupportsCancellation = True
+                        BackgroundWorkerInventory.RunWorkerAsync()
+                    Else
+                        MsgBox("Mixing product. Please wait", MsgBoxStyle.Information, "NOTICE")
+                        Exit Sub
+                    End If
+
                 End If
             Else
                 Dim prmpt = MessageBox.Show("You will reach the maximum sales capacity defined by the system. Do you want to reset the system and continue?", "NOTICE", MessageBoxButtons.YesNo, MessageBoxIcon.Information)
@@ -315,15 +321,6 @@ Public Class POS
 
                 End If
             End If
-            'MsgBox(PromoApplied)
-            'MsgBox(DiscAppleid)
-            'MsgBox(PromoName)
-            'MsgBox(PromoDesc)
-            'If Double.Parse(TextBoxGRANDTOTAL.Text) < 999999999999.99 Then
-
-            'Else
-            '    MsgBox("Maximum sales capacity already reached. Please contact your administrator for immediate solution.")
-            'End If
         Catch ex As Exception
             AuditTrail.LogToAuditTrail("System", "POS/ButtonPayMent: " & ex.ToString, "Critical")
         End Try
@@ -447,7 +444,7 @@ Public Class POS
                     ' Console.WriteLine(Query)
                     SqlCommand = New MySqlCommand(Query, LocalhostConn())
                     SqlCommand.ExecuteNonQuery()
-                    AuditTrail.LogToAuditTrail("System", "MIXED : " & Ingredient, "Critical")
+                    AuditTrail.LogToAuditTrail("System", "MIXED : " & Ingredient, "Normal")
                 Next
 
 
@@ -1014,20 +1011,30 @@ Public Class POS
         Try
             Dim ConnectionLocal As MySqlConnection = LocalhostConn()
             Dim cmd As MySqlCommand
-            Dim sql = "INSERT INTO loc_fm_stock (`formula_id`, `stock_primary`, `stock_secondary`,`crew_id`, `store_id`, `guid`, `created_at`, `status`)
-                       VALUES (@1,@2,@3,@4,@5,@6,@7,@8)"
-            For i As Integer = 0 To DataGridViewInv.Rows.Count - 1 Step +1
-                cmd = New MySqlCommand(sql, ConnectionLocal)
-                cmd.Parameters.Add("@1", MySqlDbType.VarChar).Value = DataGridViewInv.Rows(i).Cells(1).Value
-                cmd.Parameters.Add("@2", MySqlDbType.Decimal).Value = DataGridViewInv.Rows(i).Cells(2).Value
-                cmd.Parameters.Add("@3", MySqlDbType.Decimal).Value = DataGridViewInv.Rows(i).Cells(0).Value
-                cmd.Parameters.Add("@4", MySqlDbType.VarChar).Value = ClientCrewID
-                cmd.Parameters.Add("@5", MySqlDbType.VarChar).Value = ClientStoreID
-                cmd.Parameters.Add("@6", MySqlDbType.VarChar).Value = ClientGuid
-                cmd.Parameters.Add("@7", MySqlDbType.Text).Value = FullDate24HR()
-                cmd.Parameters.Add("@8", MySqlDbType.Int64).Value = 1
-                cmd.ExecuteNonQuery()
-            Next
+            Dim sql = "INSERT INTO loc_fm_stock 
+                            (
+                                `formula_id`, `stock_primary`, `stock_secondary`, `crew_id`, `store_id`, `guid`, `created_at`, `status`
+                            )
+                       VALUES 
+                            (
+                                @formula_id, @stock_primary, @stock_secondary, @crew_id, @store_id, @guid, @created_at, @status
+                            )"
+            With DataGridViewInv
+                For i As Integer = 0 To .Rows.Count - 1 Step +1
+                    cmd = New MySqlCommand(sql, ConnectionLocal)
+                    cmd.Parameters.Clear()
+                    cmd.Parameters.AddWithValue("@formula_id", .Rows(i).Cells(1).Value)
+                    cmd.Parameters.AddWithValue("@stock_primary", .Rows(i).Cells(2).Value)
+                    cmd.Parameters.AddWithValue("@stock_secondary", .Rows(i).Cells(0).Value)
+                    cmd.Parameters.AddWithValue("@crew_id", ClientCrewID)
+                    cmd.Parameters.AddWithValue("@store_id", ClientStoreID)
+                    cmd.Parameters.AddWithValue("@guid", ClientGuid)
+                    cmd.Parameters.AddWithValue("@created_at", FullDate24HR())
+                    cmd.Parameters.AddWithValue("@status", 1)
+                    cmd.ExecuteNonQuery()
+                Next
+            End With
+
         Catch ex As Exception
             AuditTrail.LogToAuditTrail("System", "POS/Fm Stock : " & ex.ToString, "Critical")
         End Try
@@ -1624,43 +1631,6 @@ Public Class POS
         Else
             MsgBox("Select Transaction First!")
         End If
-    End Sub
-    Private Sub FillDatatable()
-        Try
-            INVENTORY_DATATABLE = New DataTable
-            With INVENTORY_DATATABLE
-                .Columns.Add("SrvT")
-                .Columns.Add("FID")
-                .Columns.Add("Qty")
-                .Columns.Add("ID")
-                .Columns.Add("NM")
-                .Columns.Add("Srv")
-                .Columns.Add("COG")
-                .Columns.Add("OCOG")
-                .Columns.Add("PrdAddID")
-                .Columns.Add("Origin")
-                .Columns.Add("HalfBatch")
-            End With
-            With DataGridViewInv
-                For i As Integer = 0 To .Rows.Count - 1 Step +1
-                    Dim Prod As DataRow = INVENTORY_DATATABLE.NewRow
-                    Prod("SrvT") = .Rows(i).Cells(0).Value
-                    Prod("FID") = .Rows(i).Cells(1).Value
-                    Prod("Qty") = .Rows(i).Cells(2).Value
-                    Prod("ID") = .Rows(i).Cells(3).Value
-                    Prod("NM") = .Rows(i).Cells(4).Value
-                    Prod("Srv") = .Rows(i).Cells(5).Value
-                    Prod("COG") = .Rows(i).Cells(6).Value
-                    Prod("OCOG") = .Rows(i).Cells(7).Value
-                    Prod("PrdAddID") = .Rows(i).Cells(8).Value
-                    Prod("Origin") = .Rows(i).Cells(9).Value
-                    Prod("HalfBatch") = .Rows(i).Cells(10).Value
-                    INVENTORY_DATATABLE.Rows.Add(Prod)
-                Next
-            End With
-        Catch ex As Exception
-            AuditTrail.LogToAuditTrail("System", "POS/FillDatatable(): " & ex.ToString, "Critical")
-        End Try
     End Sub
     Private Sub PrintDocument1_PrintPage(sender As Object, e As PrintPageEventArgs) Handles printdoc.PrintPage
         Try

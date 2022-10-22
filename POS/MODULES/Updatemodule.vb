@@ -15,12 +15,16 @@ Module Updatemodule
     End Sub
 
     Public Sub UpdateInventory(returnVoid As Boolean)
+
+        FillDatatable()
+
         Dim secondary_value As Double = 0
         Dim stock_secondary As Double = 0
         Dim SqlCommand As MySqlCommand
         Dim SqlAdapter As MySqlDataAdapter
         Dim SqlDt As DataTable
         Dim UpdateInventoryCon As MySqlConnection = LocalhostConn()
+
         Try
             Dim Query As String = ""
             For i As Integer = 0 To INVENTORY_DATATABLE.Rows.Count - 1 Step +1
