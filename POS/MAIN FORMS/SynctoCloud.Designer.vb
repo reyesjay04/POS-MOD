@@ -114,15 +114,15 @@ Partial Class SynctoCloud
         Me.LabelRETItem = New System.Windows.Forms.Label()
         Me.LabelRETTime = New System.Windows.Forms.Label()
         Me.LabelRET = New System.Windows.Forms.Label()
-        Me.LabelSYS1Item = New System.Windows.Forms.Label()
+        Me.LabelAuditItem = New System.Windows.Forms.Label()
         Me.LabelACCItem = New System.Windows.Forms.Label()
         Me.LabelEXPDItem = New System.Windows.Forms.Label()
         Me.LabelEXPItem = New System.Windows.Forms.Label()
         Me.LabelINVItem = New System.Windows.Forms.Label()
         Me.LabelDTransactDItem = New System.Windows.Forms.Label()
         Me.LabelDTransacItem = New System.Windows.Forms.Label()
-        Me.LabelSYS1Time = New System.Windows.Forms.Label()
-        Me.LabelSYS1 = New System.Windows.Forms.Label()
+        Me.LabelAuditTime = New System.Windows.Forms.Label()
+        Me.LabelAudit = New System.Windows.Forms.Label()
         Me.LabelACCTime = New System.Windows.Forms.Label()
         Me.LabelEXPDTime = New System.Windows.Forms.Label()
         Me.LabelEXPTime = New System.Windows.Forms.Label()
@@ -1083,16 +1083,16 @@ Partial Class SynctoCloud
         Me.LabelRET.TabIndex = 33
         Me.LabelRET.Text = "Returns"
         '
-        'LabelSYS1Item
+        'LabelAuditItem
         '
-        Me.LabelSYS1Item.AutoSize = True
-        Me.LabelSYS1Item.Dock = System.Windows.Forms.DockStyle.Right
-        Me.LabelSYS1Item.Font = New System.Drawing.Font("Tahoma", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.LabelSYS1Item.Location = New System.Drawing.Point(475, 0)
-        Me.LabelSYS1Item.Name = "LabelSYS1Item"
-        Me.LabelSYS1Item.Size = New System.Drawing.Size(14, 15)
-        Me.LabelSYS1Item.TabIndex = 29
-        Me.LabelSYS1Item.Text = "0"
+        Me.LabelAuditItem.AutoSize = True
+        Me.LabelAuditItem.Dock = System.Windows.Forms.DockStyle.Right
+        Me.LabelAuditItem.Font = New System.Drawing.Font("Tahoma", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.LabelAuditItem.Location = New System.Drawing.Point(475, 0)
+        Me.LabelAuditItem.Name = "LabelAuditItem"
+        Me.LabelAuditItem.Size = New System.Drawing.Size(14, 15)
+        Me.LabelAuditItem.TabIndex = 29
+        Me.LabelAuditItem.Text = "0"
         '
         'LabelACCItem
         '
@@ -1160,25 +1160,25 @@ Partial Class SynctoCloud
         Me.LabelDTransacItem.TabIndex = 22
         Me.LabelDTransacItem.Text = "0"
         '
-        'LabelSYS1Time
+        'LabelAuditTime
         '
-        Me.LabelSYS1Time.AutoSize = True
-        Me.LabelSYS1Time.Font = New System.Drawing.Font("Tahoma", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.LabelSYS1Time.Location = New System.Drawing.Point(175, 0)
-        Me.LabelSYS1Time.Name = "LabelSYS1Time"
-        Me.LabelSYS1Time.Size = New System.Drawing.Size(165, 14)
-        Me.LabelSYS1Time.TabIndex = 18
-        Me.LabelSYS1Time.Text = "Estimating Time. Please Wait"
+        Me.LabelAuditTime.AutoSize = True
+        Me.LabelAuditTime.Font = New System.Drawing.Font("Tahoma", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.LabelAuditTime.Location = New System.Drawing.Point(175, 0)
+        Me.LabelAuditTime.Name = "LabelAuditTime"
+        Me.LabelAuditTime.Size = New System.Drawing.Size(165, 14)
+        Me.LabelAuditTime.TabIndex = 18
+        Me.LabelAuditTime.Text = "Estimating Time. Please Wait"
         '
-        'LabelSYS1
+        'LabelAudit
         '
-        Me.LabelSYS1.AutoSize = True
-        Me.LabelSYS1.Font = New System.Drawing.Font("Tahoma", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.LabelSYS1.Location = New System.Drawing.Point(3, 0)
-        Me.LabelSYS1.Name = "LabelSYS1"
-        Me.LabelSYS1.Size = New System.Drawing.Size(76, 14)
-        Me.LabelSYS1.TabIndex = 14
-        Me.LabelSYS1.Text = "System Logs"
+        Me.LabelAudit.AutoSize = True
+        Me.LabelAudit.Font = New System.Drawing.Font("Tahoma", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.LabelAudit.Location = New System.Drawing.Point(3, 0)
+        Me.LabelAudit.Name = "LabelAudit"
+        Me.LabelAudit.Size = New System.Drawing.Size(135, 14)
+        Me.LabelAudit.TabIndex = 14
+        Me.LabelAudit.Text = "System Audit Trail Logs"
         '
         'LabelACCTime
         '
@@ -1309,6 +1309,7 @@ Partial Class SynctoCloud
         Me.GroupBox1.Controls.Add(Me.DataGridViewERRORS)
         Me.GroupBox1.Controls.Add(Me.DataGridViewCoupons)
         Me.GroupBox1.Controls.Add(Me.LabelTime)
+        Me.GroupBox1.Controls.Add(Me.DataGridViewSYSLOG1)
         Me.GroupBox1.Controls.Add(Me.LabelRowtoSync)
         Me.GroupBox1.Controls.Add(Me.DataGridViewINV)
         Me.GroupBox1.Controls.Add(Me.DataGridView2)
@@ -1320,7 +1321,6 @@ Partial Class SynctoCloud
         Me.GroupBox1.Controls.Add(Me.DataGridViewTRAN)
         Me.GroupBox1.Controls.Add(Me.DataGridViewSYSLOG2)
         Me.GroupBox1.Controls.Add(Me.DataGridViewLocusers)
-        Me.GroupBox1.Controls.Add(Me.DataGridViewSYSLOG1)
         Me.GroupBox1.Controls.Add(Me.DataGridViewTRANDET)
         Me.GroupBox1.Controls.Add(Me.DataGridView1)
         Me.GroupBox1.Controls.Add(Me.DataGridViewCUSTOMPRODUCTS)
@@ -1329,7 +1329,7 @@ Partial Class SynctoCloud
         Me.GroupBox1.Controls.Add(Me.DataGridViewSYSLOG3)
         Me.GroupBox1.Location = New System.Drawing.Point(506, 38)
         Me.GroupBox1.Name = "GroupBox1"
-        Me.GroupBox1.Size = New System.Drawing.Size(228, 107)
+        Me.GroupBox1.Size = New System.Drawing.Size(262, 112)
         Me.GroupBox1.TabIndex = 28
         Me.GroupBox1.TabStop = False
         Me.GroupBox1.Text = "GroupBox1"
@@ -1954,7 +1954,7 @@ Partial Class SynctoCloud
         Me.DataGridViewSYSLOG1.Location = New System.Drawing.Point(6, 19)
         Me.DataGridViewSYSLOG1.Name = "DataGridViewSYSLOG1"
         Me.DataGridViewSYSLOG1.ReadOnly = True
-        Me.DataGridViewSYSLOG1.Size = New System.Drawing.Size(230, 80)
+        Me.DataGridViewSYSLOG1.Size = New System.Drawing.Size(230, 79)
         Me.DataGridViewSYSLOG1.TabIndex = 28
         '
         'Column10
@@ -2460,9 +2460,9 @@ Partial Class SynctoCloud
         Me.TableLayoutPanel1.Controls.Add(Me.LabelCPRODItem, 2, 9)
         Me.TableLayoutPanel1.Controls.Add(Me.LabelDEPOSITItem, 2, 11)
         Me.TableLayoutPanel1.Controls.Add(Me.LabelMODETItem, 2, 10)
-        Me.TableLayoutPanel1.Controls.Add(Me.LabelSYS1, 0, 0)
+        Me.TableLayoutPanel1.Controls.Add(Me.LabelAudit, 0, 0)
         Me.TableLayoutPanel1.Controls.Add(Me.LabelEXPDItem, 2, 6)
-        Me.TableLayoutPanel1.Controls.Add(Me.LabelSYS1Item, 2, 0)
+        Me.TableLayoutPanel1.Controls.Add(Me.LabelAuditItem, 2, 0)
         Me.TableLayoutPanel1.Controls.Add(Me.LabelEXPItem, 2, 5)
         Me.TableLayoutPanel1.Controls.Add(Me.LabelZREADINVITEM, 2, 4)
         Me.TableLayoutPanel1.Controls.Add(Me.LabelDTransac, 0, 1)
@@ -2491,7 +2491,7 @@ Partial Class SynctoCloud
         Me.TableLayoutPanel1.Controls.Add(Me.LabelPRICEREQ, 0, 12)
         Me.TableLayoutPanel1.Controls.Add(Me.LabelCoupon, 0, 13)
         Me.TableLayoutPanel1.Controls.Add(Me.LabelACCTime, 1, 7)
-        Me.TableLayoutPanel1.Controls.Add(Me.LabelSYS1Time, 1, 0)
+        Me.TableLayoutPanel1.Controls.Add(Me.LabelAuditTime, 1, 0)
         Me.TableLayoutPanel1.Controls.Add(Me.LabelEXPDTime, 1, 6)
         Me.TableLayoutPanel1.Controls.Add(Me.LabelDTransacTime, 1, 1)
         Me.TableLayoutPanel1.Controls.Add(Me.LabelDTransactDTime, 1, 2)
@@ -2704,9 +2704,9 @@ Partial Class SynctoCloud
     Friend WithEvents LabelINVTime As Label
     Friend WithEvents LabelDTransactDTime As Label
     Friend WithEvents LabelDTransacTime As Label
-    Friend WithEvents LabelSYS1Time As Label
-    Friend WithEvents LabelSYS1 As Label
-    Friend WithEvents LabelSYS1Item As Label
+    Friend WithEvents LabelAuditTime As Label
+    Friend WithEvents LabelAudit As Label
+    Friend WithEvents LabelAuditItem As Label
     Friend WithEvents LabelACCItem As Label
     Friend WithEvents LabelEXPDItem As Label
     Friend WithEvents LabelEXPItem As Label

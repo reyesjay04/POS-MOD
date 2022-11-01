@@ -139,6 +139,7 @@
     <Compile Include="MAIN FORMS\ConfCls\MasterlistOutletCls.vb" />
     <Compile Include="MAIN FORMS\ConfCls\OutletsCls.vb" />
     <Compile Include="MAIN FORMS\ConfCls\ProductsCls.vb" />
+    <Compile Include="MAIN FORMS\ConfCls\SyncCls.vb" />
     <Compile Include="MAIN FORMS\ConfigManager.Designer.vb">
       <DependentUpon>ConfigManager.vb</DependentUpon>
     </Compile>

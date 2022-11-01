@@ -1394,15 +1394,20 @@ Public Class Reports
             Dim CountHeaderLine As Integer = count("id", "loc_receipt WHERE type = 'Header' AND status = 1")
             Dim ProductLine As Integer = 0
 
-            Dim sql = "SELECT product_sku , SUM(quantity), SUM(total), product_category FROM loc_daily_transaction_details WHERE zreading >= '" & Format(DateTimePicker3.Value, "yyyy-MM-dd") & "' AND zreading <= '" & Format(DateTimePicker4.Value, "yyyy-MM-dd") & "' AND active = 1  AND store_id = '" & ClientStoreID & "' AND guid = '" & ClientGuid & "' GROUP BY product_name"
-            Dim cmd As MySqlCommand = New MySqlCommand(sql, LocalhostConn)
-            Dim da As MySqlDataAdapter = New MySqlDataAdapter(cmd)
-            PrintSalesDatatable = New DataTable
-            da.Fill(PrintSalesDatatable)
+            Dim sql = $"SELECT product_sku , SUM(quantity), SUM(total), product_category FROM loc_daily_transaction_details WHERE DATE(zreading) BETWEEN @dtFrom AND @dtTo AND active = 1  GROUP BY product_name"
 
-            For i As Integer = 0 To PrintSalesDatatable.Rows.Count - 1 Step +1
-                ProductLine += 10
-            Next
+            Using cmd As New MySqlCommand(sql, LocalhostConn)
+                cmd.Parameters.Clear()
+                cmd.Parameters.AddWithValue("@dtFrom", Format(DateTimePicker3.Value, "yyyy-MM-dd"))
+                cmd.Parameters.AddWithValue("@dtTo", Format(DateTimePicker4.Value, "yyyy-MM-dd"))
+
+                Dim reader = cmd.ExecuteReader
+                PrintSalesDatatable = New DataTable
+                PrintSalesDatatable.Load(reader)
+                ProductLine = PrintSalesDatatable.Rows.Count * 10
+                cmd.Dispose()
+            End Using
+
             CountHeaderLine *= 10
 
             TotalLines = CountHeaderLine + ProductLine + BodyLine
@@ -1548,7 +1553,7 @@ Public Class Reports
             SimpleTextDisplay(sender, e, "SUBTOTAL", FontDefault, 0, RECEIPTLINECOUNT - 20)
             PerfectCombinationPercentage = PerfectCombinationTotalSales / TotalSales * 100
             RightDisplay1(sender, e, RECEIPTLINECOUNT, PerfectCombinationQty, Math.Round(PerfectCombinationPercentage, 2) & "%", FontDefault, 60, 77 + IfPrintQty)
-            RightDisplay1(sender, e, RECEIPTLINECOUNT, "", Math.Round(PerfectCombinationTotalSales, 2), FontDefault, 60, 145 + IfPrintSmall)
+            RightDisplay1(sender, e, RECEIPTLINECOUNT, "", NUMBERFORMAT(Math.Round(PerfectCombinationTotalSales, 2)), FontDefault, 60, 145 + IfPrintSmall)
             RECEIPTLINECOUNT += 10
             PrintSmallLine(sender, e, FontDefaultLine, RECEIPTLINECOUNT)
             RECEIPTLINECOUNT += 10
@@ -1588,7 +1593,7 @@ Public Class Reports
             SimpleTextDisplay(sender, e, "SUBTOTAL", FontDefault, 0, RECEIPTLINECOUNT - 20)
             PremiumPercentage = PremiumTotalSales / TotalSales * 100
             RightDisplay1(sender, e, RECEIPTLINECOUNT, PremiumQty, Math.Round(PremiumPercentage, 2) & "%", FontDefault, 60, 77 + IfPrintQty)
-            RightDisplay1(sender, e, RECEIPTLINECOUNT, "", Math.Round(PremiumTotalSales, 2), FontDefault, 60, 145 + IfPrintSmall)
+            RightDisplay1(sender, e, RECEIPTLINECOUNT, "", NUMBERFORMAT(Math.Round(PremiumTotalSales, 2)), FontDefault, 60, 145 + IfPrintSmall)
             RECEIPTLINECOUNT += 10
             PrintSmallLine(sender, e, FontDefaultLine, RECEIPTLINECOUNT)
             RECEIPTLINECOUNT += 10
@@ -1631,7 +1636,7 @@ Public Class Reports
             SimpleTextDisplay(sender, e, "SUBTOTAL", FontDefault, 0, RECEIPTLINECOUNT - 20)
             ComboPercentage = ComboTotalSales / TotalSales * 100
             RightDisplay1(sender, e, RECEIPTLINECOUNT, ComboQty, Math.Round(ComboPercentage, 2) & "%", FontDefault, 60, 77 + IfPrintQty)
-            RightDisplay1(sender, e, RECEIPTLINECOUNT, "", Math.Round(ComboTotalSales, 2), FontDefault, 60, 145 + IfPrintSmall)
+            RightDisplay1(sender, e, RECEIPTLINECOUNT, "", NUMBERFORMAT(Math.Round(ComboTotalSales, 2)), FontDefault, 60, 145 + IfPrintSmall)
             RECEIPTLINECOUNT += 10
             PrintSmallLine(sender, e, FontDefaultLine, RECEIPTLINECOUNT)
             RECEIPTLINECOUNT += 10
@@ -1673,7 +1678,7 @@ Public Class Reports
             SimpleTextDisplay(sender, e, "SUBTOTAL", FontDefault, 0, RECEIPTLINECOUNT - 20)
             SavoryPercentage = SavoryTotalSales / TotalSales * 100
             RightDisplay1(sender, e, RECEIPTLINECOUNT, SavoryQty, Math.Round(SavoryPercentage, 2) & "%", FontDefault, 60, 77 + IfPrintQty)
-            RightDisplay1(sender, e, RECEIPTLINECOUNT, "", Math.Round(SavoryTotalSales, 2), FontDefault, 60, 145 + IfPrintSmall)
+            RightDisplay1(sender, e, RECEIPTLINECOUNT, "", NUMBERFORMAT(Math.Round(SavoryTotalSales, 2)), FontDefault, 60, 145 + IfPrintSmall)
             RECEIPTLINECOUNT += 10
             PrintSmallLine(sender, e, FontDefaultLine, RECEIPTLINECOUNT)
             RECEIPTLINECOUNT += 10
@@ -1715,7 +1720,7 @@ Public Class Reports
             SimpleTextDisplay(sender, e, "SUBTOTAL", FontDefault, 0, RECEIPTLINECOUNT - 20)
             FamousBlendsPercentage = FamousBlendsTotalSales / TotalSales * 100
             RightDisplay1(sender, e, RECEIPTLINECOUNT, FamousBlendsQty, Math.Round(FamousBlendsPercentage, 2) & "%", FontDefault, 60, 77 + IfPrintQty)
-            RightDisplay1(sender, e, RECEIPTLINECOUNT, "", Math.Round(FamousBlendsTotalSales, 2), FontDefault, 60, 145 + IfPrintSmall)
+            RightDisplay1(sender, e, RECEIPTLINECOUNT, "", NUMBERFORMAT(Math.Round(FamousBlendsTotalSales, 2)), FontDefault, 60, 145 + IfPrintSmall)
             RECEIPTLINECOUNT += 10
             PrintSmallLine(sender, e, FontDefaultLine, RECEIPTLINECOUNT)
             RECEIPTLINECOUNT += 10
@@ -1757,7 +1762,7 @@ Public Class Reports
             SimpleTextDisplay(sender, e, "SUBTOTAL", FontDefault, 0, RECEIPTLINECOUNT - 20)
             AddOnsPercentage = AddOnsTotalSales / TotalSales * 100
             RightDisplay1(sender, e, RECEIPTLINECOUNT, AddOnsQty, Math.Round(AddOnsPercentage, 2) & "%", FontDefault, 60, 77 + IfPrintQty)
-            RightDisplay1(sender, e, RECEIPTLINECOUNT, "", Math.Round(AddOnsTotalSales, 2), FontDefault, 60, 145 + IfPrintSmall)
+            RightDisplay1(sender, e, RECEIPTLINECOUNT, "", NUMBERFORMAT(Math.Round(AddOnsTotalSales, 2)), FontDefault, 60, 145 + IfPrintSmall)
             RECEIPTLINECOUNT += 10
             PrintSmallLine(sender, e, FontDefaultLine, RECEIPTLINECOUNT)
             RECEIPTLINECOUNT += 10
@@ -1800,7 +1805,7 @@ Public Class Reports
             SimpleTextDisplay(sender, e, "SUBTOTAL", FontDefault, 0, RECEIPTLINECOUNT - 20)
             OthersPercentage = OthersTotalSales / TotalSales * 100
             RightDisplay1(sender, e, RECEIPTLINECOUNT, OthersQty, Math.Round(OthersPercentage, 2) & "%", FontDefault, 60, 77 + IfPrintQty)
-            RightDisplay1(sender, e, RECEIPTLINECOUNT, "", Math.Round(OthersTotalSales, 2), FontDefault, 60, 145 + IfPrintSmall)
+            RightDisplay1(sender, e, RECEIPTLINECOUNT, "", NUMBERFORMAT(Math.Round(OthersTotalSales, 2)), FontDefault, 60, 145 + IfPrintSmall)
             RECEIPTLINECOUNT += 10
             TotalPercentage += OthersPercentage
 

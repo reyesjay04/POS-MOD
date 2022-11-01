@@ -387,7 +387,7 @@ Partial Class ConfigManager
         Me.TextBoxProdKey = New System.Windows.Forms.TextBox()
         Me.Label95 = New System.Windows.Forms.Label()
         Me.GroupBox13 = New System.Windows.Forms.GroupBox()
-        Me.TextBox1 = New System.Windows.Forms.TextBox()
+        Me.rtbLogStats = New System.Windows.Forms.RichTextBox()
         Me.Panel19 = New System.Windows.Forms.Panel()
         Me.Label21 = New System.Windows.Forms.Label()
         Me.ProgressBar4 = New System.Windows.Forms.ProgressBar()
@@ -401,7 +401,7 @@ Partial Class ConfigManager
         Me.FolderBrowserDialog2 = New System.Windows.Forms.FolderBrowserDialog()
         Me.BackgroundWorkerLOAD = New System.ComponentModel.BackgroundWorker()
         Me.BackgroundWorkerACTIVATION = New System.ComponentModel.BackgroundWorker()
-        Me.BackgroundWorker5 = New System.ComponentModel.BackgroundWorker()
+        Me.BackgroundWorkerPreAct = New System.ComponentModel.BackgroundWorker()
         Me.BackgroundWorkerABTDB = New System.ComponentModel.BackgroundWorker()
         Me.Panel1 = New System.Windows.Forms.Panel()
         Me.Panel25 = New System.Windows.Forms.Panel()
@@ -4253,7 +4253,7 @@ Partial Class ConfigManager
         '
         'GroupBox13
         '
-        Me.GroupBox13.Controls.Add(Me.TextBox1)
+        Me.GroupBox13.Controls.Add(Me.rtbLogStats)
         Me.GroupBox13.Dock = System.Windows.Forms.DockStyle.Fill
         Me.GroupBox13.Location = New System.Drawing.Point(3, 123)
         Me.GroupBox13.Name = "GroupBox13"
@@ -4261,20 +4261,17 @@ Partial Class ConfigManager
         Me.GroupBox13.TabIndex = 39
         Me.GroupBox13.TabStop = False
         '
-        'TextBox1
+        'rtbLogStats
         '
-        Me.TextBox1.BackColor = System.Drawing.Color.Black
-        Me.TextBox1.BorderStyle = System.Windows.Forms.BorderStyle.None
-        Me.TextBox1.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.TextBox1.Font = New System.Drawing.Font("Courier New", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.TextBox1.ForeColor = System.Drawing.Color.White
-        Me.TextBox1.Location = New System.Drawing.Point(3, 23)
-        Me.TextBox1.Multiline = True
-        Me.TextBox1.Name = "TextBox1"
-        Me.TextBox1.ReadOnly = True
-        Me.TextBox1.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
-        Me.TextBox1.Size = New System.Drawing.Size(487, 304)
-        Me.TextBox1.TabIndex = 41
+        Me.rtbLogStats.BackColor = System.Drawing.Color.Black
+        Me.rtbLogStats.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.rtbLogStats.Font = New System.Drawing.Font("Courier New", 9.0!)
+        Me.rtbLogStats.ForeColor = System.Drawing.Color.White
+        Me.rtbLogStats.Location = New System.Drawing.Point(3, 23)
+        Me.rtbLogStats.Name = "rtbLogStats"
+        Me.rtbLogStats.Size = New System.Drawing.Size(487, 304)
+        Me.rtbLogStats.TabIndex = 0
+        Me.rtbLogStats.Text = ""
         '
         'Panel19
         '
@@ -4339,7 +4336,7 @@ Partial Class ConfigManager
         'BackgroundWorkerACTIVATION
         '
         '
-        'BackgroundWorker5
+        'BackgroundWorkerPreAct
         '
         '
         'BackgroundWorkerABTDB
@@ -4531,7 +4528,6 @@ Partial Class ConfigManager
         Me.GroupBox12.ResumeLayout(False)
         Me.GroupBox12.PerformLayout()
         Me.GroupBox13.ResumeLayout(False)
-        Me.GroupBox13.PerformLayout()
         Me.Panel19.ResumeLayout(False)
         Me.Panel19.PerformLayout()
         Me.Panel1.ResumeLayout(False)
@@ -4725,7 +4721,7 @@ Partial Class ConfigManager
     Friend WithEvents DataGridViewFORMULA As DataGridView
     Friend WithEvents DataGridViewPRODUCTS As DataGridView
     Friend WithEvents DataGridViewINVENTORY As DataGridView
-    Friend WithEvents BackgroundWorker5 As System.ComponentModel.BackgroundWorker
+    Friend WithEvents BackgroundWorkerPreAct As System.ComponentModel.BackgroundWorker
     Friend WithEvents BackgroundWorkerABTDB As System.ComponentModel.BackgroundWorker
     Friend WithEvents ButtonSaveLocalCon As Button
     Friend WithEvents Panel20 As Panel
@@ -4768,7 +4764,6 @@ Partial Class ConfigManager
     Friend WithEvents Panel23 As Panel
     Friend WithEvents Panel22 As Panel
     Friend WithEvents ButtonImportCloudConn As Button
-    Friend WithEvents TextBox1 As TextBox
     Friend WithEvents BackgroundWorker6 As System.ComponentModel.BackgroundWorker
     Friend WithEvents GroupBox19 As GroupBox
     Friend WithEvents Label25 As Label
@@ -4929,4 +4924,5 @@ Partial Class ConfigManager
     Friend WithEvents colMin As DataGridViewTextBoxColumn
     Friend WithEvents colMsn As DataGridViewTextBoxColumn
     Friend WithEvents colPTUN As DataGridViewTextBoxColumn
+    Friend WithEvents rtbLogStats As RichTextBox
 End Class

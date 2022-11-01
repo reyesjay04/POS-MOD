@@ -64,18 +64,18 @@ Public Class SynctoCloud
         End Try
     End Sub
     '=====================================================SYSTEMLOGS
-    Private Sub filldatagridsystemlog1()
+    Private Sub filldgvaudittrail()
         Try
-            Dim table = "loc_system_logs WHERE synced = 'N' AND log_store = " & ClientStoreID & " AND guid = '" & ClientGuid & "'"
+            Dim table = "loc_audit_trail WHERE synced = 'N'"
             Dim fields = "*"
             Dim ThisDT = AsDatatable(table, fields, DataGridViewSYSLOG1)
             For Each row As DataRow In ThisDT.Rows
-                DataGridViewSYSLOG1.Rows.Add(row("crew_id"), row("log_type"), row("log_description"), row("log_date_time"), row("log_store"), row("guid"), row("loc_systemlog_id"), row("zreading"), row("synced"))
+                DataGridViewSYSLOG1.Rows.Add(row("id"), row("created_at"), row("group_name"), row("severity"), row("crew_id"), row("description"), row("info"), row("store_id"))
             Next
-            gettablesize(tablename:="loc_system_logs")
+            gettablesize(tablename:="loc_audit_trail")
             countrows(tablename:=table)
         Catch ex As Exception
-            AuditTrail.LogToAuditTrail("System", "Sync/filldatagridsystemlog1(): " & ex.ToString, "Critical")
+            AuditTrail.LogToAuditTrail("System", "Sync/filldgvaudittrail(): " & ex.ToString, "Critical")
         End Try
     End Sub
 
@@ -486,7 +486,7 @@ Public Class SynctoCloud
                             Exit For
                         End If
                     Next
-                    ThreadLoaddata = New Thread(AddressOf filldatagridsystemlog1)
+                    ThreadLoaddata = New Thread(AddressOf filldgvaudittrail)
                     ThreadLoaddata.Start()
                     Threadlist.Add(ThreadLoaddata)
                     For Each t In Threadlist
@@ -824,7 +824,7 @@ Public Class SynctoCloud
                         Thread.Sleep(50)
                         If i = 0 Then
                             Dim t1 As New Task(New Action(Sub()
-                                                              LabelSYS1.Text = "Syncing Systemlogs 1"
+                                                              LabelAudit.Text = "Syncing Audit Trail Logs"
                                                           End Sub))
                             t1.Start()
                             thread1 = New Thread(AddressOf insertsystemlogs1)
@@ -1649,7 +1649,7 @@ Public Class SynctoCloud
                     If WorkerCanceled = True Then
                         Exit For
                     End If
-                    cmd = New MySqlCommand("INSERT INTO Triggers_admin_system_logs(`crew_id`, `log_type`, `log_description`, `log_date_time`, `log_store`, `guid`, `loc_systemlog_id`, `zreading`) 
+                    cmd = New MySqlCommand("INSERT INTO Triggers_admin_audit_trail(`loc_id`, `created_at`, `group_name`, `severity`, `crew_id`, `description`, `info`, `store_id`) 
                     VALUES (@0, @1, @2, @3, @4, @5, @6, @7)", server)
                     cmd.Parameters.Clear()
                     cmd.Parameters.AddWithValue("@0", .Rows(i).Cells(0).Value)
@@ -1659,10 +1659,10 @@ Public Class SynctoCloud
                     cmd.Parameters.AddWithValue("@4", .Rows(i).Cells(4).Value)
                     cmd.Parameters.AddWithValue("@5", .Rows(i).Cells(5).Value)
                     cmd.Parameters.AddWithValue("@6", .Rows(i).Cells(6).Value)
-                    cmd.Parameters.AddWithValue("@7", .Rows(i).Cells(7).Value)
+                    cmd.Parameters.AddWithValue("@7", ClientStoreID)
                     '====================================================================
                     LabelRowtoSync.Text = Val(LabelRowtoSync.Text + 1)
-                    LabelSYS1Item.Text = Val(LabelSYS1Item.Text) + 1
+                    LabelAuditItem.Text = Val(LabelAuditItem.Text) + 1
                     POS.Instance.Invoke(Sub()
                                             POS.ProgressBar1.Value += 1
                                         End Sub)
@@ -1672,8 +1672,8 @@ Public Class SynctoCloud
                     cmd.ExecuteNonQuery()
                     '====================================================================
 
-                    Dim table = " loc_system_logs "
-                    Dim where = " loc_systemlog_id = '" & .Rows(i).Cells(6).Value.ToString & "'"
+                    Dim table = " loc_audit_trail "
+                    Dim where = " id = " & .Rows(i).Cells(0).Value & ""
                     Dim fields = "`synced`='Y' "
                     Dim sql = "UPDATE " & table & " SET " & fields & " WHERE " & where
                     cmdloc = New MySqlCommand(sql, local)
@@ -1685,8 +1685,8 @@ Public Class SynctoCloud
                 local.Close()
                 If WorkerCanceled = False Then
                     Dim t As New Task(New Action(Sub()
-                                                     LabelSYS1.Text = "Synced Systemlogs 1"
-                                                     LabelSYS1Time.Text = LabelTime.Text & " Seconds"
+                                                     LabelAudit.Text = "Synced Audit Trail Logs"
+                                                     LabelAuditTime.Text = LabelTime.Text & " Seconds"
                                                  End Sub))
                     t.Start()
                 End If

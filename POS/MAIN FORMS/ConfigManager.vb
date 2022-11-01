@@ -29,6 +29,8 @@ Public Class ConfigManager
     Property MasterOutletInfo As MasterlistOutletCls
     Property AccountExist As Boolean
     Property ValidProductKey As Boolean
+    Property SyncFrom As DateTime
+    Property SyncTo As DateTime
     Private Sub ConfigManager_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         CheckForIllegalCrossThreadCalls = False
         TabControl1.TabPages(0).Text = "General Settings"
@@ -1120,7 +1122,7 @@ Public Class ConfigManager
             If Not TextboxIsEmpty(GroupBox11) Then
                 If ValidLocalConnection = True Then
                     Dim ConnectionLocal As MySqlConnection = TestLocalConnection()
-                    Dim fields = "Dev_Company_Name, Dev_Address, Dev_Tin, Dev_Accr_No, Dev_Accr_Date_Issued, Dev_Accr_Valid_Until, Dev_PTU_No, Dev_PTU_Date_Issued, Dev_PTU_Valid_Until"
+                    Dim fields = "Dev_Company_Name, Dev_Address, Dev_Tin, Dev_Accr_No, Dev_Accr_Date_Issued, Dev_Accr_Valid_Until, Dev_PTU_No, Dev_PTU_Date_Issued, Dev_PTU_Valid_Until, S_DB_Version"
                     Dim sql = "Select " & fields & " FROM " & table & " WHERE " & where
                     Dim cmd As MySqlCommand = New MySqlCommand(sql, ConnectionLocal)
                     Dim da As MySqlDataAdapter = New MySqlDataAdapter(cmd)
@@ -1135,7 +1137,8 @@ Public Class ConfigManager
                 `Dev_Accr_Valid_Until`= '" & Format(DateTimePicker2ACCRVU.Value, "yyyy-MM-dd") & "',
                 `Dev_PTU_No`= '" & Trim(TextBoxDEVPTU.Text) & "',
                 `Dev_PTU_Date_Issued`= '" & Format(DateTimePickerPTUVU.Value, "yyyy-MM-dd") & "',
-                `Dev_PTU_Valid_Until`= '" & Format(DateTimePicker4PTUDI.Value, "yyyy-MM-dd") & "'"
+                `Dev_PTU_Valid_Until`= '" & Format(DateTimePicker4PTUDI.Value, "yyyy-MM-dd") & "',
+                `S_DB_Version` = 'v.1.0.0 POS-MOD-2022-10-31'"
                         sql = "UPDATE " & table & " SET " & fields1 & " WHERE " & where
                         cmd = New MySqlCommand(sql, ConnectionLocal)
                         cmd.ExecuteNonQuery()
@@ -1146,7 +1149,7 @@ Public Class ConfigManager
                         End If
 
                     Else
-                        Dim fields2 = "(Dev_Company_Name, Dev_Address, Dev_Tin, Dev_Accr_No, Dev_Accr_Date_Issued, Dev_Accr_Valid_Until, Dev_PTU_No, Dev_PTU_Date_Issued, Dev_PTU_Valid_Until)"
+                        Dim fields2 = "(Dev_Company_Name, Dev_Address, Dev_Tin, Dev_Accr_No, Dev_Accr_Date_Issued, Dev_Accr_Valid_Until, Dev_PTU_No, Dev_PTU_Date_Issued, Dev_PTU_Valid_Until, S_DB_Version)"
                         Dim value = "('" & Trim(TextBoxDevname.Text) & "'
                 ,'" & Trim(TextBoxDevAdd.Text) & "'
                 ,'" & Trim(TextBoxDevTIN.Text) & "'
@@ -1155,7 +1158,8 @@ Public Class ConfigManager
                 ,'" & Format(DateTimePicker2ACCRVU.Value, "yyyy-MM-dd") & "'
                 ,'" & Trim(TextBoxDEVPTU.Text) & "'
                 ,'" & Format(DateTimePickerPTUVU.Value, "yyyy-MM-dd") & "'
-                ,'" & Format(DateTimePicker4PTUDI.Value, "yyyy-MM-dd") & "')"
+                ,'" & Format(DateTimePicker4PTUDI.Value, "yyyy-MM-dd") & "'
+                ,'v.1.0.0 POS-MOD-2022-10-31')"
                         sql = "INSERT INTO " & table & " " & fields2 & " VALUES " & value
                         cmd = New MySqlCommand(sql, ConnectionLocal)
                         cmd.ExecuteNonQuery()
@@ -1256,24 +1260,7 @@ Public Class ConfigManager
         End If
     End Sub
 
-    Dim threadListActivation As List(Of Thread) = New List(Of Thread)
-    Dim ThreadActivation As Thread
 
-    Dim threadListActivationProduct As List(Of Thread) = New List(Of Thread)
-    Dim threadListActivationCategory As List(Of Thread) = New List(Of Thread)
-    Dim threadListActivationFormula As List(Of Thread) = New List(Of Thread)
-    Dim threadListActivationInventory As List(Of Thread) = New List(Of Thread)
-    Dim threadListActivationPartners As List(Of Thread) = New List(Of Thread)
-    Dim threadListActivationCoupons As List(Of Thread) = New List(Of Thread)
-    Dim threadListActivationStockCat As List(Of Thread) = New List(Of Thread)
-
-    Dim ThreadActivationProduct As Thread
-    Dim ThreadActivationCategory As Thread
-    Dim ThreadActivationFormula As Thread
-    Dim ThreadActivationInventory As Thread
-    Dim ThreadActivationPartners As Thread
-    Dim ThreadActivationCoupons As Thread
-    Dim ThreadActivationStockCat As Thread
 
     Private Sub BackgroundWorkerValidateSerial_DoWork(sender As Object, e As System.ComponentModel.DoWorkEventArgs) Handles BackgroundWorkerValidateSerial.DoWork
         Try
@@ -1371,9 +1358,737 @@ Public Class ConfigManager
         ProgressBar5.Value = e.ProgressPercentage
     End Sub
     Private Sub BackgroundWorkerACTIVATION_RunWorkerCompleted(sender As Object, e As System.ComponentModel.RunWorkerCompletedEventArgs) Handles BackgroundWorkerACTIVATION.RunWorkerCompleted
-        BackgroundWorker5.WorkerReportsProgress = True
-        BackgroundWorker5.WorkerSupportsCancellation = True
-        BackgroundWorker5.RunWorkerAsync()
+        BackgroundWorkerPreAct.WorkerReportsProgress = True
+        BackgroundWorkerPreAct.WorkerSupportsCancellation = True
+        BackgroundWorkerPreAct.RunWorkerAsync()
+    End Sub
+
+    Private Function GLOBAL_SELECT_ALL_FUNCTION_CLOUD(ByRef tbl As String, ByRef flds As String, ByRef datagrid As DataGridView) As DataTable
+        Dim dt As New DataTable
+        Try
+            Dim ConnectionCloud As MySqlConnection = TestCloudConnection()
+            Dim sql = "SELECT " & flds & " FROM " & tbl
+            Dim cmd As MySqlCommand = New MySqlCommand(sql, ConnectionCloud)
+            Dim da As MySqlDataAdapter = New MySqlDataAdapter(cmd)
+            da.Fill(dt)
+            datagrid.ReadOnly = True
+            ConnectionCloud.Close()
+        Catch ex As Exception
+            Throw New System.Exception(ex.Message)
+        End Try
+        Return dt
+    End Function
+
+
+#Region "Get Data From Cloud"
+    Property threadListActivation As List(Of Thread) = New List(Of Thread)
+    Property threadActivation As Thread
+
+    Private Sub BackgroundWorkerPreAct_DoWork(sender As Object, e As System.ComponentModel.DoWorkEventArgs) Handles BackgroundWorkerPreAct.DoWork
+        Try
+            SyncFrom = Now
+            For i = 0 To 100
+                Label22.Text = "Please wait " & i & " %"
+                BackgroundWorkerPreAct.ReportProgress(i)
+                Thread.Sleep(20)
+                If i = 0 Then
+                    Select Case SetCatStats
+                        Case SyncCls.CategorySync.Stats.isReady, SyncCls.CategorySync.Stats.isFetchInterrupt
+                            threadActivation = New Thread(AddressOf GetCategories)
+                            threadActivation.Start()
+                            threadListActivation.Add(threadActivation)
+                            For Each t In threadListActivation
+                                t.Join()
+                            Next
+                    End Select
+                End If
+
+                If i = 10 Then
+                    Select Case SetInvStats
+                        Case SyncCls.InventorySync.Stats.isReady, SyncCls.InventorySync.Stats.isFetchInterrupt
+                            threadActivation = New Thread(AddressOf GetInventory)
+                            threadActivation.Start()
+                            threadListActivation.Add(threadActivation)
+                            For Each t In threadListActivation
+                                t.Join()
+                            Next
+                    End Select
+                End If
+
+                If i = 20 Then
+                    Select Case SetFormStats
+                        Case SyncCls.FormulaSync.Stats.isReady, SyncCls.FormulaSync.Stats.isFetchInterrupt
+                            threadActivation = New Thread(AddressOf GetFormula)
+                            threadActivation.Start()
+                            threadListActivation.Add(threadActivation)
+                            For Each t In threadListActivation
+                                t.Join()
+                            Next
+                    End Select
+                End If
+
+                If i = 30 Then
+                    Select Case SetCoupStats
+                        Case SyncCls.CouponSync.Stats.isReady, SyncCls.CouponSync.Stats.isFetchInterrupt
+                            threadActivation = New Thread(AddressOf GetCoupons)
+                            threadActivation.Start()
+                            threadListActivation.Add(threadActivation)
+                            For Each t In threadListActivation
+                                t.Join()
+                            Next
+                    End Select
+                End If
+                If i = 40 Then
+                    Select Case SetPartStats
+                        Case SyncCls.PartnersSync.Stats.isReady, SyncCls.PartnersSync.Stats.isFetchInterrupt
+                            threadActivation = New Thread(AddressOf GetPartners)
+                            threadActivation.Start()
+                            threadListActivation.Add(threadActivation)
+                            For Each t In threadListActivation
+                                t.Join()
+                            Next
+                    End Select
+                End If
+                If i = 50 Then
+                    Select Case SetStockCatStats
+                        Case SyncCls.StockCatSync.Stats.isReady, SyncCls.StockCatSync.Stats.isFetchInterrupt
+                            threadActivation = New Thread(AddressOf GetStockCategory)
+                            threadActivation.Start()
+                            threadListActivation.Add(threadActivation)
+                            For Each t In threadListActivation
+                                t.Join()
+                            Next
+                    End Select
+                End If
+
+                If i = 60 Then
+                    Select Case SetProdStats
+                        Case SyncCls.ProductsSync.Stats.isReady, SyncCls.ProductsSync.Stats.isFetchInterrupt
+                            threadActivation = New Thread(Sub() listOfProducts = GetProducts())
+                            threadActivation.Start()
+                            threadListActivation.Add(threadActivation)
+                            For Each t In threadListActivation
+                                t.Join()
+                            Next
+                    End Select
+                End If
+
+
+                If i = 70 Then
+                    thread1 = New Thread(AddressOf FillDgvProd)
+                    thread1.Start()
+                    threadListActivation.Add(thread1)
+                    For Each t In threadListActivation
+                        t.Join()
+                    Next
+
+                    Select Case SetCatStats
+                        Case SyncCls.CategorySync.Stats.isFetchComplete, SyncCls.CategorySync.Stats.isProcessInterrupt
+                            thread1 = New Thread(AddressOf InsertToCategories)
+                            thread1.Start()
+                            threadListActivation.Add(thread1)
+                            For Each t In threadListActivation
+                                t.Join()
+                            Next
+                    End Select
+
+                    Select Case SetInvStats
+                        Case SyncCls.InventorySync.Stats.isFetchComplete, SyncCls.InventorySync.Stats.isProcessInterrupt
+                            thread1 = New Thread(AddressOf InsertToInventory)
+                            thread1.Start()
+                            threadListActivation.Add(thread1)
+                            For Each t In threadListActivation
+                                t.Join()
+                            Next
+                    End Select
+
+                    Select Case SetFormStats
+                        Case SyncCls.FormulaSync.Stats.isFetchComplete, SyncCls.FormulaSync.Stats.isProcessInterrupt
+                            thread1 = New Thread(AddressOf InsertToFormula)
+                            thread1.Start()
+                            threadListActivation.Add(thread1)
+                            For Each t In threadListActivation
+                                t.Join()
+                            Next
+                    End Select
+
+                    Select Case SetPartStats
+                        Case SyncCls.PartnersSync.Stats.isFetchComplete, SyncCls.PartnersSync.Stats.isProcessInterrupt
+                            thread1 = New Thread(AddressOf InsertPartnersTransacton)
+                            thread1.Start()
+                            threadListActivation.Add(thread1)
+                            For Each t In threadListActivation
+                                t.Join()
+                            Next
+                    End Select
+
+                    Select Case SetCoupStats
+                        Case SyncCls.CouponSync.Stats.isFetchComplete, SyncCls.CouponSync.Stats.isProcessInterrupt
+                            thread1 = New Thread(AddressOf InsertCoupons)
+                            thread1.Start()
+                            threadListActivation.Add(thread1)
+                            For Each t In threadListActivation
+                                t.Join()
+                            Next
+                    End Select
+
+
+                    Select Case SetProdStats
+                        Case SyncCls.ProductsSync.Stats.isFetchComplete, SyncCls.ProductsSync.Stats.isProcessInterrupt
+                            thread1 = New Thread(AddressOf InsertToProducts)
+                            thread1.Start()
+                            threadListActivation.Add(thread1)
+                            For Each t In threadListActivation
+                                t.Join()
+                            Next
+                    End Select
+
+                    Select Case SetStockCatStats
+                        Case SyncCls.StockCatSync.Stats.isFetchComplete, SyncCls.StockCatSync.Stats.isProcessInterrupt
+                            thread1 = New Thread(AddressOf InsertToStockCategory)
+                            thread1.Start()
+                            threadListActivation.Add(thread1)
+                            For Each t In threadListActivation
+                                t.Join()
+                            Next
+                    End Select
+
+                End If
+            Next
+        Catch ex As Exception
+            '
+        End Try
+    End Sub
+    Private Sub BackgroundWorkerPreAct_ProgressChanged(sender As Object, e As System.ComponentModel.ProgressChangedEventArgs) Handles BackgroundWorkerPreAct.ProgressChanged
+        ProgressBar6.Value = e.ProgressPercentage
+    End Sub
+    Private Sub BackgroundWorkerPreAct_RunWorkerCompleted(sender As Object, e As System.ComponentModel.RunWorkerCompletedEventArgs) Handles BackgroundWorkerPreAct.RunWorkerCompleted
+
+        If SetCatStats = SyncCls.CategorySync.Stats.isProcessComplete And
+            SetProdStats = SyncCls.ProductsSync.Stats.isProcessComplete And
+            SetInvStats = SyncCls.InventorySync.Stats.isProcessComplete And
+            SetFormStats = SyncCls.FormulaSync.Stats.isProcessComplete And
+            SetPartStats = SyncCls.PartnersSync.Stats.isProcessComplete And
+            SetCoupStats = SyncCls.CouponSync.Stats.isProcessComplete And
+            SetStockCatStats = SyncCls.StockCatSync.Stats.isProcessComplete Then
+
+            SyncTo = Now
+            Dim TS As TimeSpan = SyncTo - SyncFrom
+            rtbLogStats.Text += $"Synced data total of {TS.Seconds.ToString} seconds dated {Now}"
+
+            Dim message As Integer = MessageBox.Show("Successfully Registered. Your system will automatically reboot after pressing OK button.", "Activated", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            ValidProductKey = False
+            TextboxEnableability(GroupBox12, True)
+            ButtonEnableability(GroupBox12, True)
+            Dim logPath = My.Computer.FileSystem.SpecialDirectories.MyDocuments
+            Dim file As StreamWriter
+            file = My.Computer.FileSystem.OpenTextFileWriter(logPath & "\configmanagerslogs.txt", True)
+            file.WriteLine(rtbLogStats.Text)
+            file.Close()
+            Close()
+            ChooseLayout.Show()
+        Else
+            Dim message As Integer = MessageBox.Show("Retry to download product data ?", "NOTICE", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            If message = DialogResult.OK Then
+                BackgroundWorkerPreAct.WorkerReportsProgress = True
+                BackgroundWorkerPreAct.WorkerSupportsCancellation = True
+                BackgroundWorkerPreAct.RunWorkerAsync()
+            End If
+        End If
+
+    End Sub
+#Region "FETCH DATA"
+    Property SetCatStats As SyncCls.CategorySync.Stats = SyncCls.CategorySync.Stats.isReady
+    Property SetCatLastIndex As New SyncCls.CategorySync
+    Public Sub GetCategories()
+        Try
+            Dim Cond As String = ""
+
+            If SetCatStats = SyncCls.CategorySync.Stats.isFetchInterrupt Then
+                Cond = $"WHERE category_id > {SetCatLastIndex.lastFetchID}"
+            End If
+
+            SetCatStats = SyncCls.CategorySync.Stats.isFetching
+            rtbLogStats.Text += FullDate24HR() & " :    Getting cloud server's categories table." & vbNewLine
+
+            Dim Datatablecat = GLOBAL_SELECT_ALL_FUNCTION_CLOUD($"admin_category {Cond}", "*", DataGridViewCATEGORIES)
+
+            For Each row As DataRow In Datatablecat.Rows
+                DataGridViewCATEGORIES.Rows.Add(row("category_name"), row("brand_name"), row("updated_at"), row("origin"), row("status"))
+                SetCatLastIndex.lastFetchID = row("category_id")
+            Next
+
+            SetCatStats = SyncCls.CategorySync.Stats.isFetchComplete
+            rtbLogStats.Text += FullDate24HR() & " :    Complete(Fetching of categories data)" & vbNewLine
+
+        Catch ex As Exception
+            SetCatStats = SyncCls.CategorySync.Stats.isFetchInterrupt
+            rtbLogStats.Text += FullDate24HR() & " :    Failed(Fetching of categories data)" & vbNewLine
+        End Try
+    End Sub
+    Property SetInvStats As SyncCls.InventorySync.Stats = SyncCls.InventorySync.Stats.isReady
+    Property SetInvLastIndex As New SyncCls.InventorySync
+    Public Sub GetInventory()
+        Try
+            Dim Cond As String = ""
+
+            If SetInvStats = SyncCls.InventorySync.Stats.isFetchInterrupt Then
+                Cond = $"WHERE server_inventory_id > {SetInvLastIndex.lastFetchID}"
+            End If
+
+            SetInvStats = SyncCls.InventorySync.Stats.isFetching
+            rtbLogStats.Text += FullDate24HR() & " :    Getting cloud server's inventories data." & vbNewLine
+
+            Dim DatatableInv = GLOBAL_SELECT_ALL_FUNCTION_CLOUD($"admin_pos_inventory_org {Cond}", "*", DataGridViewINVENTORY)
+            For Each row As DataRow In DatatableInv.Rows
+                DataGridViewINVENTORY.Rows.Add(row("server_inventory_id"), row("server_formula_id"), row("product_ingredients"), row("sku"), row("stock_primary"), row("stock_secondary"), row("stock_no_of_servings"), row("stock_status"), row("critical_limit"), row("date_modified"), row("main_inventory_id"), row("origin"), row("show_stockin"))
+                SetInvLastIndex.lastFetchID = row("server_inventory_id")
+            Next
+            rtbLogStats.Text += FullDate24HR() & " :    Complete(Fetching of inventories data)" & vbNewLine
+            SetInvStats = SyncCls.InventorySync.Stats.isFetchComplete
+        Catch ex As Exception
+            rtbLogStats.Text += FullDate24HR() & " :    Failed(Fetching of inventories data)" & vbNewLine
+            SetInvStats = SyncCls.InventorySync.Stats.isFetchInterrupt
+        End Try
+    End Sub
+    Property SetProdStats As SyncCls.ProductsSync.Stats = SyncCls.ProductsSync.Stats.isReady
+    Property SetProdLastIndex As New SyncCls.ProductsSync
+    Private Function GetProducts() As List(Of ProductsCls)
+        Dim listofProdcls As New List(Of ProductsCls)
+        Try
+            Dim SqlCount As String = ""
+
+            Dim Cond As String = ""
+
+            If SetProdStats = SyncCls.CategorySync.Stats.isFetchInterrupt Then
+                Cond = $"WHERE product_id > {SetProdLastIndex.lastFetchID}"
+            End If
+
+            SqlCount = $"SELECT * FROM admin_products_org {Cond}"
+
+            SetProdStats = SyncCls.ProductsSync.Stats.isFetching
+
+            rtbLogStats.Text += $"{FullDate24HR()} :    Getting cloud server's products data.{vbNewLine}"
+            Dim Connection As MySqlConnection = TestCloudConnection()
+
+            Using CmdCount As New MySqlCommand(SqlCount, Connection)
+                Dim Reader = CmdCount.ExecuteReader
+                While Reader.Read
+                    Dim nwListofProd As New ProductsCls With {
+                         .product_id = Reader("product_id"),
+                         .product_sku = Reader("product_sku"),
+                         .product_name = Reader("product_name"),
+                         .formula_id = Reader("formula_id"),
+                         .product_barcode = Reader("product_barcode"),
+                         .product_category = Reader("product_category"),
+                         .product_price = Reader("product_price"),
+                         .product_desc = Reader("product_desc"),
+                         .product_image = Reader("product_image"),
+                         .date_modified = Reader("date_modified"),
+                         .inventory_id = Reader("inventory_id"),
+                         .addontype = Reader("addontype"),
+                         .half_batch = Reader("half_batch"),
+                         .partners = Reader("partners"),
+                         .arrangement = Reader("arrangement")
+                        }
+                    listofProdcls.Add(nwListofProd)
+                    SetProdLastIndex.lastFetchID = Reader("product_id")
+                End While
+                CmdCount.Dispose()
+            End Using
+            rtbLogStats.Text += FullDate24HR() & " :    Complete(Fetching of products data)" & vbNewLine
+            SetProdStats = SyncCls.ProductsSync.Stats.isFetchComplete
+        Catch ex As Exception
+            rtbLogStats.Text += FullDate24HR() & " :    Failed(Fetching of products data)" & vbNewLine
+            SetProdStats = SyncCls.ProductsSync.Stats.isFetchInterrupt
+        End Try
+        Return listofProdcls
+    End Function
+    Property SetFormStats As SyncCls.FormulaSync.Stats = SyncCls.FormulaSync.Stats.isReady
+    Property SetFormLastIndex As New SyncCls.FormulaSync
+    Public Sub GetFormula()
+        Try
+            Dim Cond As String = ""
+
+            If SetFormStats = SyncCls.CategorySync.Stats.isFetchInterrupt Then
+                Cond = $"WHERE server_formula_id > {SetFormLastIndex.lastFetchID}"
+            End If
+
+            SetFormStats = SyncCls.CategorySync.Stats.isFetching
+            rtbLogStats.Text += FullDate24HR() & " :    Getting cloud server's formulas data." & vbNewLine
+
+            Dim DatatableForm = GLOBAL_SELECT_ALL_FUNCTION_CLOUD($"admin_product_formula_org {Cond}", "*", DataGridViewFORMULA)
+            For Each row As DataRow In DatatableForm.Rows
+                DataGridViewFORMULA.Rows.Add(row("server_formula_id"), row("product_ingredients"), row("primary_unit"), row("primary_value"), row("secondary_unit"), row("secondary_value"), row("serving_unit"), row("serving_value"), row("no_servings"), row("status"), row("date_modified"), row("unit_cost"), row("origin"))
+                SetFormLastIndex.lastFetchID = row("server_formula_id")
+            Next
+
+            rtbLogStats.Text += FullDate24HR() & " :    Complete(Fetching of formulas data)" & vbNewLine
+            SetFormStats = SyncCls.CategorySync.Stats.isFetchComplete
+        Catch ex As Exception
+            rtbLogStats.Text += FullDate24HR() & " :    Failed(Fetching of formulas data)" & vbNewLine
+            SetFormStats = SyncCls.CategorySync.Stats.isFetchInterrupt
+        End Try
+    End Sub
+    Property SetCoupStats As SyncCls.CouponSync.Stats = SyncCls.CouponSync.Stats.isReady
+    Property SetCoupLastIndex As New SyncCls.CouponSync
+    Private Sub GetCoupons()
+        Try
+            Dim Cond As String = ""
+
+            If SetCoupStats = SyncCls.CouponSync.Stats.isFetchInterrupt Then
+                Cond = $"WHERE ID > {SetCoupLastIndex.lastFetchID}"
+            End If
+
+            rtbLogStats.Text += FullDate24HR() & " :    Getting cloud server's coupons data." & vbNewLine
+            SetCoupStats = SyncCls.CouponSync.Stats.isFetching
+
+            Dim DatatableCoupons = GLOBAL_SELECT_ALL_FUNCTION_CLOUD($"admin_coupon {Cond}", "*", DataGridViewCoupons)
+            For Each row As DataRow In DatatableCoupons.Rows
+                DataGridViewCoupons.Rows.Add(row("Couponname_"), row("Desc_"), row("Discountvalue_"), row("Referencevalue_"), row("Type"), row("Bundlebase_"), row("BBValue_"), row("Bundlepromo_"), row("BPValue_"), row("Effectivedate"), row("Expirydate"), row("date_created"), row("active"))
+                SetCoupLastIndex.lastFetchID = row("ID")
+            Next
+            rtbLogStats.Text += FullDate24HR() & " :    Complete(Fetching of coupons data)" & vbNewLine
+            SetCoupStats = SyncCls.CouponSync.Stats.isFetchComplete
+        Catch ex As Exception
+            rtbLogStats.Text += FullDate24HR() & " :    Failed(Fetching of coupons data)" & vbNewLine
+            SetCoupStats = SyncCls.CouponSync.Stats.isFetchInterrupt
+        End Try
+    End Sub
+    Property SetPartStats As SyncCls.PartnersSync.Stats = SyncCls.PartnersSync.Stats.isReady
+    Property SetPartLastIndex As New SyncCls.PartnersSync
+    Private Sub GetPartners()
+        Try
+            Dim Cond As String = ""
+
+            If SetPartStats = SyncCls.PartnersSync.Stats.isFetchInterrupt Then
+                Cond = $"WHERE id > {SetPartLastIndex.lastFetchID}"
+            End If
+
+            rtbLogStats.Text += FullDate24HR() & " :    Getting cloud server's partners data." & vbNewLine
+            SetPartStats = SyncCls.PartnersSync.Stats.isFetching
+
+            Dim DatatablePartners = GLOBAL_SELECT_ALL_FUNCTION_CLOUD($"admin_partners_transaction_org {Cond}", "*", DataGridViewPartners)
+            For Each row As DataRow In DatatablePartners.Rows
+                DataGridViewPartners.Rows.Add(row("arrid"), row("bankname"), row("date_modified"), row("active"))
+                SetPartLastIndex.lastFetchID = row("id")
+            Next
+
+            rtbLogStats.Text += FullDate24HR() & " :    Complete(Fetching of partners data)" & vbNewLine
+            SetPartStats = SyncCls.PartnersSync.Stats.isFetchComplete
+        Catch ex As Exception
+            rtbLogStats.Text += FullDate24HR() & " :    Failed(Fetching of partners data)" & vbNewLine
+            SetPartStats = SyncCls.PartnersSync.Stats.isFetchInterrupt
+
+        End Try
+    End Sub
+    Property SetStockCatStats As SyncCls.StockCatSync.Stats = SyncCls.StockCatSync.Stats.isReady
+    Property SetStockCatLastIndex As New SyncCls.StockCatSync
+    Private Sub GetStockCategory()
+        Try
+            Dim Cond As String = ""
+
+            If SetStockCatStats = SyncCls.StockCatSync.Stats.isFetchInterrupt Then
+                Cond = $"WHERE adj_id > {SetStockCatLastIndex.lastFetchID}"
+            End If
+
+            rtbLogStats.Text += FullDate24HR() & " :    Getting cloud server's stock adjustment categories data." & vbNewLine
+            SetStockCatStats = SyncCls.StockCatSync.Stats.isFetching
+
+            Dim DatatableStockAdjustment = GLOBAL_SELECT_ALL_FUNCTION_CLOUD($"admin_stock_category {Cond}", "*", DataGridViewStockAdjustment)
+
+            For Each row As DataRow In DatatableStockAdjustment.Rows
+                DataGridViewStockAdjustment.Rows.Add(row("adj_type"), row("created_at"), row("active"))
+                SetStockCatLastIndex.lastFetchID = row("adj_id")
+            Next
+
+            rtbLogStats.Text += FullDate24HR() & " :    Complete(Fetching of stock adjustment categories data)" & vbNewLine
+            SetStockCatStats = SyncCls.StockCatSync.Stats.isFetchComplete
+        Catch ex As Exception
+            rtbLogStats.Text += FullDate24HR() & " :    Failed(Fetching of stock adjustment categories data)" & vbNewLine
+            SetStockCatStats = SyncCls.StockCatSync.Stats.isFetchInterrupt
+        End Try
+    End Sub
+#End Region
+#Region "INSERT DATA"
+    Private Sub FillDgvProd()
+        Try
+            For Each prod As ProductsCls In listOfProducts
+                With prod
+                    DataGridViewPRODUCTS.Rows.Add(.product_id, .product_sku, .product_name, .formula_id, .product_barcode, .product_category, .product_price, .product_desc, .product_image, .date_modified, .inventory_id, .addontype, .half_batch, .partners, .arrangement)
+                End With
+            Next
+        Catch ex As Exception
+        End Try
+    End Sub
+    Private Sub InsertToProducts()
+        Try
+            rtbLogStats.Text += FullDate24HR() & " :    Inserting data to local server's table(Products)" & vbNewLine
+            SetProdStats = SyncCls.ProductsSync.Stats.isProcessing
+
+            Dim ConnectionLocal As MySqlConnection = TestLocalConnection()
+
+            For Each prod As ProductsCls In listOfProducts.Skip(SetProdLastIndex.lastInsertID)
+
+                Dim Query = "INSERT INTO loc_admin_products 
+                                (
+                                    `server_product_id`,`product_sku`, `product_name`, `formula_id`, `product_barcode`, `product_category`, `product_price`, `product_desc`, 
+                                    `product_image`, `origin`, `date_modified`, `server_inventory_id`, `guid`, `store_id`, `addontype`, `half_batch`, 
+                                    `partners`, `arrangement`, `synced`
+                                )
+                             VALUES 
+                                (
+                                    @server_product_id, @product_sku, @product_name, @formula_id, @product_barcode, @product_category, @product_price, @product_desc, 
+                                    @product_image, @origin, @date_modified, @server_inventory_id, @guid, @store_id, @addontype, @half_batch, 
+                                    @partners, @arrangement, @synced
+                                )"
+                Using cmdlocal As New MySqlCommand(Query, ConnectionLocal)
+                    cmdlocal.Parameters.Clear()
+                    With prod
+                        cmdlocal.Parameters.AddWithValue("@server_product_id", .product_id)
+                        cmdlocal.Parameters.AddWithValue("@product_sku", .product_sku)
+                        cmdlocal.Parameters.AddWithValue("@product_name", .product_name)
+                        cmdlocal.Parameters.AddWithValue("@formula_id", .formula_id)
+                        cmdlocal.Parameters.AddWithValue("@product_barcode", .product_barcode)
+                        cmdlocal.Parameters.AddWithValue("@product_category", .product_category)
+                        cmdlocal.Parameters.AddWithValue("@product_price", .product_price)
+                        cmdlocal.Parameters.AddWithValue("@product_desc", .product_desc)
+                        cmdlocal.Parameters.AddWithValue("@product_image", .product_image)
+                        cmdlocal.Parameters.AddWithValue("@origin", "Server")
+                        cmdlocal.Parameters.AddWithValue("@date_modified", .date_modified)
+                        cmdlocal.Parameters.AddWithValue("@server_inventory_id", .inventory_id)
+                        cmdlocal.Parameters.AddWithValue("@guid", MasterList.user_id)
+                        cmdlocal.Parameters.AddWithValue("@store_id", MasterOutletInfo.store_id)
+                        cmdlocal.Parameters.AddWithValue("@addontype", .addontype)
+                        cmdlocal.Parameters.AddWithValue("@half_batch", .half_batch)
+                        cmdlocal.Parameters.AddWithValue("@partners", .partners)
+                        cmdlocal.Parameters.AddWithValue("@arrangement", .arrangement)
+                        cmdlocal.Parameters.AddWithValue("@synced", "Y")
+                        SetProdLastIndex.lastInsertID += 1
+                    End With
+
+                    cmdlocal.ExecuteNonQuery()
+                End Using
+            Next
+
+            rtbLogStats.Text += FullDate24HR() & " :    Complete(Products data insertion)" & vbNewLine
+            SetProdStats = SyncCls.ProductsSync.Stats.isProcessComplete
+        Catch ex As Exception
+            rtbLogStats.Text += FullDate24HR() & " :    Failed(Products data insertion)" & vbNewLine
+            SetProdStats = SyncCls.ProductsSync.Stats.isProcessInterrupt
+        End Try
+    End Sub
+    Private Sub InsertToInventory()
+        Try
+            rtbLogStats.Text += FullDate24HR() & " :    Inserting data to local server's table(Inventories)." & vbNewLine
+            SetInvStats = SyncCls.InventorySync.Stats.isProcessing
+
+            With DataGridViewINVENTORY
+                Dim ConnectionLocal As MySqlConnection = TestLocalConnection()
+                Dim cmdlocal As MySqlCommand
+                For i As Integer = SetInvLastIndex.lastInsertID To .Rows.Count - 1 Step +1
+                    cmdlocal = New MySqlCommand("INSERT INTO loc_pos_inventory(`server_inventory_id`, `formula_id`, `product_ingredients`, `sku`, `stock_primary`, `stock_secondary`, `stock_no_of_servings`, `stock_status`, `critical_limit`, `server_date_modified`, `store_id`, `guid`, `date_modified`, `crew_id`, `synced`, `main_inventory_id`, `origin`, `show_stockin`)
+                                             VALUES (@0, @1, @2, @3, @4, @5, @6, @7, @8, @9, @10, @11, @12, @13, @14, @15, @16, @17)", ConnectionLocal)
+                    cmdlocal.Parameters.Add("@0", MySqlDbType.Int64).Value = .Rows(i).Cells(0).Value.ToString()
+                    cmdlocal.Parameters.Add("@1", MySqlDbType.Int64).Value = 0
+                    cmdlocal.Parameters.Add("@2", MySqlDbType.VarChar).Value = .Rows(i).Cells(2).Value.ToString()
+                    cmdlocal.Parameters.Add("@3", MySqlDbType.VarChar).Value = .Rows(i).Cells(3).Value.ToString()
+                    cmdlocal.Parameters.Add("@4", MySqlDbType.Decimal).Value = .Rows(i).Cells(4).Value.ToString()
+                    cmdlocal.Parameters.Add("@5", MySqlDbType.Decimal).Value = .Rows(i).Cells(5).Value.ToString()
+                    cmdlocal.Parameters.Add("@6", MySqlDbType.Decimal).Value = .Rows(i).Cells(6).Value.ToString()
+                    cmdlocal.Parameters.Add("@7", MySqlDbType.Int64).Value = .Rows(i).Cells(7).Value.ToString()
+                    cmdlocal.Parameters.Add("@8", MySqlDbType.Int64).Value = .Rows(i).Cells(8).Value
+                    cmdlocal.Parameters.Add("@9", MySqlDbType.Text).Value = .Rows(i).Cells(9).Value
+                    cmdlocal.Parameters.Add("@10", MySqlDbType.VarChar).Value = DataGridViewOutlets.SelectedRows(0).Cells(0).Value
+                    cmdlocal.Parameters.Add("@11", MySqlDbType.VarChar).Value = MasterList.user_id
+                    cmdlocal.Parameters.Add("@12", MySqlDbType.Text).Value = .Rows(i).Cells(9).Value
+                    cmdlocal.Parameters.Add("@13", MySqlDbType.VarChar).Value = "0"
+                    cmdlocal.Parameters.Add("@14", MySqlDbType.VarChar).Value = "Synced"
+                    cmdlocal.Parameters.Add("@15", MySqlDbType.Text).Value = .Rows(i).Cells(10).Value
+                    cmdlocal.Parameters.Add("@16", MySqlDbType.Text).Value = .Rows(i).Cells(11).Value
+                    cmdlocal.Parameters.Add("@17", MySqlDbType.Int64).Value = .Rows(i).Cells(12).Value
+                    cmdlocal.ExecuteNonQuery()
+                    SetInvLastIndex.lastInsertID += 1
+                Next
+                ConnectionLocal.Close()
+            End With
+            rtbLogStats.Text += FullDate24HR() & " :    Complete(Inventories data insertion)" & vbNewLine
+            SetInvStats = SyncCls.InventorySync.Stats.isProcessComplete
+        Catch ex As Exception
+            rtbLogStats.Text += FullDate24HR() & " :    Failed(Inventories data insertion)" & vbNewLine
+            SetInvStats = SyncCls.InventorySync.Stats.isProcessInterrupt
+
+        End Try
+    End Sub
+    Private Sub InsertToCategories()
+        Try
+            SetCatStats = SyncCls.CategorySync.Stats.isProcessing
+
+            rtbLogStats.Text += FullDate24HR() & " :    Inserting data to local server's table(Categories)." & vbNewLine
+            With DataGridViewCATEGORIES
+                Dim ConnectionLocal As MySqlConnection = TestLocalConnection()
+                Dim cmdlocal As MySqlCommand
+                For i As Integer = SetCatLastIndex.lastInsertID To .Rows.Count - 1 Step +1
+                    cmdlocal = New MySqlCommand("INSERT INTO loc_admin_category( `category_name`, `brand_name`, `updated_at`, `origin`, `status`)
+                                             VALUES (@0, @1, @2, @3, @4)", ConnectionLocal)
+                    cmdlocal.Parameters.Add("@0", MySqlDbType.VarChar).Value = .Rows(i).Cells(0).Value.ToString()
+                    cmdlocal.Parameters.Add("@1", MySqlDbType.VarChar).Value = .Rows(i).Cells(1).Value.ToString()
+                    cmdlocal.Parameters.Add("@2", MySqlDbType.VarChar).Value = .Rows(i).Cells(2).Value.ToString
+                    cmdlocal.Parameters.Add("@3", MySqlDbType.VarChar).Value = .Rows(i).Cells(3).Value.ToString()
+                    cmdlocal.Parameters.Add("@4", MySqlDbType.Int64).Value = .Rows(i).Cells(4).Value.ToString()
+                    cmdlocal.ExecuteNonQuery()
+                    SetCatLastIndex.lastInsertID = i + 1
+                Next
+                ConnectionLocal.Close()
+            End With
+            rtbLogStats.Text += FullDate24HR() & " :    Complete(Categories data insertion)" & vbNewLine
+            SetCatStats = SyncCls.CategorySync.Stats.isProcessComplete
+        Catch ex As Exception
+            rtbLogStats.Text += FullDate24HR() & " :    Failed(Categories data insertion)" & vbNewLine
+            SetCatStats = SyncCls.CategorySync.Stats.isProcessInterrupt
+        End Try
+    End Sub
+    Private Sub InsertToStockCategory()
+        Try
+            rtbLogStats.Text += FullDate24HR() & " :    Inserting data to local server's table(Stock Adjustment Categories)." & vbNewLine
+            SetStockCatStats = SyncCls.ProductsSync.Stats.isProcessing
+
+            With DataGridViewStockAdjustment
+                Dim ConnectionLocal As MySqlConnection = TestLocalConnection()
+                Dim cmdlocal As MySqlCommand
+                For i As Integer = SetStockCatLastIndex.lastInsertID To .Rows.Count - 1 Step +1
+                    cmdlocal = New MySqlCommand("INSERT INTO loc_transfer_data( `transfer_cat`, `crew_id`, `created_at`, `created_by`, `updated_at`, `active`)
+                                             VALUES (@0, @1, @2, @3, @4, @5)", ConnectionLocal)
+                    cmdlocal.Parameters.Add("@0", MySqlDbType.Text).Value = .Rows(i).Cells(0).Value.ToString()
+                    cmdlocal.Parameters.Add("@1", MySqlDbType.Text).Value = "Server"
+                    cmdlocal.Parameters.Add("@2", MySqlDbType.Text).Value = .Rows(i).Cells(1).Value.ToString()
+                    cmdlocal.Parameters.Add("@3", MySqlDbType.Text).Value = "Server"
+                    cmdlocal.Parameters.Add("@4", MySqlDbType.Text).Value = "N/A"
+                    cmdlocal.Parameters.Add("@5", MySqlDbType.Int64).Value = .Rows(i).Cells(2).Value.ToString()
+                    cmdlocal.ExecuteNonQuery()
+                    SetStockCatLastIndex.lastInsertID += 1
+                Next
+                ConnectionLocal.Close()
+            End With
+            rtbLogStats.Text += FullDate24HR() & " :    Complete(Stock Adjustment Categories data insertion)" & vbNewLine
+            SetStockCatStats = SyncCls.ProductsSync.Stats.isProcessComplete
+        Catch ex As Exception
+            rtbLogStats.Text += FullDate24HR() & " :    Failed(Stock Adjustment  data insertion)" & vbNewLine
+            SetStockCatStats = SyncCls.ProductsSync.Stats.isProcessInterrupt
+        End Try
+    End Sub
+    Private Sub InsertPartnersTransacton()
+        Try
+            rtbLogStats.Text += FullDate24HR() & " :    Inserting data to local server's table(Partners)." & vbNewLine
+            SetPartStats = SyncCls.PartnersSync.Stats.isProcessing
+
+            With DataGridViewPartners
+                Dim ConnectionLocal As MySqlConnection = TestLocalConnection()
+                Dim cmdlocal As MySqlCommand
+                For i As Integer = SetPartLastIndex.lastInsertID To .Rows.Count - 1 Step +1
+                    cmdlocal = New MySqlCommand("INSERT INTO loc_partners_transaction(`arrid`, `bankname`, `date_modified`, `crew_id`, `store_id`, `guid`, `active`, `synced`)
+                                             VALUES (@0, @1, @2, @3, @4 ,@5 ,@6 ,@7)", ConnectionLocal)
+                    cmdlocal.Parameters.Add("@0", MySqlDbType.Int64).Value = .Rows(i).Cells(0).Value.ToString()
+                    cmdlocal.Parameters.Add("@1", MySqlDbType.VarChar).Value = .Rows(i).Cells(1).Value.ToString()
+                    cmdlocal.Parameters.Add("@2", MySqlDbType.Text).Value = .Rows(i).Cells(2).Value.ToString
+                    cmdlocal.Parameters.Add("@3", MySqlDbType.VarChar).Value = ""
+                    cmdlocal.Parameters.Add("@4", MySqlDbType.VarChar).Value = DataGridViewOutlets.SelectedRows(0).Cells(0).Value
+                    cmdlocal.Parameters.Add("@5", MySqlDbType.VarChar).Value = MasterList.user_id
+                    cmdlocal.Parameters.Add("@6", MySqlDbType.Int64).Value = .Rows(i).Cells(3).Value.ToString()
+                    cmdlocal.Parameters.Add("@7", MySqlDbType.VarChar).Value = "Synced"
+                    cmdlocal.ExecuteNonQuery()
+                    SetPartLastIndex.lastInsertID += 1
+                Next
+                ConnectionLocal.Close()
+            End With
+            rtbLogStats.Text += FullDate24HR() & " :    Complete(Partners data insertion)" & vbNewLine
+            SetPartStats = SyncCls.PartnersSync.Stats.isProcessComplete
+        Catch ex As Exception
+            rtbLogStats.Text += FullDate24HR() & " :    Failed(Partners data insertion)" & vbNewLine
+            SetPartStats = SyncCls.PartnersSync.Stats.isProcessInterrupt
+        End Try
+    End Sub
+    Private Sub InsertCoupons()
+        Try
+
+            rtbLogStats.Text += FullDate24HR() & " :    Inserting data to local server's table(Coupons)." & vbNewLine
+            SetCoupStats = SyncCls.CouponSync.Stats.isProcessing
+
+            With DataGridViewCoupons
+                Dim ConnectionLocal As MySqlConnection = TestLocalConnection()
+                Dim cmdlocal As MySqlCommand
+                For i As Integer = SetCoupLastIndex.lastInsertID To .Rows.Count - 1 Step +1
+                    cmdlocal = New MySqlCommand("INSERT INTO tbcoupon(`Couponname_`, `Desc_`, `Discountvalue_`, `Referencevalue_`, `Type`, `Bundlebase_`, `BBValue_`, `Bundlepromo_`, `BPValue_`, `Effectivedate`, `Expirydate`, `date_created`, `store_id`, `crew_id`, `guid`, `origin`, `synced`, `active`)
+                                             VALUES (@0, @1, @2, @3, @4 ,@5 ,@6 ,@7 ,@8 ,@9 ,@10 ,@11 ,@12 ,@13, @14, @15, @16, @17)", ConnectionLocal)
+                    cmdlocal.Parameters.Add("@0", MySqlDbType.Text).Value = .Rows(i).Cells(0).Value.ToString()
+                    cmdlocal.Parameters.Add("@1", MySqlDbType.Text).Value = .Rows(i).Cells(1).Value.ToString()
+                    cmdlocal.Parameters.Add("@2", MySqlDbType.Text).Value = .Rows(i).Cells(2).Value.ToString
+                    cmdlocal.Parameters.Add("@3", MySqlDbType.Text).Value = .Rows(i).Cells(3).Value.ToString
+                    cmdlocal.Parameters.Add("@4", MySqlDbType.Text).Value = .Rows(i).Cells(4).Value.ToString
+                    cmdlocal.Parameters.Add("@5", MySqlDbType.Text).Value = .Rows(i).Cells(5).Value.ToString
+                    cmdlocal.Parameters.Add("@6", MySqlDbType.Text).Value = .Rows(i).Cells(6).Value.ToString
+                    cmdlocal.Parameters.Add("@7", MySqlDbType.Text).Value = .Rows(i).Cells(7).Value.ToString
+                    cmdlocal.Parameters.Add("@8", MySqlDbType.Text).Value = .Rows(i).Cells(8).Value.ToString
+                    cmdlocal.Parameters.Add("@9", MySqlDbType.Text).Value = .Rows(i).Cells(9).Value.ToString
+                    cmdlocal.Parameters.Add("@10", MySqlDbType.Text).Value = .Rows(i).Cells(10).Value.ToString
+                    cmdlocal.Parameters.Add("@11", MySqlDbType.Text).Value = .Rows(i).Cells(11).Value.ToString
+                    cmdlocal.Parameters.Add("@12", MySqlDbType.Text).Value = DataGridViewOutlets.SelectedRows(0).Cells(0).Value
+                    cmdlocal.Parameters.Add("@13", MySqlDbType.Text).Value = ""
+                    cmdlocal.Parameters.Add("@14", MySqlDbType.Text).Value = MasterList.user_id
+                    cmdlocal.Parameters.Add("@15", MySqlDbType.Text).Value = "Server"
+                    cmdlocal.Parameters.Add("@16", MySqlDbType.Text).Value = "Synced"
+                    cmdlocal.Parameters.Add("@17", MySqlDbType.Text).Value = .Rows(i).Cells(12).Value.ToString
+                    cmdlocal.ExecuteNonQuery()
+                    SetCoupLastIndex.lastInsertID += 1
+                Next
+                ConnectionLocal.Close()
+            End With
+            rtbLogStats.Text += FullDate24HR() & " :    Complete(Coupons data insertion)" & vbNewLine
+            SetCoupStats = SyncCls.CouponSync.Stats.isProcessComplete
+        Catch ex As Exception
+            rtbLogStats.Text += FullDate24HR() & " :    Failed(Coupons data insertion)" & vbNewLine
+            SetCoupStats = SyncCls.CouponSync.Stats.isProcessInterrupt
+        End Try
+    End Sub
+    Private Sub InsertToFormula()
+        Try
+            rtbLogStats.Text += FullDate24HR() & " :    Inserting data to local server's table(Formulas)." & vbNewLine
+            SetFormStats = SyncCls.FormulaSync.Stats.isProcessing
+
+            With DataGridViewFORMULA
+                Dim ConnectionLocal As MySqlConnection = TestLocalConnection()
+                Dim cmdlocal As MySqlCommand
+                For i As Integer = SetFormLastIndex.lastInsertID To .Rows.Count - 1 Step +1
+                    cmdlocal = New MySqlCommand("INSERT INTO loc_product_formula(`server_formula_id`, `product_ingredients`, `primary_unit`, `primary_value`, `secondary_unit`, `secondary_value`, `serving_unit`, `serving_value`, `no_servings`, `status`, `date_modified`, `unit_cost`, `origin`, `server_date_modified`, `store_id`, `guid`)
+                                             VALUES (@0, @1, @2, @3, @4, @5, @6, @7, @8, @9, @10, @11, @12, @13, @14, @15)", ConnectionLocal)
+                    cmdlocal.Parameters.Add("@0", MySqlDbType.Int64).Value = .Rows(i).Cells(0).Value.ToString()
+                    cmdlocal.Parameters.Add("@1", MySqlDbType.VarChar).Value = .Rows(i).Cells(1).Value.ToString()
+                    cmdlocal.Parameters.Add("@2", MySqlDbType.VarChar).Value = .Rows(i).Cells(2).Value.ToString()
+                    cmdlocal.Parameters.Add("@3", MySqlDbType.VarChar).Value = .Rows(i).Cells(3).Value.ToString()
+                    cmdlocal.Parameters.Add("@4", MySqlDbType.VarChar).Value = .Rows(i).Cells(4).Value.ToString()
+                    cmdlocal.Parameters.Add("@5", MySqlDbType.VarChar).Value = .Rows(i).Cells(5).Value.ToString()
+                    cmdlocal.Parameters.Add("@6", MySqlDbType.VarChar).Value = .Rows(i).Cells(6).Value.ToString()
+                    cmdlocal.Parameters.Add("@7", MySqlDbType.VarChar).Value = .Rows(i).Cells(7).Value.ToString()
+                    cmdlocal.Parameters.Add("@8", MySqlDbType.VarChar).Value = .Rows(i).Cells(8).Value.ToString()
+                    cmdlocal.Parameters.Add("@9", MySqlDbType.Int64).Value = .Rows(i).Cells(9).Value.ToString()
+                    cmdlocal.Parameters.Add("@10", MySqlDbType.VarChar).Value = .Rows(i).Cells(10).Value
+                    cmdlocal.Parameters.Add("@11", MySqlDbType.Decimal).Value = .Rows(i).Cells(11).Value.ToString()
+                    cmdlocal.Parameters.Add("@12", MySqlDbType.VarChar).Value = .Rows(i).Cells(12).Value.ToString()
+                    cmdlocal.Parameters.Add("@13", MySqlDbType.VarChar).Value = .Rows(i).Cells(10).Value
+                    cmdlocal.Parameters.Add("@14", MySqlDbType.VarChar).Value = DataGridViewOutlets.SelectedRows(0).Cells(0).Value
+                    cmdlocal.Parameters.Add("@15", MySqlDbType.VarChar).Value = MasterList.user_id
+                    cmdlocal.ExecuteNonQuery()
+                    SetFormLastIndex.lastInsertID += 1
+                Next
+                ConnectionLocal.Close()
+            End With
+            rtbLogStats.Text += FullDate24HR() & " :    Complete(Formulas data insertion)" & vbNewLine
+            SetFormStats = SyncCls.FormulaSync.Stats.isProcessComplete
+        Catch ex As Exception
+            rtbLogStats.Text += FullDate24HR() & " :    Failed(Formulas data insertion)" & vbNewLine
+            SetFormStats = SyncCls.FormulaSync.Stats.isProcessInterrupt
+
+        End Try
     End Sub
     Private Sub SerialKey()
         Try
@@ -1396,7 +2111,8 @@ Public Class ConfigManager
     End Sub
     Private Sub adminserialkey()
         Try
-            TextBox1.Text += FullDate24HR() & " :    Updating cloud server's table(Product Key)." & vbNewLine
+
+            rtbLogStats.Text += FullDate24HR() & " :    Updating cloud server's table(Product Key)." & vbNewLine
             If TestModeIsOFF Then
                 Dim CloudConnection As MySqlConnection = TestCloudConnection()
                 Dim sql = "UPDATE admin_serialkeys SET active = @1 , date_used = @2 WHERE serial_key = @3"
@@ -1410,15 +2126,15 @@ Public Class ConfigManager
                     CloudConnection.Close()
                 End Using
             End If
-            TextBox1.Text += FullDate24HR() & " :    Complete(Product key table updated)." & vbNewLine
+            rtbLogStats.Text += FullDate24HR() & " :    Complete(Product key table updated)." & vbNewLine
         Catch ex As Exception
-            TextBox1.Text += FullDate24HR() & " :    Failed(Updating of product key)." & vbNewLine
+            rtbLogStats.Text += FullDate24HR() & " :    Failed(Updating of product key)." & vbNewLine
 
         End Try
     End Sub
     Public Sub adminoutlets()
         Try
-            TextBox1.Text += FullDate24HR() & " :    Updating cloud server's table(Outlets)." & vbNewLine
+            rtbLogStats.Text += FullDate24HR() & " :    Updating cloud server's table(Outlets)." & vbNewLine
             If TestModeIsOFF Then
                 Dim CloudConnection As MySqlConnection = TestCloudConnection()
                 Dim sql = "UPDATE admin_outlets SET active = @1 WHERE store_id = @storeID "
@@ -1432,16 +2148,15 @@ Public Class ConfigManager
                 End Using
 
             End If
-            TextBox1.Text += FullDate24HR() & " :    Complete(Outlets table updated)." & vbNewLine
+            rtbLogStats.Text += FullDate24HR() & " :    Complete(Outlets table updated)." & vbNewLine
         Catch ex As Exception
-            TextBox1.Text += FullDate24HR() & " :    Failed(Updating of outlet)." & vbNewLine
+            rtbLogStats.Text += FullDate24HR() & " :    Failed(Updating of outlet)." & vbNewLine
 
         End Try
     End Sub
-    Dim Datenow
     Public Sub insertintocloud()
         Try
-            TextBox1.Text += $"{FullDate24HR()} :    Inserting data to cloud server's table(Masterlist).{vbNewLine}"
+            rtbLogStats.Text += $"{FullDate24HR()} :    Inserting data to cloud server's table(Masterlist).{vbNewLine}"
             If TestModeIsOFF Then
                 Dim CloudConnection As MySqlConnection = TestCloudConnection()
                 Dim sql = "INSERT INTO admin_masterlist (`masterlist_username`,`client_guid`,`client_product_key`,`user_id`,`client_store_id`) VALUES (@1,@2,@3,@4,@5)"
@@ -1457,16 +2172,16 @@ Public Class ConfigManager
                     CloudConnection.Close()
                 End Using
             End If
-            TextBox1.Text += $"{FullDate24HR() } :    Complete(Masterlist data inserted).{vbNewLine}"
+            rtbLogStats.Text += $"{FullDate24HR() } :    Complete(Masterlist data inserted).{vbNewLine}"
         Catch ex As Exception
-            TextBox1.Text += $"{FullDate24HR() } :    Failed(Masterlist data insertion(Cloud)).{vbNewLine}"
+            rtbLogStats.Text += $"{FullDate24HR() } :    Failed(Masterlist data insertion(Cloud)).{vbNewLine}"
         End Try
     End Sub
     Private Sub insertintolocaloutlets()
         Try
-            TextBox1.Text += $"{FullDate24HR()} :    Getting cloud server's outlet data.{vbNewLine}"
+            rtbLogStats.Text += $"{FullDate24HR()} :    Getting cloud server's outlet data.{vbNewLine}"
             With MasterOutletInfo
-                TextBox1.Text += $"{FullDate24HR()} :    Inserting outlet data..{vbNewLine}"
+                rtbLogStats.Text += $"{FullDate24HR()} :    Inserting outlet data..{vbNewLine}"
                 Dim Query = "INSERT INTO admin_outlets 
                                 (
                                     `store_id`, `brand_name`, `store_name`, `location_name`, `postal_code`, 
@@ -1500,10 +2215,10 @@ Public Class ConfigManager
                     cmd.Parameters.AddWithValue("@PTUN", .PTUN)
                     cmd.ExecuteNonQuery()
                 End Using
-                TextBox1.Text += $"{FullDate24HR()} :    Complete(Outlet data inserted).{vbNewLine}"
+                rtbLogStats.Text += $"{FullDate24HR()} :    Complete(Outlet data inserted).{vbNewLine}"
             End With
         Catch ex As Exception
-            TextBox1.Text += $"{FullDate24HR()} :     Failed(Outlet data insertion(Local)).{vbNewLine}"
+            rtbLogStats.Text += $"{FullDate24HR()} :     Failed(Outlet data insertion(Local)).{vbNewLine}"
         End Try
     End Sub
     Private Sub SaveLogo()
@@ -1523,7 +2238,7 @@ Public Class ConfigManager
     End Sub
     Private Sub InsertLocalMasterList()
         Try
-            TextBox1.Text += FullDate24HR() & " :    Inserting masterlist data." & vbNewLine
+            rtbLogStats.Text += FullDate24HR() & " :    Inserting masterlist data." & vbNewLine
             Dim Connectionlocal As MySqlConnection = TestLocalConnection()
             Dim sql = "INSERT INTO admin_masterlist 
                             (
@@ -1544,164 +2259,16 @@ Public Class ConfigManager
                 Connectionlocal.Close()
             End Using
 
-            TextBox1.Text += FullDate24HR() & " :    Complete(Masterlist data inserted)." & vbNewLine
+            rtbLogStats.Text += FullDate24HR() & " :    Complete(Masterlist data inserted)." & vbNewLine
         Catch ex As Exception
-            TextBox1.Text += FullDate24HR() & " :    Failed(Masterlist data insertion)." & vbNewLine
+            rtbLogStats.Text += FullDate24HR() & " :    Failed(Masterlist data insertion)." & vbNewLine
             MsgBox("Contact Administrator Error Code: 3.0")
         End Try
     End Sub
-    Private Function GLOBAL_SELECT_ALL_FUNCTION_CLOUD(tbl As String, flds As String, datagrid As DataGridView) As DataTable
-        datagrid.Rows.Clear()
-        Dim dt As DataTable = New DataTable()
-        Try
-            Dim ConnectionCloud As MySqlConnection = TestCloudConnection()
-            Dim sql = "SELECT " & flds & " FROM " & table
-            Dim cmd As MySqlCommand = New MySqlCommand(sql, ConnectionCloud)
-            Dim da As MySqlDataAdapter = New MySqlDataAdapter(cmd)
-            da.Fill(dt)
-            datagrid.ReadOnly = True
-            ConnectionCloud.Close()
-        Catch ex As Exception
+#End Region
+#End Region
 
-        End Try
-        Return dt
-    End Function
-
-    Private Sub FillDgvProd()
-        Try
-            For Each prod As ProductsCls In listOfProducts
-                With prod
-                    DataGridViewPRODUCTS.Rows.Add(.product_id, .product_sku, .product_name, .formula_id, .product_barcode, .product_category, .product_price, .product_desc, .product_image, .date_modified, .inventory_id, .addontype, .half_batch, .partners, .arrangement)
-                End With
-            Next
-        Catch ex As Exception
-        End Try
-    End Sub
-    Dim threadLISTINSERPROD As List(Of Thread) = New List(Of Thread)
-    Private Sub BackgroundWorker5_DoWork(sender As Object, e As System.ComponentModel.DoWorkEventArgs) Handles BackgroundWorker5.DoWork
-        Try
-            For i = 0 To 100
-                Label22.Text = "Please wait " & i & " %"
-                BackgroundWorker5.ReportProgress(i)
-                Thread.Sleep(20)
-                If i = 0 Then
-                    ThreadActivationCategory = New Thread(AddressOf GetCategories)
-                    ThreadActivationCategory.Start()
-                    threadListActivationCategory.Add(ThreadActivationCategory)
-                    For Each t In threadListActivationCategory
-                        t.Join()
-                    Next
-                End If
-                If i = 10 Then
-                    ThreadActivationInventory = New Thread(AddressOf GetInventory)
-                    ThreadActivationInventory.Start()
-                    threadListActivationInventory.Add(ThreadActivationInventory)
-                    For Each t In threadListActivationInventory
-                        t.Join()
-                    Next
-                End If
-                If i = 20 Then
-                    ThreadActivationFormula = New Thread(AddressOf GetFormula)
-                    ThreadActivationFormula.Start()
-                    threadListActivationFormula.Add(ThreadActivationFormula)
-                    For Each t In threadListActivationFormula
-                        t.Join()
-                    Next
-                End If
-
-                If i = 30 Then
-                    ThreadActivationCoupons = New Thread(AddressOf GetCoupons)
-                    ThreadActivationCoupons.Start()
-                    threadListActivationCoupons.Add(ThreadActivationCoupons)
-                    For Each t In threadListActivationCoupons
-                        t.Join()
-                    Next
-                End If
-                If i = 40 Then
-                    ThreadActivationPartners = New Thread(AddressOf GetPartners)
-                    ThreadActivationPartners.Start()
-                    threadListActivationPartners.Add(ThreadActivationPartners)
-                    For Each t In threadListActivationPartners
-                        t.Join()
-                    Next
-                End If
-                If i = 50 Then
-                    ThreadActivationStockCat = New Thread(AddressOf GetStockCategory)
-                    ThreadActivationStockCat.Start()
-                    threadListActivationStockCat.Add(ThreadActivationStockCat)
-                    For Each t In threadListActivationStockCat
-                        t.Join()
-                    Next
-                End If
-
-                If i = 60 Then
-                    ThreadActivationProduct = New Thread(Sub() listOfProducts = GetProducts())
-                    ThreadActivationProduct.Start()
-                    threadListActivationProduct.Add(ThreadActivationProduct)
-                    For Each t In threadListActivationProduct
-                        t.Join()
-                    Next
-                End If
-
-
-                If i = 70 Then
-                    thread1 = New System.Threading.Thread(AddressOf FillDgvProd)
-                    thread1.Start()
-                    threadLISTINSERPROD.Add(thread1)
-                    For Each t In threadLISTINSERPROD
-                        t.Join()
-                    Next
-
-                    thread1 = New System.Threading.Thread(AddressOf InsertToInventory)
-                    thread1.Start()
-                    threadLISTINSERPROD.Add(thread1)
-                    For Each t In threadLISTINSERPROD
-                        t.Join()
-                    Next
-                    thread1 = New System.Threading.Thread(AddressOf InsertToCategories)
-                    thread1.Start()
-                    threadLISTINSERPROD.Add(thread1)
-                    For Each t In threadLISTINSERPROD
-                        t.Join()
-                    Next
-                    thread1 = New System.Threading.Thread(AddressOf InsertToFormula)
-                    thread1.Start()
-                    threadLISTINSERPROD.Add(thread1)
-                    For Each t In threadLISTINSERPROD
-                        t.Join()
-                    Next
-                    thread1 = New System.Threading.Thread(AddressOf InsertPartnersTransacton)
-                    thread1.Start()
-                    threadLISTINSERPROD.Add(thread1)
-                    For Each t In threadLISTINSERPROD
-                        t.Join()
-                    Next
-                    thread1 = New System.Threading.Thread(AddressOf InsertCoupons)
-                    thread1.Start()
-                    threadLISTINSERPROD.Add(thread1)
-                    For Each t In threadLISTINSERPROD
-                        t.Join()
-                    Next
-                    thread1 = New System.Threading.Thread(AddressOf InsertToProducts)
-                    thread1.Start()
-                    threadLISTINSERPROD.Add(thread1)
-                    For Each t In threadLISTINSERPROD
-                        t.Join()
-                    Next
-                    thread1 = New System.Threading.Thread(AddressOf InsertToStockCategory)
-                    thread1.Start()
-                    threadLISTINSERPROD.Add(thread1)
-                    For Each t In threadLISTINSERPROD
-                        t.Join()
-                    Next
-
-
-                End If
-            Next
-        Catch ex As Exception
-            '
-        End Try
-    End Sub
+#Region "System Database Option"
     Dim optimizeorrepair As Integer = 0
     Private Sub ButtonMaintenance_Click(sender As Object, e As EventArgs) Handles ButtonMaintenance.Click
         optimizeorrepair = 1
@@ -1721,9 +2288,9 @@ Public Class ConfigManager
         BackgroundWorkerABTDB.WorkerSupportsCancellation = True
         BackgroundWorkerABTDB.RunWorkerAsync()
     End Sub
-    Dim bat As String
-    Dim threadABTDB As Thread
-    Dim threadListABTDB As List(Of Thread) = New List(Of Thread)
+    Property bat As String
+    Property threadABTDB As Thread
+    Property threadListABTDB As List(Of Thread) = New List(Of Thread)
     Private Sub BackgroundWorkerABTDB_DoWork(sender As Object, e As System.ComponentModel.DoWorkEventArgs) Handles BackgroundWorkerABTDB.DoWork
         Try
             If optimizeorrepair = 0 Then
@@ -1760,383 +2327,8 @@ Public Class ConfigManager
 
         End Try
     End Sub
-    Private Sub BackgroundWorker5_RunWorkerCompleted(sender As Object, e As System.ComponentModel.RunWorkerCompletedEventArgs) Handles BackgroundWorker5.RunWorkerCompleted
-        Dim message As Integer = MessageBox.Show("Successfully Registered. Your system will automatically reboot after pressing OK button.", "Activated", MessageBoxButtons.OK, MessageBoxIcon.Information)
+#End Region
 
-        ValidProductKey = False
-        TextboxEnableability(GroupBox12, True)
-        ButtonEnableability(GroupBox12, True)
-        Dim logPath = My.Computer.FileSystem.SpecialDirectories.MyDocuments
-        Dim file As System.IO.StreamWriter
-        file = My.Computer.FileSystem.OpenTextFileWriter(logPath & "\configmanagerslogs.txt", True)
-        file.WriteLine(TextBox1.Text)
-        file.Close()
-        Close()
-        ChooseLayout.Show()
-    End Sub
-    Public Sub GetCategories()
-        Try
-            TextBox1.Text += FullDate24HR() & " :    Getting cloud server's categories table." & vbNewLine
-            table = "admin_category"
-            fields = "*"
-            Dim Datatablecat = GLOBAL_SELECT_ALL_FUNCTION_CLOUD(table, fields, DataGridViewCATEGORIES)
-            For Each row As DataRow In Datatablecat.Rows
-                DataGridViewCATEGORIES.Rows.Add(row("category_name"), row("brand_name"), row("updated_at"), row("origin"), row("status"))
-            Next
-            TextBox1.Text += FullDate24HR() & " :    Complete(Fetching of categories data)" & vbNewLine
-        Catch ex As Exception
-            TextBox1.Text += FullDate24HR() & " :    Failed(Fetching of categories data)" & vbNewLine
-            '
-        End Try
-    End Sub
-    'Dim DtCount As DataTable
-    Private Function GetProducts() As List(Of ProductsCls)
-        Dim listofProdcls As New List(Of ProductsCls)
-        Try
-            TextBox1.Text += $"{FullDate24HR()} :    Getting cloud server's products data.{vbNewLine}"
-            Dim Connection As MySqlConnection = TestCloudConnection()
-            Dim SqlCount = "SELECT * FROM admin_products_org"
-            Using CmdCount As New MySqlCommand(SqlCount, Connection)
-                Dim Reader = CmdCount.ExecuteReader
-                While Reader.Read
-                    Dim nwListofProd As New ProductsCls With {
-                         .product_id = Reader("product_id"),
-                         .product_sku = Reader("product_sku"),
-                         .product_name = Reader("product_name"),
-                         .formula_id = Reader("formula_id"),
-                         .product_barcode = Reader("product_barcode"),
-                         .product_category = Reader("product_category"),
-                         .product_price = Reader("product_price"),
-                         .product_desc = Reader("product_desc"),
-                         .product_image = Reader("product_image"),
-                         .date_modified = Reader("date_modified"),
-                         .inventory_id = Reader("inventory_id"),
-                         .addontype = Reader("addontype"),
-                         .half_batch = Reader("half_batch"),
-                         .partners = Reader("partners"),
-                         .arrangement = Reader("arrangement")
-                        }
-                    listofProdcls.Add(nwListofProd)
-                End While
-                CmdCount.Dispose()
-            End Using
-            TextBox1.Text += FullDate24HR() & " :    Complete(Fetching of products data)" & vbNewLine
-        Catch ex As Exception
-            TextBox1.Text += FullDate24HR() & " :    Failed(Fetching of products data)" & vbNewLine
-            End Try
-        Return listofProdcls
-    End Function
-    Private Sub GetCoupons()
-        Try
-            TextBox1.Text += FullDate24HR() & " :    Getting cloud server's coupons data." & vbNewLine
-            table = "admin_coupon"
-            fields = "*"
-            Dim DatatableCoupons = GLOBAL_SELECT_ALL_FUNCTION_CLOUD(table, fields, DataGridViewCoupons)
-            For Each row As DataRow In DatatableCoupons.Rows
-                DataGridViewCoupons.Rows.Add(row("Couponname_"), row("Desc_"), row("Discountvalue_"), row("Referencevalue_"), row("Type"), row("Bundlebase_"), row("BBValue_"), row("Bundlepromo_"), row("BPValue_"), row("Effectivedate"), row("Expirydate"), row("date_created"), row("active"))
-            Next
-            TextBox1.Text += FullDate24HR() & " :    Complete(Fetching of coupons data)" & vbNewLine
-        Catch ex As Exception
-            TextBox1.Text += FullDate24HR() & " :    Failed(Fetching of coupons data)" & vbNewLine
-
-        End Try
-    End Sub
-    Private Sub GetPartners()
-        Try
-            TextBox1.Text += FullDate24HR() & " :    Getting cloud server's partners data." & vbNewLine
-            table = "admin_partners_transaction_org"
-            fields = "*"
-            Dim DatatablePartners = GLOBAL_SELECT_ALL_FUNCTION_CLOUD(table, fields, DataGridViewPartners)
-            For Each row As DataRow In DatatablePartners.Rows
-                DataGridViewPartners.Rows.Add(row("arrid"), row("bankname"), row("date_modified"), row("active"))
-            Next
-            TextBox1.Text += FullDate24HR() & " :    Complete(Fetching of partners data)" & vbNewLine
-        Catch ex As Exception
-            TextBox1.Text += FullDate24HR() & " :    Failed(Fetching of partners data)" & vbNewLine
-
-        End Try
-    End Sub
-    Private Sub GetStockCategory()
-        Try
-            TextBox1.Text += FullDate24HR() & " :    Getting cloud server's stock adjustment categories data." & vbNewLine
-            table = "admin_stock_category"
-            fields = "*"
-            Dim DatatableStockAdjustment = GLOBAL_SELECT_ALL_FUNCTION_CLOUD(table, fields, DataGridViewStockAdjustment)
-            For Each row As DataRow In DatatableStockAdjustment.Rows
-                DataGridViewStockAdjustment.Rows.Add(row("adj_type"), row("created_at"), row("active"))
-            Next
-            TextBox1.Text += FullDate24HR() & " :    Complete(Fetching of stock adjustment categories data)" & vbNewLine
-        Catch ex As Exception
-            TextBox1.Text += FullDate24HR() & " :    Failed(Fetching of stock adjustment categories data)" & vbNewLine
-
-        End Try
-    End Sub
-    Public Sub GetInventory()
-        Try
-            TextBox1.Text += FullDate24HR() & " :    Getting cloud server's inventories data." & vbNewLine
-            table = "admin_pos_inventory_org"
-            fields = "*"
-            Dim DatatableInv = GLOBAL_SELECT_ALL_FUNCTION_CLOUD(table, fields, DataGridViewINVENTORY)
-            For Each row As DataRow In DatatableInv.Rows
-                DataGridViewINVENTORY.Rows.Add(row("server_inventory_id"), row("server_formula_id"), row("product_ingredients"), row("sku"), row("stock_primary"), row("stock_secondary"), row("stock_no_of_servings"), row("stock_status"), row("critical_limit"), row("date_modified"), row("main_inventory_id"), row("origin"), row("show_stockin"))
-            Next
-            TextBox1.Text += FullDate24HR() & " :    Complete(Fetching of inventories data)" & vbNewLine
-        Catch ex As Exception
-            TextBox1.Text += FullDate24HR() & " :    Failed(Fetching of inventories data)" & vbNewLine
-
-        End Try
-    End Sub
-    Public Sub GetFormula()
-        Try
-            TextBox1.Text += FullDate24HR() & " :    Getting cloud server's formulas data." & vbNewLine
-            table = "admin_product_formula_org"
-            fields = "*"
-            Dim DatatableForm = GLOBAL_SELECT_ALL_FUNCTION_CLOUD(table, fields, DataGridViewFORMULA)
-            For Each row As DataRow In DatatableForm.Rows
-                DataGridViewFORMULA.Rows.Add(row("server_formula_id"), row("product_ingredients"), row("primary_unit"), row("primary_value"), row("secondary_unit"), row("secondary_value"), row("serving_unit"), row("serving_value"), row("no_servings"), row("status"), row("date_modified"), row("unit_cost"), row("origin"))
-            Next
-            TextBox1.Text += FullDate24HR() & " :    Complete(Fetching of formulas data)" & vbNewLine
-        Catch ex As Exception
-            TextBox1.Text += FullDate24HR() & " :    Failed(Fetching of formulas data)" & vbNewLine
-
-        End Try
-    End Sub
-    Private Sub InsertToProducts()
-        Try
-            TextBox1.Text += FullDate24HR() & " :    Inserting data to local server's table(Products)" & vbNewLine
-
-            Dim ConnectionLocal As MySqlConnection = TestLocalConnection()
-
-            For Each prod As ProductsCls In listOfProducts
-                Dim Query = "INSERT INTO loc_admin_products 
-                                (
-                                    `server_product_id`,`product_sku`, `product_name`, `formula_id`, `product_barcode`, `product_category`, `product_price`, `product_desc`, 
-                                    `product_image`, `origin`, `date_modified`, `server_inventory_id`, `guid`, `store_id`, `addontype`, `half_batch`, 
-                                    `partners`, `arrangement`, `synced`
-                                )
-                             VALUES 
-                                (
-                                    @server_product_id, @product_sku, @product_name, @formula_id, @product_barcode, @product_category, @product_price, @product_desc, 
-                                    @product_image, @origin, @date_modified, @server_inventory_id, @guid, @store_id, @addontype, @half_batch, 
-                                    @partners, @arrangement, @synced
-                                )"
-                Using cmdlocal As New MySqlCommand(Query, ConnectionLocal)
-                    cmdlocal.Parameters.Clear()
-                    With prod
-                        cmdlocal.Parameters.AddWithValue("@server_product_id", .product_id)
-                        cmdlocal.Parameters.AddWithValue("@product_sku", .product_sku)
-                        cmdlocal.Parameters.AddWithValue("@product_name", .product_name)
-                        cmdlocal.Parameters.AddWithValue("@formula_id", .formula_id)
-                        cmdlocal.Parameters.AddWithValue("@product_barcode", .product_barcode)
-                        cmdlocal.Parameters.AddWithValue("@product_category", .product_category)
-                        cmdlocal.Parameters.AddWithValue("@product_price", .product_price)
-                        cmdlocal.Parameters.AddWithValue("@product_desc", .product_desc)
-                        cmdlocal.Parameters.AddWithValue("@product_image", .product_image)
-                        cmdlocal.Parameters.AddWithValue("@origin", "Server")
-                        cmdlocal.Parameters.AddWithValue("@date_modified", .date_modified)
-                        cmdlocal.Parameters.AddWithValue("@server_inventory_id", .inventory_id)
-                        cmdlocal.Parameters.AddWithValue("@guid", MasterList.user_id)
-                        cmdlocal.Parameters.AddWithValue("@store_id", MasterOutletInfo.store_id)
-                        cmdlocal.Parameters.AddWithValue("@addontype", .addontype)
-                        cmdlocal.Parameters.AddWithValue("@half_batch", .half_batch)
-                        cmdlocal.Parameters.AddWithValue("@partners", .partners)
-                        cmdlocal.Parameters.AddWithValue("@arrangement", .arrangement)
-                        cmdlocal.Parameters.AddWithValue("@synced", "Y")
-                    End With
-                    cmdlocal.ExecuteNonQuery()
-                End Using
-            Next
-
-            TextBox1.Text += FullDate24HR() & " :    Complete(Products data insertion)" & vbNewLine
-        Catch ex As Exception
-            TextBox1.Text += FullDate24HR() & " :    Failed(Products data insertion)" & vbNewLine
-        End Try
-    End Sub
-    Private Sub InsertToInventory()
-        Try
-            TextBox1.Text += FullDate24HR() & " :    Inserting data to local server's table(Inventories)." & vbNewLine
-            With DataGridViewINVENTORY
-                Dim ConnectionLocal As MySqlConnection = TestLocalConnection()
-                Dim cmdlocal As MySqlCommand
-                For i As Integer = 0 To .Rows.Count - 1 Step +1
-                    cmdlocal = New MySqlCommand("INSERT INTO loc_pos_inventory(`server_inventory_id`, `formula_id`, `product_ingredients`, `sku`, `stock_primary`, `stock_secondary`, `stock_no_of_servings`, `stock_status`, `critical_limit`, `server_date_modified`, `store_id`, `guid`, `date_modified`, `crew_id`, `synced`, `main_inventory_id`, `origin`, `show_stockin`)
-                                             VALUES (@0, @1, @2, @3, @4, @5, @6, @7, @8, @9, @10, @11, @12, @13, @14, @15, @16, @17)", ConnectionLocal)
-                    cmdlocal.Parameters.Add("@0", MySqlDbType.Int64).Value = .Rows(i).Cells(0).Value.ToString()
-                    cmdlocal.Parameters.Add("@1", MySqlDbType.Int64).Value = 0
-                    cmdlocal.Parameters.Add("@2", MySqlDbType.VarChar).Value = .Rows(i).Cells(2).Value.ToString()
-                    cmdlocal.Parameters.Add("@3", MySqlDbType.VarChar).Value = .Rows(i).Cells(3).Value.ToString()
-                    cmdlocal.Parameters.Add("@4", MySqlDbType.Decimal).Value = .Rows(i).Cells(4).Value.ToString()
-                    cmdlocal.Parameters.Add("@5", MySqlDbType.Decimal).Value = .Rows(i).Cells(5).Value.ToString()
-                    cmdlocal.Parameters.Add("@6", MySqlDbType.Decimal).Value = .Rows(i).Cells(6).Value.ToString()
-                    cmdlocal.Parameters.Add("@7", MySqlDbType.Int64).Value = .Rows(i).Cells(7).Value.ToString()
-                    cmdlocal.Parameters.Add("@8", MySqlDbType.Int64).Value = .Rows(i).Cells(8).Value
-                    cmdlocal.Parameters.Add("@9", MySqlDbType.Text).Value = .Rows(i).Cells(9).Value
-                    cmdlocal.Parameters.Add("@10", MySqlDbType.VarChar).Value = DataGridViewOutlets.SelectedRows(0).Cells(0).Value
-                    cmdlocal.Parameters.Add("@11", MySqlDbType.VarChar).Value = MasterList.user_id
-                    cmdlocal.Parameters.Add("@12", MySqlDbType.Text).Value = .Rows(i).Cells(9).Value
-                    cmdlocal.Parameters.Add("@13", MySqlDbType.VarChar).Value = "0"
-                    cmdlocal.Parameters.Add("@14", MySqlDbType.VarChar).Value = "Synced"
-                    cmdlocal.Parameters.Add("@15", MySqlDbType.Text).Value = .Rows(i).Cells(10).Value
-                    cmdlocal.Parameters.Add("@16", MySqlDbType.Text).Value = .Rows(i).Cells(11).Value
-                    cmdlocal.Parameters.Add("@17", MySqlDbType.Int64).Value = .Rows(i).Cells(12).Value
-                    cmdlocal.ExecuteNonQuery()
-                Next
-                ConnectionLocal.Close()
-            End With
-            TextBox1.Text += FullDate24HR() & " :    Complete(Inventories data insertion)" & vbNewLine
-        Catch ex As Exception
-            TextBox1.Text += FullDate24HR() & " :    Failed(Inventories data insertion)" & vbNewLine
-
-        End Try
-    End Sub
-    Private Sub InsertToCategories()
-        Try
-            TextBox1.Text += FullDate24HR() & " :    Inserting data to local server's table(Categories)." & vbNewLine
-            With DataGridViewCATEGORIES
-                Dim ConnectionLocal As MySqlConnection = TestLocalConnection()
-                Dim cmdlocal As MySqlCommand
-                For i As Integer = 0 To .Rows.Count - 1 Step +1
-                    cmdlocal = New MySqlCommand("INSERT INTO loc_admin_category( `category_name`, `brand_name`, `updated_at`, `origin`, `status`)
-                                             VALUES (@0, @1, @2, @3, @4)", ConnectionLocal)
-                    cmdlocal.Parameters.Add("@0", MySqlDbType.VarChar).Value = .Rows(i).Cells(0).Value.ToString()
-                    cmdlocal.Parameters.Add("@1", MySqlDbType.VarChar).Value = .Rows(i).Cells(1).Value.ToString()
-                    cmdlocal.Parameters.Add("@2", MySqlDbType.VarChar).Value = .Rows(i).Cells(2).Value.ToString
-                    cmdlocal.Parameters.Add("@3", MySqlDbType.VarChar).Value = .Rows(i).Cells(3).Value.ToString()
-                    cmdlocal.Parameters.Add("@4", MySqlDbType.Int64).Value = .Rows(i).Cells(4).Value.ToString()
-                    cmdlocal.ExecuteNonQuery()
-                Next
-                ConnectionLocal.Close()
-            End With
-            TextBox1.Text += FullDate24HR() & " :    Complete(Categories data insertion)" & vbNewLine
-        Catch ex As Exception
-            TextBox1.Text += FullDate24HR() & " :    Failed(Categories data insertion)" & vbNewLine
-
-        End Try
-    End Sub
-    Private Sub InsertToStockCategory()
-        Try
-            TextBox1.Text += FullDate24HR() & " :    Inserting data to local server's table(Stock Adjustment Categories)." & vbNewLine
-            With DataGridViewStockAdjustment
-                Dim ConnectionLocal As MySqlConnection = TestLocalConnection()
-                Dim cmdlocal As MySqlCommand
-                For i As Integer = 0 To .Rows.Count - 1 Step +1
-                    cmdlocal = New MySqlCommand("INSERT INTO loc_transfer_data( `transfer_cat`, `crew_id`, `created_at`, `created_by`, `updated_at`, `active`)
-                                             VALUES (@0, @1, @2, @3, @4, @5)", ConnectionLocal)
-                    cmdlocal.Parameters.Add("@0", MySqlDbType.Text).Value = .Rows(i).Cells(0).Value.ToString()
-                    cmdlocal.Parameters.Add("@1", MySqlDbType.Text).Value = "Server"
-                    cmdlocal.Parameters.Add("@2", MySqlDbType.Text).Value = .Rows(i).Cells(1).Value.ToString()
-                    cmdlocal.Parameters.Add("@3", MySqlDbType.Text).Value = "Server"
-                    cmdlocal.Parameters.Add("@4", MySqlDbType.Text).Value = "N/A"
-                    cmdlocal.Parameters.Add("@5", MySqlDbType.Int64).Value = .Rows(i).Cells(2).Value.ToString()
-                    cmdlocal.ExecuteNonQuery()
-                Next
-                ConnectionLocal.Close()
-            End With
-            TextBox1.Text += FullDate24HR() & " :    Complete(Stock Adjustment Categories data insertion)" & vbNewLine
-        Catch ex As Exception
-            TextBox1.Text += FullDate24HR() & " :    Failed(Stock Adjustment  data insertion)" & vbNewLine
-
-        End Try
-    End Sub
-    Private Sub InsertPartnersTransacton()
-        Try
-            TextBox1.Text += FullDate24HR() & " :    Inserting data to local server's table(Partners)." & vbNewLine
-            With DataGridViewPartners
-                Dim ConnectionLocal As MySqlConnection = TestLocalConnection()
-                Dim cmdlocal As MySqlCommand
-                For i As Integer = 0 To .Rows.Count - 1 Step +1
-                    cmdlocal = New MySqlCommand("INSERT INTO loc_partners_transaction(`arrid`, `bankname`, `date_modified`, `crew_id`, `store_id`, `guid`, `active`, `synced`)
-                                             VALUES (@0, @1, @2, @3, @4 ,@5 ,@6 ,@7)", ConnectionLocal)
-                    cmdlocal.Parameters.Add("@0", MySqlDbType.Int64).Value = .Rows(i).Cells(0).Value.ToString()
-                    cmdlocal.Parameters.Add("@1", MySqlDbType.VarChar).Value = .Rows(i).Cells(1).Value.ToString()
-                    cmdlocal.Parameters.Add("@2", MySqlDbType.Text).Value = .Rows(i).Cells(2).Value.ToString
-                    cmdlocal.Parameters.Add("@3", MySqlDbType.VarChar).Value = ""
-                    cmdlocal.Parameters.Add("@4", MySqlDbType.VarChar).Value = DataGridViewOutlets.SelectedRows(0).Cells(0).Value
-                    cmdlocal.Parameters.Add("@5", MySqlDbType.VarChar).Value = MasterList.user_id
-                    cmdlocal.Parameters.Add("@6", MySqlDbType.Int64).Value = .Rows(i).Cells(3).Value.ToString()
-                    cmdlocal.Parameters.Add("@7", MySqlDbType.VarChar).Value = "Synced"
-                    cmdlocal.ExecuteNonQuery()
-                Next
-                ConnectionLocal.Close()
-            End With
-            TextBox1.Text += FullDate24HR() & " :    Complete(Partners data insertion)" & vbNewLine
-        Catch ex As Exception
-            TextBox1.Text += FullDate24HR() & " :    Failed(Partners data insertion)" & vbNewLine
-
-        End Try
-    End Sub
-    Private Sub InsertCoupons()
-        Try
-            TextBox1.Text += FullDate24HR() & " :    Inserting data to local server's table(Coupons)." & vbNewLine
-            With DataGridViewCoupons
-                Dim ConnectionLocal As MySqlConnection = TestLocalConnection()
-                Dim cmdlocal As MySqlCommand
-                For i As Integer = 0 To .Rows.Count - 1 Step +1
-                    cmdlocal = New MySqlCommand("INSERT INTO tbcoupon(`Couponname_`, `Desc_`, `Discountvalue_`, `Referencevalue_`, `Type`, `Bundlebase_`, `BBValue_`, `Bundlepromo_`, `BPValue_`, `Effectivedate`, `Expirydate`, `date_created`, `store_id`, `crew_id`, `guid`, `origin`, `synced`, `active`)
-                                             VALUES (@0, @1, @2, @3, @4 ,@5 ,@6 ,@7 ,@8 ,@9 ,@10 ,@11 ,@12 ,@13, @14, @15, @16, @17)", ConnectionLocal)
-                    cmdlocal.Parameters.Add("@0", MySqlDbType.Text).Value = .Rows(i).Cells(0).Value.ToString()
-                    cmdlocal.Parameters.Add("@1", MySqlDbType.Text).Value = .Rows(i).Cells(1).Value.ToString()
-                    cmdlocal.Parameters.Add("@2", MySqlDbType.Text).Value = .Rows(i).Cells(2).Value.ToString
-                    cmdlocal.Parameters.Add("@3", MySqlDbType.Text).Value = .Rows(i).Cells(3).Value.ToString
-                    cmdlocal.Parameters.Add("@4", MySqlDbType.Text).Value = .Rows(i).Cells(4).Value.ToString
-                    cmdlocal.Parameters.Add("@5", MySqlDbType.Text).Value = .Rows(i).Cells(5).Value.ToString
-                    cmdlocal.Parameters.Add("@6", MySqlDbType.Text).Value = .Rows(i).Cells(6).Value.ToString
-                    cmdlocal.Parameters.Add("@7", MySqlDbType.Text).Value = .Rows(i).Cells(7).Value.ToString
-                    cmdlocal.Parameters.Add("@8", MySqlDbType.Text).Value = .Rows(i).Cells(8).Value.ToString
-                    cmdlocal.Parameters.Add("@9", MySqlDbType.Text).Value = .Rows(i).Cells(9).Value.ToString
-                    cmdlocal.Parameters.Add("@10", MySqlDbType.Text).Value = .Rows(i).Cells(10).Value.ToString
-                    cmdlocal.Parameters.Add("@11", MySqlDbType.Text).Value = .Rows(i).Cells(11).Value.ToString
-                    cmdlocal.Parameters.Add("@12", MySqlDbType.Text).Value = DataGridViewOutlets.SelectedRows(0).Cells(0).Value
-                    cmdlocal.Parameters.Add("@13", MySqlDbType.Text).Value = ""
-                    cmdlocal.Parameters.Add("@14", MySqlDbType.Text).Value = MasterList.user_id
-                    cmdlocal.Parameters.Add("@15", MySqlDbType.Text).Value = "Server"
-                    cmdlocal.Parameters.Add("@16", MySqlDbType.Text).Value = "Synced"
-                    cmdlocal.Parameters.Add("@17", MySqlDbType.Text).Value = .Rows(i).Cells(12).Value.ToString
-                    cmdlocal.ExecuteNonQuery()
-                Next
-                ConnectionLocal.Close()
-            End With
-            TextBox1.Text += FullDate24HR() & " :    Complete(Coupons data insertion)" & vbNewLine
-        Catch ex As Exception
-            TextBox1.Text += FullDate24HR() & " :    Failed(Coupons data insertion)" & vbNewLine
-
-        End Try
-    End Sub
-    Private Sub InsertToFormula()
-        Try
-            TextBox1.Text += FullDate24HR() & " :    Inserting data to local server's table(Formulas)." & vbNewLine
-            With DataGridViewFORMULA
-                Dim ConnectionLocal As MySqlConnection = TestLocalConnection()
-                Dim cmdlocal As MySqlCommand
-                For i As Integer = 0 To .Rows.Count - 1 Step +1
-                    cmdlocal = New MySqlCommand("INSERT INTO loc_product_formula(`server_formula_id`, `product_ingredients`, `primary_unit`, `primary_value`, `secondary_unit`, `secondary_value`, `serving_unit`, `serving_value`, `no_servings`, `status`, `date_modified`, `unit_cost`, `origin`, `server_date_modified`, `store_id`, `guid`)
-                                             VALUES (@0, @1, @2, @3, @4, @5, @6, @7, @8, @9, @10, @11, @12, @13, @14, @15)", ConnectionLocal)
-                    cmdlocal.Parameters.Add("@0", MySqlDbType.Int64).Value = .Rows(i).Cells(0).Value.ToString()
-                    cmdlocal.Parameters.Add("@1", MySqlDbType.VarChar).Value = .Rows(i).Cells(1).Value.ToString()
-                    cmdlocal.Parameters.Add("@2", MySqlDbType.VarChar).Value = .Rows(i).Cells(2).Value.ToString()
-                    cmdlocal.Parameters.Add("@3", MySqlDbType.VarChar).Value = .Rows(i).Cells(3).Value.ToString()
-                    cmdlocal.Parameters.Add("@4", MySqlDbType.VarChar).Value = .Rows(i).Cells(4).Value.ToString()
-                    cmdlocal.Parameters.Add("@5", MySqlDbType.VarChar).Value = .Rows(i).Cells(5).Value.ToString()
-                    cmdlocal.Parameters.Add("@6", MySqlDbType.VarChar).Value = .Rows(i).Cells(6).Value.ToString()
-                    cmdlocal.Parameters.Add("@7", MySqlDbType.VarChar).Value = .Rows(i).Cells(7).Value.ToString()
-                    cmdlocal.Parameters.Add("@8", MySqlDbType.VarChar).Value = .Rows(i).Cells(8).Value.ToString()
-                    cmdlocal.Parameters.Add("@9", MySqlDbType.Int64).Value = .Rows(i).Cells(9).Value.ToString()
-                    cmdlocal.Parameters.Add("@10", MySqlDbType.VarChar).Value = .Rows(i).Cells(10).Value
-                    cmdlocal.Parameters.Add("@11", MySqlDbType.Decimal).Value = .Rows(i).Cells(11).Value.ToString()
-                    cmdlocal.Parameters.Add("@12", MySqlDbType.VarChar).Value = .Rows(i).Cells(12).Value.ToString()
-                    cmdlocal.Parameters.Add("@13", MySqlDbType.VarChar).Value = .Rows(i).Cells(10).Value
-                    cmdlocal.Parameters.Add("@14", MySqlDbType.VarChar).Value = DataGridViewOutlets.SelectedRows(0).Cells(0).Value
-                    cmdlocal.Parameters.Add("@15", MySqlDbType.VarChar).Value = MasterList.user_id
-                    cmdlocal.ExecuteNonQuery()
-                Next
-                ConnectionLocal.Close()
-            End With
-            TextBox1.Text += FullDate24HR() & " :    Complete(Formulas data insertion)" & vbNewLine
-        Catch ex As Exception
-            TextBox1.Text += FullDate24HR() & " :    Failed(Formulas data insertion)" & vbNewLine
-
-        End Try
-    End Sub
     Private Sub Button7_Click(sender As Object, e As EventArgs) Handles ButtonEditAccount.Click
         TextboxEnableability(Panel14, True)
         AccountExist = False
@@ -2152,7 +2344,7 @@ Public Class ConfigManager
 
     Private Sub SaveLocalConnection()
         Try
-            If ValidLocalConnection = True Then
+            If ValidLocalConnection Then
                 Dim FolderName As String = "Innovention"
                 Dim path = My.Computer.FileSystem.SpecialDirectories.MyDocuments
                 CreateFolder(path, FolderName)
@@ -2164,12 +2356,9 @@ Public Class ConfigManager
                 MsgBox("Connection must be valid")
             End If
         Catch ex As Exception
-
         End Try
     End Sub
-    Private Sub BackgroundWorker5_ProgressChanged(sender As Object, e As System.ComponentModel.ProgressChangedEventArgs) Handles BackgroundWorker5.ProgressChanged
-        ProgressBar6.Value = e.ProgressPercentage
-    End Sub
+
     Private Sub TextBoxLocalServer_TextChanged(sender As Object, e As EventArgs) Handles TextBoxLocalUsername.TextChanged, TextBoxLocalServer.TextChanged, TextBoxLocalPort.TextChanged, TextBoxLocalPassword.TextChanged, TextBoxLocalDatabase.TextChanged
         Try
             BTNSaveLocalConn = False
@@ -2377,8 +2566,9 @@ Public Class ConfigManager
             AuditTrail.LogToAuditTrail("System", ex.ToString, "Critical")
         End Try
     End Sub
-    Dim PrintOptionIsSet As Boolean = False
-    Dim PrintOption As String = ""
+#Region "Printing Receipt Options"
+    Property PrintOptionIsSet As Boolean = False
+    Property PrintOption As String = ""
     Private Sub RadioButtonPrintReceiptYes_Click(sender As Object, e As EventArgs) Handles RadioButtonPrintReceiptYes.Click, RadioButtonPrintReceiptNo.Click
         Try
             Dim table = "`loc_settings`"
@@ -2429,8 +2619,8 @@ Public Class ConfigManager
             PrintOption = ""
         End Try
     End Sub
-    Dim RePrintOptionIsSet As Boolean = False
-    Dim RePrintOption As String = ""
+    Property RePrintOptionIsSet As Boolean = False
+    Property RePrintOption As String = ""
     Private Sub RadioButtonRePrintReceiptYes_Click(sender As Object, e As EventArgs) Handles RadioButtonRePrintReceiptYes.Click, RadioButtonRePrintReceiptNo.Click
         Try
             Dim table = "`loc_settings`"
@@ -2481,8 +2671,8 @@ Public Class ConfigManager
             RePrintOptionIsSet = False
         End Try
     End Sub
-    Dim PrintXZRead As Boolean = False
-    Dim PrintXZReadOption As String = ""
+    Property PrintXZRead As Boolean = False
+    Property PrintXZReadOption As String = ""
     Private Sub RadioButtonPrintXZReadYes_Click(sender As Object, e As EventArgs) Handles RadioButtonPrintXZReadYes.Click, RadioButtonPrintXZReadNo.Click
         Try
             Dim table = "`loc_settings`"
@@ -2534,8 +2724,8 @@ Public Class ConfigManager
             PrintXZRead = False
         End Try
     End Sub
-    Dim PrintReturns = ""
-    Dim PrintReturnsBool As Boolean = False
+    Property PrintReturns = ""
+    Property PrintReturnsBool As Boolean = False
     Private Sub RadioButtonPrintReturnsYes_Click(sender As Object, e As EventArgs) Handles RadioButtonPrintReturnsYes.Click, RadioButtonPrintReturnsNo.Click
         Try
             Dim table = "`loc_settings`"
@@ -2586,14 +2776,6 @@ Public Class ConfigManager
             PrintReturns = ""
             PrintReturnsBool = False
         End Try
-    End Sub
-
-    Private Sub RadioButtonTestModeFalse_CheckedChanged(sender As Object, e As EventArgs) Handles RadioButtonTestModeFalse.CheckedChanged
-        If RadioButtonTestModeFalse.Checked Then
-            TestModeIsOFF = True
-        Else
-            TestModeIsOFF = False
-        End If
     End Sub
     Property PrintSalesReport As String = ""
     Property PrintSalesReportBool As Boolean = False
@@ -2648,17 +2830,20 @@ Public Class ConfigManager
             PrintSalesReportBool = False
         End Try
     End Sub
+#End Region
 
-    Private Sub Button1_Click_2(sender As Object, e As EventArgs)
-        Try
-            listOfProducts = GetProducts()
-        Catch ex As Exception
-            MsgBox(ex.ToString)
-        End Try
+    Private Sub RadioButtonTestModeFalse_CheckedChanged(sender As Object, e As EventArgs) Handles RadioButtonTestModeFalse.CheckedChanged
+        If RadioButtonTestModeFalse.Checked Then
+            TestModeIsOFF = True
+        Else
+            TestModeIsOFF = False
+        End If
     End Sub
 
-
-
+    Private Sub rtbLogStats_TextChanged(sender As Object, e As EventArgs) Handles rtbLogStats.TextChanged
+        rtbLogStats.SelectionStart = rtbLogStats.Text.Length
+        rtbLogStats.ScrollToCaret()
+    End Sub
 
 #Region "Test Insert"
     'Private Sub button734_click(sender As Object, e As EventArgs) Handles Button4.Click
