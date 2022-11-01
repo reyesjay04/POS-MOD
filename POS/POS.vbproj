@@ -83,15 +83,15 @@
   <ItemGroup>
     <Reference Include="EJOURNAL_PDF, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\Users\jjrey\Documents\Visual Studio 2015\Projects\DGPos Utility\EJournal PDF\bin\Debug\EJOURNAL_PDF.dll</HintPath>
+      <HintPath>.\EJOURNAL_PDF.dll</HintPath>
     </Reference>
     <Reference Include="MySql.Data, Version=8.0.19.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>bin\Debug\MySql.Data.dll</HintPath>
+      <HintPath>.\MySql.Data.dll</HintPath>
     </Reference>
     <Reference Include="PdfSharp, Version=1.0.898.0, Culture=neutral, PublicKeyToken=f94615aa0424f9eb, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>bin\Debug\PdfSharp.dll</HintPath>
+      <HintPath>.\PdfSharp.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
