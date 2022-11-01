@@ -106,32 +106,32 @@ Public Class Loading
                         Label1.Text = "Checking for updates..."
                     End If
                 End If
-                'If i = 40 Then
-                '    If CheckForInternetConnection() Then
-                '        IfInternetIsAvailable = True
-                '        Label1.Text = "Connecting to cloud server..."
-                '        If ValidDatabaseLocalConnection Then
-                '            thread = New Thread(AddressOf ServerCloudCon)
-                '            thread.Start()
-                '            threadList.Add(thread)
-                '            For Each t In threadList
-                '                t.Join()
-                '            Next
-                '        End If
-                '        If ValidCloudConnection Then
-                '            thread = New Thread(AddressOf RunScript)
-                '            thread.Start()
-                '            threadList.Add(thread)
+                If i = 40 Then
+                    If CheckForInternetConnection() Then
+                        IfInternetIsAvailable = True
+                        Label1.Text = "Connecting to cloud server..."
+                        If ValidDatabaseLocalConnection Then
+                            thread = New Thread(AddressOf ServerCloudCon)
+                            thread.Start()
+                            threadList.Add(thread)
+                            For Each t In threadList
+                                t.Join()
+                            Next
+                        End If
+                        If ValidCloudConnection Then
+                            thread = New Thread(AddressOf RunScript)
+                            thread.Start()
+                            threadList.Add(thread)
 
-                '            For Each t In threadList
-                '                t.Join()
-                '            Next
-                '        End If
-                '    Else
-                '        IfInternetIsAvailable = False
-                '        Label1.Text = "No Internet Connection..."
-                '    End If
-                'End If
+                            For Each t In threadList
+                                t.Join()
+                            Next
+                        End If
+                    Else
+                        IfInternetIsAvailable = False
+                        Label1.Text = "No Internet Connection..."
+                    End If
+                End If
                 If My.Settings.Auto_Update Then
                     If i = 50 Then
                         If CheckForInternetConnection() Then
