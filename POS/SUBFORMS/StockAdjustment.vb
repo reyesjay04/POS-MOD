@@ -161,8 +161,8 @@ Public Class StockAdjustment
                         MDIFORM.newMDIchildInventory.loadinventory()
                         MDIFORM.newMDIchildInventory.loadstockadjustmentreport(False)
                         MDIFORM.newMDIchildInventory.loadcriticalstocks()
-                        MDIFORM.LabelTotalAvailStock.Text = roundsum("stock_primary", "loc_pos_inventory WHERE store_id = " & ClientStoreID & " AND guid = '" & ClientGuid & "'", "P")
-                        MDIFORM.LabelTotalCrititems.Text = count(table:="loc_pos_inventory WHERE stock_status = 1 AND critical_limit >= stock_primary AND store_id ='" & ClientStoreID & "' AND guid = '" & ClientGuid & "'", tocount:="inventory_id")
+                        MDIFORM.LabelTotalAvailStock.Text = roundsum("stock_primary", "loc_pos_inventory", "P")
+                        MDIFORM.LabelTotalCrititems.Text = count(table:="loc_pos_inventory WHERE stock_status = 1 AND critical_limit >= stock_primary", tocount:="inventory_id")
                     Else
                         MessageBox.Show("Fill up all empty fields", "Empty Fields", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
                     End If

@@ -36,9 +36,9 @@
         Try
             LabelFOOTER.Text = My.Settings.Footer
             LabelTotalProdLine.Text = count(table:="loc_admin_products WHERE product_status = 1", tocount:="product_id")
-            LabelTotalAvailStock.Text = roundsum("stock_primary", "loc_pos_inventory WHERE store_id = " & ClientStoreID & " AND guid = '" & ClientGuid & "'", "P")
-            LabelTotalSales.Text = sum(table:="loc_daily_transaction_details WHERE zreading = '" & Format(Now(), "yyyy-MM-dd") & "' AND active = 1 AND store_id = '" & ClientStoreID & "' AND guid = '" & ClientGuid & "' ", tototal:="total")
-            LabelTotalCrititems.Text = count(table:="loc_pos_inventory WHERE stock_status = 1 AND critical_limit >= stock_primary AND store_id ='" & ClientStoreID & "' AND guid = '" & ClientGuid & "'", tocount:="inventory_id")
+            LabelTotalAvailStock.Text = roundsum("stock_primary", "loc_pos_inventory", "P")
+            LabelTotalSales.Text = sum(table:="loc_daily_transaction_details WHERE zreading = '" & Format(Now(), "yyyy-MM-dd") & "' AND active = 1 ", tototal:="total")
+            LabelTotalCrititems.Text = count(table:="loc_pos_inventory WHERE stock_status = 1 AND critical_limit >= stock_primary", tocount:="inventory_id")
         Catch ex As Exception
             AuditTrail.LogToAuditTrail("System", "MDI/LoadMDIFORM(): " & ex.ToString, "Critical")
         End Try

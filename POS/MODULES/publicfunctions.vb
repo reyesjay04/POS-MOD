@@ -319,19 +319,19 @@ Module publicfunctions
             Dim LogType = ""
             If Shift = "First Shift" Then
                 LogType = "END-1"
-                Dim DailySales = sum(table:="loc_daily_transaction_details WHERE created_at = '" & Format(Now(), "yyyy-MM-dd") & "' AND active = 1 AND store_id = '" & ClientStoreID & "' AND guid = '" & ClientGuid & "' ", tototal:="total")
+                Dim DailySales = sum(table:="loc_daily_transaction_details WHERE created_at = '" & Format(Now(), "yyyy-MM-dd") & "' AND active = 1  ", tototal:="total")
                 EndingBalance = BeginningBalance + Val(DailySales)
             ElseIf Shift = "Second Shift" Then
                 LogType = "END-2"
-                Dim DailySales = sum(table:="loc_daily_transaction_details WHERE created_at = '" & Format(Now(), "yyyy-MM-dd") & "' AND active = 1 AND store_id = '" & ClientStoreID & "' AND guid = '" & ClientGuid & "' ", tototal:="total")
+                Dim DailySales = sum(table:="loc_daily_transaction_details WHERE created_at = '" & Format(Now(), "yyyy-MM-dd") & "' AND active = 1  ", tototal:="total")
                 EndingBalance = BeginningBalance + Val(DailySales)
             ElseIf Shift = "Third Shift" Then
                 LogType = "END-3"
-                Dim DailySales = sum(table:="loc_daily_transaction_details WHERE created_at = '" & Format(Now(), "yyyy-MM-dd") & "' AND active = 1 AND store_id = '" & ClientStoreID & "' AND guid = '" & ClientGuid & "' ", tototal:="total")
+                Dim DailySales = sum(table:="loc_daily_transaction_details WHERE created_at = '" & Format(Now(), "yyyy-MM-dd") & "' AND active = 1  ", tototal:="total")
                 EndingBalance = BeginningBalance + Val(DailySales)
             Else
                 LogType = "END-4"
-                Dim DailySales = sum(table:="loc_daily_transaction_details WHERE created_at = '" & Format(Now(), "yyyy-MM-dd") & "' AND active = 1 AND store_id = '" & ClientStoreID & "' AND guid = '" & ClientGuid & "' ", tototal:="total")
+                Dim DailySales = sum(table:="loc_daily_transaction_details WHERE created_at = '" & Format(Now(), "yyyy-MM-dd") & "' AND active = 1  ", tototal:="total")
                 EndingBalance = BeginningBalance + Val(DailySales)
             End If
             AuditTrail.LogToAuditTrail("System", $"{LogType}: " & SystemLogDesc, "Normal")

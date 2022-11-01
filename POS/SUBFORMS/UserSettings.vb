@@ -11,12 +11,9 @@ Public Class UserSettings
             Dim ClientDT
             Dim Fields As String = "`user_id`, `user_level`, `full_name`, `username`, `password`, `contact_number`, `email`, `position`, `gender`, `created_at`, `updated_at`, `active`, `guid`, `store_id`, `uniq_id`, `synced`"
             If ClientRole = "Crew" Then
-                'GLOBAL_SELECT_ALL_FUNCTION(, "*", DataGridViewUserSettings)
-                ClientDT = AsDatatable("loc_users WHERE user_level <> 'Admin' AND user_id = " & ClientCrewID & " AND store_id= " & ClientStoreID & " AND guid='" & ClientGuid & "' AND active = 1 ", Fields, DataGridViewUserSettings)
+                ClientDT = AsDatatable("loc_users WHERE user_level <> 'Admin' AND user_id = " & ClientCrewID & "  AND active = 1 ", Fields, DataGridViewUserSettings)
             Else
-                'GLOBAL_SELECT_ALL_FUNCTION("loc_users WHERE user_level <> 'Admin' AND store_id= " & ClientStoreID & " AND guid='" & ClientGuid & "' AND active = 1 ", "*", DataGridViewUserSettings)
-                ClientDT = AsDatatable("loc_users WHERE user_level <> 'Admin' AND store_id= " & ClientStoreID & " AND guid='" & ClientGuid & "' AND active = 1 ", Fields, DataGridViewUserSettings)
-
+                ClientDT = AsDatatable("loc_users WHERE user_level <> 'Admin' AND active = 1 ", Fields, DataGridViewUserSettings)
             End If
 
             With DataGridViewUserSettings

@@ -56,8 +56,8 @@ Public Class NewStockEntry
                 Else
                     MsgBox("Quantity(Primary) must be greater than 0")
                 End If
-                MDIFORM.LabelTotalAvailStock.Text = roundsum("stock_primary", "loc_pos_inventory WHERE store_id = " & ClientStoreID & " AND guid = '" & ClientGuid & "'", "P")
-                MDIFORM.LabelTotalCrititems.Text = count(table:="loc_pos_inventory WHERE stock_status = 1 AND critical_limit >= stock_primary AND store_id ='" & ClientStoreID & "' AND guid = '" & ClientGuid & "'", tocount:="inventory_id")
+                MDIFORM.LabelTotalAvailStock.Text = roundsum("stock_primary", "loc_pos_inventory", "P")
+                MDIFORM.LabelTotalCrititems.Text = count(table:="loc_pos_inventory WHERE stock_status = 1 AND critical_limit >= stock_primary ", tocount:="inventory_id")
 
             End If
 

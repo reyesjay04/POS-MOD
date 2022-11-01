@@ -10,7 +10,7 @@ Public Class PendingOrders
     End Sub
     Public Sub AMPpopulatecategory()
         Try
-            Dim command As New MySqlCommand("SELECT DISTINCT customer_name FROM loc_pending_orders WHERE guid = '" & ClientGuid & "'", LocalhostConn())
+            Dim command As New MySqlCommand("SELECT DISTINCT customer_name FROM loc_pending_orders", LocalhostConn())
             Dim adapter As New MySqlDataAdapter(command)
             Dim table As New DataTable()
             adapter.Fill(table)
@@ -37,7 +37,7 @@ Public Class PendingOrders
     End Sub
     Public Sub populatedatagridvieworders()
         Try
-            Dim command As New MySqlCommand("SELECT * FROM `loc_pending_orders` WHERE customer_name = '" & ComboBoxCustomerName.Text & "' AND guid = '" & ClientGuid & "'", LocalhostConn())
+            Dim command As New MySqlCommand("SELECT * FROM `loc_pending_orders` WHERE customer_name = '" & ComboBoxCustomerName.Text & "'", LocalhostConn())
             Dim adapter As New MySqlDataAdapter(command)
             Dim table As New DataTable()
             adapter.Fill(table)

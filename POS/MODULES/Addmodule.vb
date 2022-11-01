@@ -45,7 +45,7 @@ Module Addmodule
             Connectionlocal.Open()
             Dim Command As MySqlCommand
 
-            Dim Query As String = "SELECT * FROM loc_daily_transaction WHERE synced = 'N' AND store_id = " & ClientStoreID & " AND guid = '" & ClientGuid & "'"
+            Dim Query As String = "SELECT * FROM loc_daily_transaction WHERE synced = 'N'"
             Command = New MySqlCommand(Query, Connectionlocal)
             Dim DaSales As MySqlDataAdapter = New MySqlDataAdapter(Command)
             Dim DtSales As DataTable = New DataTable
@@ -175,7 +175,7 @@ Module Addmodule
             ConnectionLocal.ConnectionString = LocalConnectionString
             ConnectionLocal.Open()
 
-            Dim Query As String = "SELECT * FROM loc_pos_inventory WHERE store_id = " & ClientStoreID & " AND guid = '" & ClientGuid & "'"
+            Dim Query As String = "SELECT * FROM loc_pos_inventory"
             CommandLocal = New MySqlCommand(Query, ConnectionLocal)
             Dim DaInventory As MySqlDataAdapter = New MySqlDataAdapter(CommandLocal)
             Dim DtInventory As DataTable = New DataTable

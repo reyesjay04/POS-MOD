@@ -56,7 +56,6 @@ Public Class Reports
 
             TabControl1.TabPages(0).Text = "Daily Transactions"
             TabControl1.TabPages(1).Text = "System Logs"
-
             TabControl1.TabPages(2).Text = "Sales Report"
             TabControl1.TabPages(3).Text = "Custom Report"
             TabControl1.TabPages(4).Text = "Expense Report"
@@ -72,7 +71,6 @@ Public Class Reports
                 .AllowUserToOrderColumns = False
                 .AllowUserToResizeColumns = False
                 .AllowUserToResizeRows = False
-                .Font = New Font("tahoma", 10)
                 .CellBorderStyle = DataGridViewCellBorderStyle.SingleHorizontal
                 .ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.None
                 .SelectionMode = DataGridViewSelectionMode.FullRowSelect
@@ -87,14 +85,12 @@ Public Class Reports
                 .AllowUserToOrderColumns = False
                 .AllowUserToResizeColumns = False
                 .AllowUserToResizeRows = False
-                .Font = New Font("tahoma", 10)
                 .CellBorderStyle = DataGridViewCellBorderStyle.SingleHorizontal
                 .ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.None
                 .SelectionMode = DataGridViewSelectionMode.FullRowSelect
             End With
 
             With DataGridViewCustomReport
-                .Font = New Font("tahoma", 10)
                 .CellBorderStyle = DataGridViewCellBorderStyle.SingleHorizontal
                 .ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.None
             End With
@@ -254,9 +250,9 @@ Public Class Reports
             table = "`loc_system_logs`"
             fields = "`log_type`, `log_description`, `log_date_time`"
             If searchdate = False Then
-                where = " WHERE Date(log_date_time) = CURRENT_DATE() And log_type <> 'TRANSACTION' AND log_store = '" & ClientStoreID & "' AND guid = '" & ClientGuid & "' ORDER BY log_date_time DESC"
+                where = " WHERE Date(log_date_time) = CURRENT_DATE() And log_type <> 'TRANSACTION' ORDER BY log_date_time DESC"
             Else
-                where = " WHERE log_type <> 'TRANSACTION' AND log_store = '" & ClientStoreID & "' AND guid = '" & ClientGuid & "' AND date(log_date_time) >= '" & Format(DateTimePicker9.Value, "yyyy-MM-dd") & "' AND date(log_date_time) <= '" & Format(DateTimePicker10.Value, "yyyy-MM-dd") & "' ORDER BY  log_date_time DESC"
+                where = " WHERE log_type <> 'TRANSACTION' AND date(log_date_time) >= '" & Format(DateTimePicker9.Value, "yyyy-MM-dd") & "' AND date(log_date_time) <= '" & Format(DateTimePicker10.Value, "yyyy-MM-dd") & "' ORDER BY  log_date_time DESC"
             End If
             With DataGridViewSysLog
                 .Columns(0).HeaderText = "Type"
@@ -293,10 +289,10 @@ Public Class Reports
             Dim WhereVal As String = ""
             Dim ReturnsRefunds
             If searchdate = False Then
-                WhereVal = " WHERE date(zreading) = CURRENT_DATE() AND store_id = '" & ClientStoreID & "' AND guid = '" & ClientGuid & "'"
+                WhereVal = " WHERE date(zreading) = CURRENT_DATE() "
                 ReturnsRefunds = AsDatatable(Table & WhereVal, Fields, DataGridViewReturns)
             Else
-                WhereVal = " WHERE date(zreading) >= '" & Format(DateTimePicker14.Value, "yyyy-MM-dd") & "' AND date(zreading) <= '" & Format(DateTimePicker13.Value, "yyyy-MM-dd") & "' AND store_id = '" & ClientStoreID & "' AND guid = '" & ClientGuid & "'"
+                WhereVal = " WHERE date(zreading) >= '" & Format(DateTimePicker14.Value, "yyyy-MM-dd") & "' AND date(zreading) <= '" & Format(DateTimePicker13.Value, "yyyy-MM-dd") & "' "
                 ReturnsRefunds = AsDatatable(Table & WhereVal, Fields, DataGridViewReturns)
             End If
             With DataGridViewReturns
@@ -354,13 +350,13 @@ Public Class Reports
             Dim DailyTable
             If searchdate = False Then
                 If ComboBoxTransactionType.Text = "All" Then
-                    where = " WHERE zreading = CURRENT_DATE() AND " & ActiveColumn & " AND store_id = '" & ClientStoreID & "' AND guid = '" & ClientGuid & "' ORDER BY `created_at` DESC"
+                    where = " WHERE zreading = CURRENT_DATE() AND " & ActiveColumn & "  ORDER BY `created_at` DESC"
                 ElseIf ComboBoxTransactionType.Text = "All(Cash)" Then
-                    where = " WHERE zreading = CURRENT_DATE() AND " & ActiveColumn & " AND store_id = '" & ClientStoreID & "' AND guid = '" & ClientGuid & "' AND transaction_type IN ('Walk-In','Registered') ORDER BY `created_at` DESC"
+                    where = " WHERE zreading = CURRENT_DATE() AND " & ActiveColumn & "  AND transaction_type IN ('Walk-In','Registered') ORDER BY `created_at` DESC"
                 ElseIf ComboBoxTransactionType.Text = "All(Others)" Then
-                    where = " WHERE zreading = CURRENT_DATE() AND " & ActiveColumn & " AND store_id = '" & ClientStoreID & "' AND guid = '" & ClientGuid & "' AND transaction_type NOT IN ('Walk-In','Registered') ORDER BY `created_at` DESC"
+                    where = " WHERE zreading = CURRENT_DATE() AND " & ActiveColumn & "  AND transaction_type NOT IN ('Walk-In','Registered') ORDER BY `created_at` DESC"
                 Else
-                    where = " WHERE zreading = CURRENT_DATE() AND " & ActiveColumn & " AND store_id = '" & ClientStoreID & "' AND guid = '" & ClientGuid & "' AND `transaction_type` = '" & ComboBoxTransactionType.Text & "' ORDER BY `created_at` DESC"
+                    where = " WHERE zreading = CURRENT_DATE() AND " & ActiveColumn & "  AND `transaction_type` = '" & ComboBoxTransactionType.Text & "' ORDER BY `created_at` DESC"
                 End If
                 DailyTable = AsDatatable(table & where, fields, DataGridViewDaily)
                 For Each row As DataRow In DailyTable.rows
@@ -368,13 +364,13 @@ Public Class Reports
                 Next
             Else
                 If ComboBoxTransactionType.Text = "All" Then
-                    where = " WHERE zreading >= '" & Format(DateTimePicker1.Value, "yyyy-MM-dd") & "' and zreading <= '" & Format(DateTimePicker2.Value, "yyyy-MM-dd") & "' AND " & ActiveColumn & " AND store_id = '" & ClientStoreID & "' AND guid = '" & ClientGuid & "' ORDER BY `created_at` DESC"
+                    where = " WHERE zreading >= '" & Format(DateTimePicker1.Value, "yyyy-MM-dd") & "' and zreading <= '" & Format(DateTimePicker2.Value, "yyyy-MM-dd") & "' AND " & ActiveColumn & "  ORDER BY `created_at` DESC"
                 ElseIf ComboBoxTransactionType.Text = "All(Cash)" Then
-                    where = " WHERE zreading >= '" & Format(DateTimePicker1.Value, "yyyy-MM-dd") & "' and zreading <= '" & Format(DateTimePicker2.Value, "yyyy-MM-dd") & "' AND " & ActiveColumn & " AND store_id = '" & ClientStoreID & "' AND guid = '" & ClientGuid & "' AND transaction_type IN ('Walk-In','Registered') ORDER BY `created_at` DESC"
+                    where = " WHERE zreading >= '" & Format(DateTimePicker1.Value, "yyyy-MM-dd") & "' and zreading <= '" & Format(DateTimePicker2.Value, "yyyy-MM-dd") & "' AND " & ActiveColumn & "  AND transaction_type IN ('Walk-In','Registered') ORDER BY `created_at` DESC"
                 ElseIf ComboBoxTransactionType.Text = "All(Others)" Then
-                    where = " WHERE zreading >= '" & Format(DateTimePicker1.Value, "yyyy-MM-dd") & "' and zreading <= '" & Format(DateTimePicker2.Value, "yyyy-MM-dd") & "' AND " & ActiveColumn & " AND store_id = '" & ClientStoreID & "' AND guid = '" & ClientGuid & "' AND transaction_type NOT IN ('Walk-In','Registered') ORDER BY `created_at` DESC"
+                    where = " WHERE zreading >= '" & Format(DateTimePicker1.Value, "yyyy-MM-dd") & "' and zreading <= '" & Format(DateTimePicker2.Value, "yyyy-MM-dd") & "' AND " & ActiveColumn & "  AND transaction_type NOT IN ('Walk-In','Registered') ORDER BY `created_at` DESC"
                 Else
-                    where = " WHERE zreading >= '" & Format(DateTimePicker1.Value, "yyyy-MM-dd") & "' and zreading <= '" & Format(DateTimePicker2.Value, "yyyy-MM-dd") & "' AND " & ActiveColumn & " AND store_id = '" & ClientStoreID & "' AND guid = '" & ClientGuid & "' AND `transaction_type` = '" & ComboBoxTransactionType.Text & "' ORDER BY `created_at` DESC"
+                    where = " WHERE zreading >= '" & Format(DateTimePicker1.Value, "yyyy-MM-dd") & "' and zreading <= '" & Format(DateTimePicker2.Value, "yyyy-MM-dd") & "' AND " & ActiveColumn & "  AND `transaction_type` = '" & ComboBoxTransactionType.Text & "' ORDER BY `created_at` DESC"
                 End If
                 DailyTable = AsDatatable(table & where, fields, DataGridViewDaily)
                 For Each row As DataRow In DailyTable.rows
@@ -399,10 +395,10 @@ Public Class Reports
             table = "`loc_daily_transaction_details`"
             fields = "`product_sku`, `product_name`, sum(`quantity`), `price`, sum(`total`), `created_at` ,`product_category`"
             If searchdate = False Then
-                where = " zreading = CURRENT_DATE()  AND active = 1 AND store_id = '" & ClientStoreID & "' AND guid = '" & ClientGuid & "' GROUP BY `product_name`"
+                where = " zreading = CURRENT_DATE()  AND active = 1  GROUP BY `product_name`"
                 GLOBAL_SELECT_ALL_FUNCTION_WHERE(table:=table, datagrid:=DataGridViewSales, fields:=fields, where:=where)
             Else
-                where = " zreading >= '" & Format(DateTimePicker3.Value, "yyyy-MM-dd") & "' AND zreading <= '" & Format(DateTimePicker4.Value, "yyyy-MM-dd") & "' AND active = 1  AND store_id = '" & ClientStoreID & "' AND guid = '" & ClientGuid & "'  GROUP BY `product_name`"
+                where = " zreading >= '" & Format(DateTimePicker3.Value, "yyyy-MM-dd") & "' AND zreading <= '" & Format(DateTimePicker4.Value, "yyyy-MM-dd") & "' AND active = 1    GROUP BY `product_name`"
                 GLOBAL_SELECT_ALL_FUNCTION_WHERE(table:=table, datagrid:=DataGridViewSales, fields:=fields, where:=where)
             End If
             With DataGridViewSales
@@ -427,10 +423,10 @@ Public Class Reports
             table = "`loc_expense_list`"
             fields = "`expense_id`, `crew_id`, `expense_number`, `total_amount`, `paid_amount`, `unpaid_amount`, `created_at`"
             If searchdate = False Then
-                where = " zreading = date(CURRENT_DATE()) AND store_id = '" & ClientStoreID & "' AND guid = '" & ClientGuid & "'"
+                where = " zreading = date(CURRENT_DATE()) "
                 GLOBAL_SELECT_ALL_FUNCTION_WHERE(table:=table, datagrid:=DataGridViewEXPENSES, fields:=fields, where:=where)
             Else
-                where = " zreading >= '" & Format(DateTimePicker7.Value, "yyyy-MM-dd") & "' and zreading <= '" & Format(DateTimePicker8.Value, "yyyy-MM-dd") & "' AND store_id = '" & ClientStoreID & "' AND guid = '" & ClientGuid & "'"
+                where = " zreading >= '" & Format(DateTimePicker7.Value, "yyyy-MM-dd") & "' and zreading <= '" & Format(DateTimePicker8.Value, "yyyy-MM-dd") & "' "
                 GLOBAL_SELECT_ALL_FUNCTION_WHERE(table:=table, datagrid:=DataGridViewEXPENSES, fields:=fields, where:=where)
             End If
             With DataGridViewEXPENSES
@@ -491,10 +487,10 @@ Public Class Reports
             table = "`loc_deposit`"
             fields = "`dep_id`, `name`, `crew_id`, `transaction_number`, `amount`, `bank`, `transaction_date`, `store_id`, `guid`, `created_at`"
             If searchdate = False Then
-                where = " date(transaction_date) = date(CURRENT_DATE()) AND store_id = '" & ClientStoreID & "' AND guid = '" & ClientGuid & "'"
+                where = " date(transaction_date) = date(CURRENT_DATE()) "
                 GLOBAL_SELECT_ALL_FUNCTION_WHERE(table:=table, datagrid:=DataGridViewDeposits, fields:=fields, where:=where)
             Else
-                where = " date(transaction_date) >= '" & Format(DateTimePicker16.Value, "yyyy-MM-dd") & "' and date(transaction_date) <= '" & Format(DateTimePicker15.Value, "yyyy-MM-dd") & "' AND store_id = '" & ClientStoreID & "' AND guid = '" & ClientGuid & "'"
+                where = " date(transaction_date) >= '" & Format(DateTimePicker16.Value, "yyyy-MM-dd") & "' and date(transaction_date) <= '" & Format(DateTimePicker15.Value, "yyyy-MM-dd") & "' "
                 GLOBAL_SELECT_ALL_FUNCTION_WHERE(table:=table, datagrid:=DataGridViewDeposits, fields:=fields, where:=where)
             End If
             With DataGridViewDeposits
