@@ -625,13 +625,13 @@ Public Class AdvancedCustomReport
                         End With
 
                         gfx.DrawString("Total Items: " & ToolStripStatusLabel2.Text, font, XBrushes.Black, 50, 133 + RowCount)
-                        gfx.DrawString("Total Gross Sales: " & GrossSales, font, XBrushes.Black, 50, 143 + RowCount)
-                        gfx.DrawString("Total Discount: " & TotalDisc, font, XBrushes.Black, 50, 153 + RowCount)
-                        gfx.DrawString("Net Sales: " & NetSales, font, XBrushes.Black, 50, 163 + RowCount)
-                        gfx.DrawString("Vatable Sales: " & VatableSales, font, XBrushes.Black, 50, 173 + RowCount)
-                        gfx.DrawString("Less Vat: " & LessVat, font, XBrushes.Black, 50, 183 + RowCount)
-                        gfx.DrawString("Add Vat: " & AddVat, font, XBrushes.Black, 50, 193 + RowCount)
-                        gfx.DrawString("Vat Exempt Sales: " & VatExempt, font, XBrushes.Black, 50, 203 + RowCount)
+                        gfx.DrawString("Total Gross Sales: " & NUMBERFORMAT(GrossSales), font, XBrushes.Black, 50, 143 + RowCount)
+                        gfx.DrawString("Total Discount: " & NUMBERFORMAT(TotalDisc), font, XBrushes.Black, 50, 153 + RowCount)
+                        gfx.DrawString("Net Sales: " & NUMBERFORMAT(NetSales), font, XBrushes.Black, 50, 163 + RowCount)
+                        gfx.DrawString("Vatable Sales: " & NUMBERFORMAT(VatableSales), font, XBrushes.Black, 50, 173 + RowCount)
+                        gfx.DrawString("Less Vat: " & NUMBERFORMAT(LessVat), font, XBrushes.Black, 50, 183 + RowCount)
+                        gfx.DrawString("Add Vat: " & NUMBERFORMAT(AddVat), font, XBrushes.Black, 50, 193 + RowCount)
+                        gfx.DrawString("Vat Exempt Sales: " & NUMBERFORMAT(VatExempt), font, XBrushes.Black, 50, 203 + RowCount)
                         gfx.DrawString("Refunded/Cancel: " & NUMBERFORMAT(grossRefund), font, XBrushes.Black, 50, 213 + RowCount)
                         gfx.DrawString("Date Generated: " & FullDate24HR(), font, XBrushes.Black, 50, 223 + RowCount)
 
@@ -686,13 +686,13 @@ Public Class AdvancedCustomReport
                         End With
 
                         gfx.DrawString("Total Items: " & ToolStripStatusLabel2.Text, font, XBrushes.Black, 50, 133 + RowCount)
-                        gfx.DrawString("Total Gross Sales: " & GrossSales, font, XBrushes.Black, 50, 143 + RowCount)
-                        gfx.DrawString("Total Discount: " & TotalDisc, font, XBrushes.Black, 50, 153 + RowCount)
-                        gfx.DrawString("Net Sales: " & NetSales, font, XBrushes.Black, 50, 163 + RowCount)
-                        gfx.DrawString("Vatable Sales: " & VatableSales, font, XBrushes.Black, 50, 173 + RowCount)
-                        gfx.DrawString("Less Vat: " & LessVat, font, XBrushes.Black, 50, 183 + RowCount)
-                        gfx.DrawString("Add Vat: " & AddVat, font, XBrushes.Black, 50, 193 + RowCount)
-                        gfx.DrawString("Vat Exempt Sales: " & VatExempt, font, XBrushes.Black, 50, 203 + RowCount)
+                        gfx.DrawString("Total Gross Sales: " & NUMBERFORMAT(GrossSales), font, XBrushes.Black, 50, 143 + RowCount)
+                        gfx.DrawString("Total Discount: " & NUMBERFORMAT(TotalDisc), font, XBrushes.Black, 50, 153 + RowCount)
+                        gfx.DrawString("Net Sales: " & NUMBERFORMAT(NetSales), font, XBrushes.Black, 50, 163 + RowCount)
+                        gfx.DrawString("Vatable Sales: " & NUMBERFORMAT(VatableSales), font, XBrushes.Black, 50, 173 + RowCount)
+                        gfx.DrawString("Less Vat: " & NUMBERFORMAT(LessVat), font, XBrushes.Black, 50, 183 + RowCount)
+                        gfx.DrawString("Add Vat: " & NUMBERFORMAT(AddVat), font, XBrushes.Black, 50, 193 + RowCount)
+                        gfx.DrawString("Vat Exempt Sales: " & NUMBERFORMAT(VatExempt), font, XBrushes.Black, 50, 203 + RowCount)
                         gfx.DrawString("Refunded/Cancel: " & NUMBERFORMAT(GrossRefund), font, XBrushes.Black, 50, 213 + RowCount)
                         gfx.DrawString("Date Generated: " & FullDate24HR(), font, XBrushes.Black, 50, 223 + RowCount)
 

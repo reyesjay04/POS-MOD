@@ -2008,9 +2008,9 @@ Public Class Reports
 
     Private Sub ToolStripButton3_Click(sender As Object, e As EventArgs) Handles ToolStripButton3.Click
         Try
-            Dim document As Pdf.PdfDocument = New Pdf.PdfDocument
+            Dim document As PdfDocument = New PdfDocument
             document.Info.Title = "Created with PDFsharp"
-            Dim page As Pdf.PdfPage = document.Pages.Add
+            Dim page As PdfPage = document.Pages.Add
             Dim gfx As XGraphics = XGraphics.FromPdfPage(page)
             Dim font As XFont = New XFont("Verdana", 9, XFontStyle.Regular)
             Dim font1 As XFont = New XFont("Verdana", 9, XFontStyle.Bold)
@@ -2026,16 +2026,26 @@ Public Class Reports
 
             Dim result As List(Of String) = list.Distinct().ToList
             Dim TotalNetSales As Double = 0
+            Dim TotalGrossSales As Double = 0
+            Dim TotalVatExempt As Double = 0
+            Dim TotalRefund As Double = 0
+            Dim TotalAddVat As Double
             Dim ConnectionLocal As MySqlConnection = LocalhostConn()
 
             For Each element As String In result
-                'Console.WriteLine(element.ToString)
-                Dim Query = "SELECT amountdue FROM loc_daily_transaction WHERE transaction_number = '" & element & "'"
+                Dim Query = "SELECT amountdue, grosssales, vatexemptsales, active, vatpercentage FROM loc_daily_transaction WHERE transaction_number = '" & element & "'"
                 Dim Cmd As MySqlCommand = New MySqlCommand(Query, ConnectionLocal)
                 Using reader As MySqlDataReader = Cmd.ExecuteReader
                     If reader.HasRows Then
                         While reader.Read
-                            TotalNetSales += reader("amountdue")
+                            If reader("active") = 1 Then
+                                TotalNetSales += reader("amountdue")
+                                TotalGrossSales += reader("grosssales")
+                                TotalVatExempt += reader("vatexemptsales")
+                                TotalAddVat += reader("vatpercentage")
+                            Else
+                                TotalRefund += reader("grosssales")
+                            End If
                         End While
                     End If
                 End Using
@@ -2094,12 +2104,18 @@ Public Class Reports
                             Next
                         End With
 
-                        gfx.DrawString("Total Items: " & SumOfColumnsToInt(DataGridViewCustomReport, 2), font, XBrushes.Black, 50, 133 + RowCount)
-                        gfx.DrawString("Total Discount: " & NUMBERFORMAT(TotalDiscountCustomReports), font, XBrushes.Black, 50, 143 + RowCount)
-                        gfx.DrawString("Net Sales: " & NUMBERFORMAT(TotalNetSales), font, XBrushes.Black, 50, 153 + RowCount)
-                        gfx.DrawString("Vatable Sales: " & CustomReportVat, font, XBrushes.Black, 50, 163 + RowCount)
-                        gfx.DrawString("Less Vat: " & CustomReportLessVat, font, XBrushes.Black, 50, 173 + RowCount)
-                        gfx.DrawString("Date Generated: " & FullDate24HR(), font, XBrushes.Black, 50, 183 + RowCount)
+
+
+                        gfx.DrawString("Total Gross Sales: " & NUMBERFORMAT(TotalGrossSales), font, XBrushes.Black, 50, 133 + RowCount)
+                        gfx.DrawString("Total Items: " & SumOfColumnsToInt(DataGridViewCustomReport, 2), font, XBrushes.Black, 50, 143 + RowCount)
+                        gfx.DrawString("Total Discount: " & NUMBERFORMAT(TotalDiscountCustomReports), font, XBrushes.Black, 50, 153 + RowCount)
+                        gfx.DrawString("Vatable Sales: " & NUMBERFORMAT(CustomReportVat), font, XBrushes.Black, 50, 163 + RowCount)
+                        gfx.DrawString("Net Sales: " & NUMBERFORMAT(TotalNetSales), font, XBrushes.Black, 50, 173 + RowCount)
+                        gfx.DrawString("Less Vat: " & NUMBERFORMAT(CustomReportLessVat), font, XBrushes.Black, 50, 183 + RowCount)
+                        gfx.DrawString("Add Vat: " & NUMBERFORMAT(TotalAddVat), font, XBrushes.Black, 50, 193 + RowCount)
+                        gfx.DrawString("Vat Exempt Sales: " & NUMBERFORMAT(TotalVatExempt), font, XBrushes.Black, 50, 203 + RowCount)
+                        gfx.DrawString("Refunded/ Cancel: " & NUMBERFORMAT(TotalRefund), font, XBrushes.Black, 50, 213 + RowCount)
+                        gfx.DrawString("Date Generated: " & FullDate24HR(), font, XBrushes.Black, 50, 223 + RowCount)
 
                         Kahitano += 1
                     Else
@@ -2137,12 +2153,16 @@ Public Class Reports
                             Next
                         End With
 
-                        gfx.DrawString("Total Items: " & SumOfColumnsToInt(DataGridViewCustomReport, 2), font, XBrushes.Black, 50, 133 + RowCount)
-                        gfx.DrawString("Total Discount: " & NUMBERFORMAT(TotalDiscountCustomReports), font, XBrushes.Black, 50, 143 + RowCount)
-                        gfx.DrawString("Net Sales: " & NUMBERFORMAT(TotalNetSales), font, XBrushes.Black, 50, 153 + RowCount)
-                        gfx.DrawString("Vatable Sales: " & CustomReportVat, font, XBrushes.Black, 50, 163 + RowCount)
-                        gfx.DrawString("Less Vat: " & CustomReportLessVat, font, XBrushes.Black, 50, 173 + RowCount)
-                        gfx.DrawString("Date Generated: " & FullDate24HR(), font, XBrushes.Black, 50, 183 + RowCount)
+                        gfx.DrawString("Total Gross Sales: " & NUMBERFORMAT(TotalGrossSales), font, XBrushes.Black, 50, 133 + RowCount)
+                        gfx.DrawString("Total Items: " & SumOfColumnsToInt(DataGridViewCustomReport, 2), font, XBrushes.Black, 50, 143 + RowCount)
+                        gfx.DrawString("Total Discount: " & NUMBERFORMAT(TotalDiscountCustomReports), font, XBrushes.Black, 50, 153 + RowCount)
+                        gfx.DrawString("Vatable Sales: " & NUMBERFORMAT(CustomReportVat), font, XBrushes.Black, 50, 163 + RowCount)
+                        gfx.DrawString("Net Sales: " & NUMBERFORMAT(TotalNetSales), font, XBrushes.Black, 50, 173 + RowCount)
+                        gfx.DrawString("Less Vat: " & NUMBERFORMAT(CustomReportLessVat), font, XBrushes.Black, 50, 183 + RowCount)
+                        gfx.DrawString("Add Vat: " & NUMBERFORMAT(TotalAddVat), font, XBrushes.Black, 50, 193 + RowCount)
+                        gfx.DrawString("Vat Exempt Sales: " & NUMBERFORMAT(TotalVatExempt), font, XBrushes.Black, 50, 203 + RowCount)
+                        gfx.DrawString("Refunded/ Cancel: " & NUMBERFORMAT(TotalRefund), font, XBrushes.Black, 50, 213 + RowCount)
+                        gfx.DrawString("Date Generated: " & FullDate24HR(), font, XBrushes.Black, 50, 223 + RowCount)
                     End If
                 Next
                 AuditTrail.LogToAuditTrail("Report", "Reports/Custom Report: Generated Report, " & ClientCrewID, "Normal")
