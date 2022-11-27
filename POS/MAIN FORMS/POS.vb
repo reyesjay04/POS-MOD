@@ -460,6 +460,14 @@ Public Class POS
     Dim ThreadMix As Thread
     Private Sub BackgroundWorker3_DoWork(sender As Object, e As System.ComponentModel.DoWorkEventArgs) Handles BackgroundWorkerInventory.DoWork
         Try
+
+            ThreadMix = New Thread(AddressOf FillDatatable)
+            ThreadMix.Start()
+            ThreadlistMIX.Add(ThreadMix)
+            For Each t In ThreadlistMIX
+                t.Join()
+            Next
+
             ThreadMix = New Thread(AddressOf Mix)
             ThreadMix.Start()
             ThreadlistMIX.Add(ThreadMix)
@@ -2176,6 +2184,45 @@ Public Class POS
 
 #End Region
 #End Region
+    Public Sub FillDatatable()
+        Try
+            INVENTORY_DATATABLE = New DataTable
+            With INVENTORY_DATATABLE
+                .Columns.Add("SrvT")
+                .Columns.Add("FID")
+                .Columns.Add("Qty")
+                .Columns.Add("ID")
+                .Columns.Add("NM")
+                .Columns.Add("Srv")
+                .Columns.Add("COG")
+                .Columns.Add("OCOG")
+                .Columns.Add("PrdAddID")
+                .Columns.Add("Origin")
+                .Columns.Add("HalfBatch")
+            End With
+
+            Console.WriteLine(DataGridViewInv.Rows.Count)
+
+            For Each row As DataGridViewRow In DataGridViewInv.Rows
+                Dim Prod As DataRow = INVENTORY_DATATABLE.NewRow
+                Prod("SrvT") = row.Cells(0).Value
+                Prod("FID") = row.Cells(1).Value
+                Prod("Qty") = row.Cells(2).Value
+                Prod("ID") = row.Cells(3).Value
+                Prod("NM") = row.Cells(4).Value
+                Prod("Srv") = row.Cells(5).Value
+                Prod("COG") = row.Cells(6).Value
+                Prod("OCOG") = row.Cells(7).Value
+                Prod("PrdAddID") = row.Cells(8).Value
+                Prod("Origin") = row.Cells(9).Value
+                Prod("HalfBatch") = row.Cells(10).Value
+                INVENTORY_DATATABLE.Rows.Add(Prod)
+            Next
+
+        Catch ex As Exception
+            AuditTrail.LogToAuditTrail("System", "Confirm Refund/FillDatatable(): " & ex.ToString, "Critical")
+        End Try
+    End Sub
 End Class
 
 

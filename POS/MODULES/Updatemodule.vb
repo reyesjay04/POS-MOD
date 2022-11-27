@@ -16,7 +16,7 @@ Module Updatemodule
 
     Public Sub UpdateInventory(returnVoid As Boolean)
 
-        FillDatatable()
+
 
         Dim secondary_value As Double = 0
         Dim stock_secondary As Double = 0

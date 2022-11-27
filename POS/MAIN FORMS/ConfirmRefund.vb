@@ -194,7 +194,7 @@ Public Class ConfirmRefund
 
                 Next
                 IncrementID += 1
-                FillDatatable()
+
             Next
         Catch ex As Exception
             AuditTrail.LogToAuditTrail("System", "Confirm Refund/LoadProducts(): " & ex.ToString, "Critical")
