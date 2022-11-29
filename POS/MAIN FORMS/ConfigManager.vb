@@ -1684,6 +1684,7 @@ Public Class ConfigManager
                          .product_price = Reader("product_price"),
                          .product_desc = Reader("product_desc"),
                          .product_image = Reader("product_image"),
+                         .product_status = Reader("product_status"),
                          .date_modified = Reader("date_modified"),
                          .inventory_id = Reader("inventory_id"),
                          .addontype = Reader("addontype"),
@@ -1815,7 +1816,7 @@ Public Class ConfigManager
         Try
             For Each prod As ProductsCls In listOfProducts
                 With prod
-                    DataGridViewPRODUCTS.Rows.Add(.product_id, .product_sku, .product_name, .formula_id, .product_barcode, .product_category, .product_price, .product_desc, .product_image, .date_modified, .inventory_id, .addontype, .half_batch, .partners, .arrangement)
+                    DataGridViewPRODUCTS.Rows.Add(.product_id, .product_sku, .product_name, .formula_id, .product_barcode, .product_category, .product_price, .product_desc, .product_image, .product_status, .date_modified, .inventory_id, .addontype, .half_batch, .partners, .arrangement)
                 End With
             Next
         Catch ex As Exception
@@ -1833,13 +1834,13 @@ Public Class ConfigManager
                 Dim Query = "INSERT INTO loc_admin_products 
                                 (
                                     `server_product_id`,`product_sku`, `product_name`, `formula_id`, `product_barcode`, `product_category`, `product_price`, `product_desc`, 
-                                    `product_image`, `origin`, `date_modified`, `server_inventory_id`, `guid`, `store_id`, `addontype`, `half_batch`, 
+                                    `product_image`, `origin`, `product_status`, `date_modified`, `server_inventory_id`, `guid`, `store_id`, `addontype`, `half_batch`, 
                                     `partners`, `arrangement`, `synced`
                                 )
                              VALUES 
                                 (
                                     @server_product_id, @product_sku, @product_name, @formula_id, @product_barcode, @product_category, @product_price, @product_desc, 
-                                    @product_image, @origin, @date_modified, @server_inventory_id, @guid, @store_id, @addontype, @half_batch, 
+                                    @product_image, @origin, @product_status, @date_modified, @server_inventory_id, @guid, @store_id, @addontype, @half_batch, 
                                     @partners, @arrangement, @synced
                                 )"
                 Using cmdlocal As New MySqlCommand(Query, ConnectionLocal)
@@ -1854,6 +1855,7 @@ Public Class ConfigManager
                         cmdlocal.Parameters.AddWithValue("@product_price", .product_price)
                         cmdlocal.Parameters.AddWithValue("@product_desc", .product_desc)
                         cmdlocal.Parameters.AddWithValue("@product_image", .product_image)
+                        cmdlocal.Parameters.AddWithValue("@product_status", .product_status)
                         cmdlocal.Parameters.AddWithValue("@origin", "Server")
                         cmdlocal.Parameters.AddWithValue("@date_modified", .date_modified)
                         cmdlocal.Parameters.AddWithValue("@server_inventory_id", .inventory_id)

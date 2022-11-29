@@ -8,6 +8,7 @@
     Property product_price As Double
     Property product_desc As String
     Property product_image As String
+    Property product_status As String
     Property date_modified As Date
     Property inventory_id As Integer
     Property addontype As String
