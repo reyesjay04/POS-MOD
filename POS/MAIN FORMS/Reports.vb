@@ -50,7 +50,7 @@ Public Class Reports
     Property genxreadReport As xreadCls
     Property genzreadreport As zreadCls
     Property genrepzreadreport As zreadReprintCls
-
+    Property ReturnsList As New List(Of RepReturnsCls)
     Private Sub Reports_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         Try
 
@@ -163,15 +163,16 @@ Public Class Reports
             If ComboBoxUserIDS.Text <> "All" Then
                 crewIdFilter = $" AND dt.crew_id = '{ComboBoxUserIDS.Text}'"
             End If
-            Dim Fields As String = "dt.transaction_number, dt.grosssales, SUM(dtd.quantity) , dt.crew_id, dt.created_at"
+            Dim Fields As String = "dt.transaction_number, dt.grosssales, SUM(dtd.quantity) , dt.crew_id, dt.created_at , dt.active"
             If bool = False Then
                 Table = $"loc_daily_transaction dt LEFT JOIN loc_daily_transaction_details dtd ON dt.transaction_number = dtd.transaction_number WHERE DATE_FORMAT(dt.created_at , '%y-%m-%d') = DATE_FORMAT(CURDATE(), '%y-%m-%d') GROUP BY dt.created_at"
             Else
                 Table = $"loc_daily_transaction dt LEFT JOIN loc_daily_transaction_details dtd ON dt.transaction_number = dtd.transaction_number WHERE dt.zreading >= '{Format(DateTimePicker5.Value, "yyyy-MM-dd")}' AND dt.zreading <= '{Format(DateTimePicker6.Value, "yyyy-MM-dd")}' {crewIdFilter} GROUP BY dt.created_at"
             End If
+
             Dim CrewSalesDt = AsDatatable(Table, Fields, DataGridViewCrewSales)
             For Each row As DataRow In CrewSalesDt.Rows
-                DataGridViewCrewSales.Rows.Add(row("transaction_number"), row("grosssales"), row("SUM(dtd.quantity)"), row("crew_id"), row("created_at"))
+                DataGridViewCrewSales.Rows.Add(row("transaction_number"), row("grosssales"), row("SUM(dtd.quantity)"), row("crew_id"), If(row("active") = 2, "Refunded", If(row("active") = 3, "Rep.Expenses", "Completed")), row("created_at"))
             Next
 
             tssttlcrewqty.Text = SumOfColumnsToDecimal(DataGridViewCrewSales, 2)
@@ -328,6 +329,7 @@ Public Class Reports
             With DataGridViewTRANSACTIONLOGS
                 .Rows.Clear()
                 For Each row As DataRow In trxLogs.Rows
+
                     .Rows.Add(row("created_at"), row("crew_id"), row("description"))
                 Next
             End With
@@ -1890,36 +1892,52 @@ Public Class Reports
 
             ReceiptHeaderOne(sender, e, False, "", False, False)
 
-            PrintSmallLine(sender, e, FontDefaultLine, RECEIPTLINECOUNT)
             RECEIPTLINECOUNT += 30
+            PrintSmallLine(sender, e, FontDefaultLine, RECEIPTLINECOUNT - 10)
+            RightToLeftDisplay(sender, e, RECEIPTLINECOUNT, "Return Item Logs : " & Format(DateTimePicker14.Value, "yyyy-MM-dd") & " - " & Format(DateTimePicker13.Value, "yyyy-MM-dd"), "", FontDefault, 20, 0)
+
             With DataGridViewReturns
+                ReturnsList.Clear()
+                RECEIPTLINECOUNT += 20
+
                 Dim FooterSpacing As Integer = 0
                 If CheckBoxPRINTALL.Checked = False Then
-                    RightToLeftDisplay(sender, e, RECEIPTLINECOUNT, "Return Item Logs : " & Format(DateTimePicker14.Value, "yyyy-MM-dd") & " - " & Format(DateTimePicker13.Value, "yyyy-MM-dd"), "", FontDefault, 20, 0)
-                    RECEIPTLINECOUNT += 20
+
+
                     RightToLeftDisplay(sender, e, RECEIPTLINECOUNT, "Transaction Number: ", "", FontDefault, 20, 0)
+                    SimpleTextDisplay(sender, e, Space(40) & .Rows(0).Cells(0).Value.ToString, FontDefault, 0, RECEIPTLINECOUNT - 20)
 
                     RECEIPTLINECOUNT += 10
                     RightToLeftDisplay(sender, e, RECEIPTLINECOUNT, "Service Crew: ", "", FontDefault, 20, 0)
-                    SimpleTextDisplay(sender, e, Space(40) & .SelectedRows(0).Cells(0).Value.ToString, FontDefault, 0, RECEIPTLINECOUNT - 30)
+                    SimpleTextDisplay(sender, e, Space(40) & .SelectedRows(0).Cells(1).Value.ToString, FontDefault, 0, RECEIPTLINECOUNT - 20)
+                    '
                     RECEIPTLINECOUNT += 10
                     RightToLeftDisplay(sender, e, RECEIPTLINECOUNT, "Date: ", "", FontDefault, 20, 0)
-                    SimpleTextDisplay(sender, e, Space(40) & .SelectedRows(0).Cells(1).Value.ToString, FontDefault, 0, RECEIPTLINECOUNT - 30)
-                    RECEIPTLINECOUNT += 10
+                    SimpleTextDisplay(sender, e, Space(40) & .SelectedRows(0).Cells(3).Value.ToString, FontDefault, 0, RECEIPTLINECOUNT - 20)
+                    RECEIPTLINECOUNT += 20
+
+                    ReturnsList = ModRepReturns.GetProducts(.Rows(0).Cells(0).Value.ToString)
+
+                    For Each row As RepReturnsCls In ReturnsList
+                        SimpleTextDisplay(sender, e, row.ProductName, FontDefault, 0, RECEIPTLINECOUNT - 30)
+                        SimpleTextDisplay(sender, e, row.ProductQuantity, FontDefault, 50, RECEIPTLINECOUNT - 30)
+                        SimpleTextDisplay(sender, e, NUMBERFORMAT(row.Price), FontDefault, 80, RECEIPTLINECOUNT - 30)
+                        SimpleTextDisplay(sender, e, NUMBERFORMAT(row.Total), FontDefault, 140, RECEIPTLINECOUNT - 30)
+                        RECEIPTLINECOUNT += 10
+                    Next
+
                     RightToLeftDisplay(sender, e, RECEIPTLINECOUNT, "Reason:", "", FontDefault, 20, 0)
-                    SimpleTextDisplay(sender, e, Space(40) & .SelectedRows(0).Cells(3).Value.ToString, FontDefault, 0, RECEIPTLINECOUNT - 30)
                     RECEIPTLINECOUNT += 10
                     RightToLeftDisplay(sender, e, RECEIPTLINECOUNT, Space(5) & .SelectedRows(0).Cells(2).Value.ToString, "", FontDefault, 20, 0)
-                    SimpleTextDisplay(sender, e, Space(40) & "TOTAL: " & .SelectedRows(0).Cells(4).Value.ToString, FontDefault, 0, RECEIPTLINECOUNT - 30)
-
                     PrintSmallLine(sender, e, FontDefaultLine, RECEIPTLINECOUNT)
-                    RECEIPTLINECOUNT += 30
-                    CenterTextDisplay(sender, e, S_Zreading & " " & Format(Now(), "HH:mm:ss"), FontDefault, RECEIPTLINECOUNT)
                     RECEIPTLINECOUNT += 10
+                    SimpleTextDisplay(sender, e, Space(40) & "TOTAL: " & .SelectedRows(0).Cells(4).Value.ToString, FontDefault, 0, RECEIPTLINECOUNT - 20)
+                    RECEIPTLINECOUNT += 20
+                    CenterTextDisplay(sender, e, S_Zreading & " " & Format(Now(), "HH:mm:ss"), FontDefault, RECEIPTLINECOUNT)
+
                 Else
                     For i As Integer = 0 To .Rows.Count - 1 Step +1
-                        RightToLeftDisplay(sender, e, RECEIPTLINECOUNT, "Return Item Logs : " & Format(DateTimePicker14.Value, "yyyy-MM-dd") & " - " & Format(DateTimePicker13.Value, "yyyy-MM-dd"), "", FontDefault, 20, 0)
-                        RECEIPTLINECOUNT += 20
+
                         RightToLeftDisplay(sender, e, RECEIPTLINECOUNT, "Transaction Number: ", "", FontDefault, 20, 0)
                         SimpleTextDisplay(sender, e, Space(40) & .Rows(i).Cells(0).Value.ToString, FontDefault, 0, RECEIPTLINECOUNT - 20)
                         RECEIPTLINECOUNT += 10
@@ -1928,16 +1946,27 @@ Public Class Reports
                         RECEIPTLINECOUNT += 10
                         RightToLeftDisplay(sender, e, RECEIPTLINECOUNT, "Date: ", "", FontDefault, 20, 0)
                         SimpleTextDisplay(sender, e, Space(40) & .Rows(i).Cells(3).Value.ToString, FontDefault, 0, RECEIPTLINECOUNT - 20)
-                        RECEIPTLINECOUNT += 10
-                        RightToLeftDisplay(sender, e, RECEIPTLINECOUNT, "Reason:", "", FontDefault, 20, 0)
-                        SimpleTextDisplay(sender, e, Space(40) & "TOTAL: " & .Rows(i).Cells(4).Value.ToString, FontDefault, 0, RECEIPTLINECOUNT - 20)
-                        RECEIPTLINECOUNT += 10
-                        RightToLeftDisplay(sender, e, RECEIPTLINECOUNT, Space(5) & .Rows(i).Cells(2).Value.ToString, "", FontDefault, 20, 0)
                         RECEIPTLINECOUNT += 20
 
+                        ReturnsList = ModRepReturns.GetProducts(.Rows(i).Cells(0).Value.ToString)
+
+                        For Each row As RepReturnsCls In ReturnsList
+                            SimpleTextDisplay(sender, e, row.ProductName, FontDefault, 0, RECEIPTLINECOUNT - 30)
+                            SimpleTextDisplay(sender, e, row.ProductQuantity, FontDefault, 50, RECEIPTLINECOUNT - 30)
+                            SimpleTextDisplay(sender, e, NUMBERFORMAT(row.Price), FontDefault, 80, RECEIPTLINECOUNT - 30)
+                            SimpleTextDisplay(sender, e, NUMBERFORMAT(row.Total), FontDefault, 140, RECEIPTLINECOUNT - 30)
+                            RECEIPTLINECOUNT += 10
+                        Next
+
+                        RightToLeftDisplay(sender, e, RECEIPTLINECOUNT, "Reason:", "", FontDefault, 20, 0)
+                        RECEIPTLINECOUNT += 10
+                        RightToLeftDisplay(sender, e, RECEIPTLINECOUNT, Space(5) & .Rows(i).Cells(2).Value.ToString, "", FontDefault, 20, 0)
+                        PrintSmallLine(sender, e, FontDefaultLine, RECEIPTLINECOUNT)
+                        RECEIPTLINECOUNT += 10
+                        SimpleTextDisplay(sender, e, Space(40) & "TOTAL: " & .Rows(i).Cells(4).Value.ToString, FontDefault, 0, RECEIPTLINECOUNT - 20)
+                        RECEIPTLINECOUNT += 20
                     Next
-                    PrintSmallLine(sender, e, FontDefaultLine, RECEIPTLINECOUNT - 20)
-                    CenterTextDisplay(sender, e, S_Zreading & " " & Format(Now(), "HH:mm:ss"), FontDefault, RECEIPTLINECOUNT + 10)
+                    CenterTextDisplay(sender, e, S_Zreading & " " & Format(Now(), "HH:mm:ss"), FontDefault, RECEIPTLINECOUNT)
                 End If
             End With
         Catch ex As Exception
@@ -1969,7 +1998,7 @@ Public Class Reports
                         PrintPreviewDialogReturns.ShowDialog()
                     End If
                 Else
-                    BodyLine = 70
+                    BodyLine = 90
                     For i As Integer = 0 To DataGridViewReturns.Rows.Count - 1 Step +1
                         ProductLine += 80
                     Next
@@ -2957,8 +2986,7 @@ Public Class Reports
             XML_Writer.WriteEndDocument()
             XML_Writer.Close()
 
-            AuditTrail.LogToAuditTrail("System", "Reports: Generated XREAD, " & ClientCrewID, "Normal")
-
+            AuditTrail.LogToAuditTrail("System", $"Reports: Generated XREAD, Date: {S_Zreading}, {ClientCrewID}", "Normal")
         Catch ex As Exception
             isSuccess = False
             AuditTrail.LogToAuditTrail("System", "Reports/ButtonXREAD: " & ex.ToString, "Critical")
@@ -3016,7 +3044,7 @@ Public Class Reports
                 InsertIntoEJournal()
                 SaveXMLInfo(ZreadXmlName)
 
-                AuditTrail.LogToAuditTrail("System", "Reports: Generated ZREAD, " & ClientCrewID, "Normal")
+                AuditTrail.LogToAuditTrail("System", $"Reports: Generated ZREAD, Z-Read for {S_Zreading}, {ClientCrewID}", "Normal")
                 genzreadreport.InsertZReadXRead()
                 S_OLDGRANDTOTAL = genzreadreport.UpdateBegBalance()
                 S_Zreading = genzreadreport.UpdateZreadSettings()

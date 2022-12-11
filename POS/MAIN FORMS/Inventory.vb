@@ -12,6 +12,9 @@ Public Class Inventory
     Dim prodid As String
     Dim tbl As String
     Dim flds As String
+
+    Property InventoryList As New List(Of InventoryCls)
+
     Private Sub Inventory_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         _instance = Me
         Try
@@ -25,8 +28,24 @@ Public Class Inventory
             TabControl5.TabPages(0).Text = "Approved"
             TabControl5.TabPages(1).Text = "Waiting for approval"
 
+            With DataGridViewINVVIEW
+                .Rows.Clear()
+                .RowHeadersVisible = False
+                .AllowUserToAddRows = False
+                .AllowUserToDeleteRows = False
+                .AllowUserToOrderColumns = False
+                .AllowUserToResizeColumns = False
+                .AllowUserToResizeRows = False
+                .Font = New Font("tahoma", 10)
+                .CellBorderStyle = DataGridViewCellBorderStyle.SingleHorizontal
+                .ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.None
+                .SelectionMode = DataGridViewSelectionMode.FullRowSelect
+                .Columns(0).Width = 150
+                .Columns(7).Width = 170
+            End With
 
-            loadinventory()
+            GetInventory() 'Class Type
+
             loadcriticalstocks()
             loadstockadjustmentreport(False)
             loadfastmovingstock()
@@ -54,22 +73,30 @@ Public Class Inventory
             AuditTrail.LogToAuditTrail("System", "Inventory/Load: " & ex.ToString, "Critical")
         End Try
     End Sub
-    Sub loadinventory()
+    Private Sub dgv_EmployeeTraining_RowPostPaint(sender As Object, e As DataGridViewRowPostPaintEventArgs) Handles DataGridViewINVVIEW.RowPostPaint
+        If e.RowIndex < Me.DataGridViewINVVIEW.RowCount - 1 Then
+            Try
+                Dim dgvRow As DataGridViewRow = Me.DataGridViewINVVIEW.Rows(e.RowIndex)
+                If dgvRow.Cells("colPrimary").Value <= dgvRow.Cells("colLimit").Value Then
+                    dgvRow.DefaultCellStyle.BackColor = Color.FromArgb(255, 213, 128)
+                End If
+            Catch ex As Exception
+                MsgBox(ex.ToString)
+            End Try
+        End If
+    End Sub
+
+    Public Sub GetInventory()
         Try
-            fields = "I.product_ingredients as Ingredients, i.sku , CONCAT_WS(' ', ROUND(I.stock_primary,0), F.primary_unit) as PrimaryValue , CONCAT_WS(' ', ROUND(I.stock_secondary,0), F.secondary_unit) as UOM , ROUND(I.stock_no_of_servings,0) as NoofServings, I.stock_status, I.critical_limit, I.date_modified"
-            GLOBAL_SELECT_ALL_FUNCTION_WHERE(table:="loc_pos_inventory I INNER JOIN loc_product_formula F ON F.server_formula_id = I.server_inventory_id ", datagrid:=DataGridViewINVVIEW, fields:=fields, where:=" I.stock_status = 1 AND I.store_id = " & ClientStoreID & " ORDER BY I.product_ingredients ASC")
-            With DataGridViewINVVIEW
-                .Columns(0).HeaderCell.Value = "Ingredients"
-                .Columns(1).HeaderCell.Value = "SKU"
-                .Columns(2).HeaderCell.Value = "Primary"
-                .Columns(3).HeaderCell.Value = "UOM"
-                .Columns(4).HeaderCell.Value = "No. of Servings"
-                .Columns(5).HeaderCell.Value = "Status"
-                .Columns(6).HeaderCell.Value = "Critical Limit"
-                .Columns(7).HeaderCell.Value = "Date Created"
-            End With
+            DataGridViewINVVIEW.Rows.Clear()
+            InventoryList = ModInventory.loadinventory()
+            For Each row As InventoryCls In InventoryList
+                With row
+                    DataGridViewINVVIEW.Rows.Add(.Ingredientname, .SKU, .PrimaryValue, .UnitOfMeasure, .Servings, If(.Status = 1, "Active", "In-active"), .Limit, .DateCreated)
+                End With
+            Next
         Catch ex As Exception
-            AuditTrail.LogToAuditTrail("System", "Inventory/loadinventory(): " & ex.ToString, "Critical")
+            AuditTrail.LogToAuditTrail("System", "Inventory/GetInventory(): " & ex.ToString, "Critical")
         End Try
     End Sub
     Sub loadinventorycustom()
@@ -138,27 +165,32 @@ Public Class Inventory
     Dim inv
     Public Sub loadstockentry(bool As Boolean)
         Try
-            Dim fields = "crew_id, log_type, log_description, log_date_time"
+            Dim Fields = "`created_at`, `group_name`, `severity`, `crew_id`, `description`"
+            Dim Table = "loc_audit_trail"
             Dim WhereVal As String = ""
             Dim LoadStockEntry
             If bool = False Then
-                WhereVal = " date(log_date_time) = CURRENT_DATE() AND log_type = 'STOCK ENTRY' "
-                LoadStockEntry = AsDatatable("loc_system_logs WHERE " & WhereVal, fields, DataGridViewSTOCKENTRY)
+                WhereVal = " WHERE severity = 'Normal' AND description LIKE '%Stock Entry:%' AND date(created_at) = CURRENT_DATE() "
+                LoadStockEntry = AsDatatable(Table & WhereVal, Fields, DataGridViewSTOCKENTRY)
             Else
-                WhereVal = " log_type = 'STOCK ENTRY' AND date(log_date_time) >= '" & Format(DateTimePicker4.Value, "yyyy-MM-dd") & "' AND date(log_date_time) <= '" & Format(DateTimePicker3.Value, "yyyy-MM-dd") & "'"
-                LoadStockEntry = AsDatatable("loc_system_logs WHERE " & WhereVal, fields, DataGridViewSTOCKENTRY)
+                WhereVal = " WHERE severity = 'Normal' AND description LIKE '%Stock Entry:%' AND date(created_at) BETWEEN '" & Format(DateTimePicker4.Value, "yyyy-MM-dd") & "' AND '" & Format(DateTimePicker3.Value, "yyyy-MM-dd") & "'"
+                LoadStockEntry = AsDatatable(Table & WhereVal, Fields, DataGridViewSTOCKENTRY)
             End If
 
             With DataGridViewSTOCKENTRY
                 For Each row As DataRow In LoadStockEntry.Rows
-                    DataGridViewSTOCKENTRY.Rows.Add(row("crew_id"), row("log_type"), row("log_description"), row("log_date_time"))
+                    Dim CrewID = returnfullname(row("crew_id"))
+                    DataGridViewSTOCKENTRY.Rows.Add(CrewID, row("group_name"), row("severity"), row("description"), row("created_at"))
                 Next
                 .Columns(0).HeaderText = "Service Crew"
-                .Columns(1).Visible = False
-                .Columns(2).HeaderText = "Description"
-                .Columns(3).HeaderText = "Date and Time"
-                .Columns(0).Width = 150
-                .Columns(3).Width = 200
+                .Columns(1).HeaderText = "Group Name"
+                .Columns(2).HeaderText = "Severity"
+                .Columns(3).HeaderText = "Description"
+                .Columns(4).HeaderText = "Date and Time"
+                .Columns(0).Width = 120
+                .Columns(1).Width = 120
+                .Columns(2).Width = 120
+                .Columns(4).Width = 170
             End With
         Catch ex As Exception
             AuditTrail.LogToAuditTrail("System", "Inventory/loadstockentry(): " & ex.ToString, "Critical")
@@ -168,31 +200,29 @@ Public Class Inventory
     Sub loadstockadjustmentreport(searchdate As Boolean)
         Try
             Dim StockAdjustmentReport As DataTable = New DataTable
-            Dim Fields = "`crew_id`, `log_type`, `log_description`, `log_date_time`, `log_store`, `guid`, `loc_systemlog_id`, `synced`"
-            Dim Table = "loc_system_logs"
+            Dim Fields = "`created_at`, `group_name`, `severity`, `crew_id`, `description`"
+            Dim Table = "loc_audit_trail"
             Dim Where = ""
             If searchdate = False Then
-                Where = " WHERE date(log_date_time) = CURRENT_DATE() AND log_type IN('NEW STOCK ADDED','STOCK REMOVAL','STOCK TRANSFER')"
+                Where = " WHERE severity = 'Normal' AND date(created_at) = CURRENT_DATE() AND description LIKE '%Stock Adjustment:%'"
                 StockAdjustmentReport = AsDatatable(Table & Where, Fields, DataGridViewStockAdjustment)
             Else
-                Where = " WHERE log_type IN('NEW STOCK ADDED','STOCK REMOVAL','STOCK TRANSFER') AND date(log_date_time) >= '" & Format(DateTimePicker1.Value, "yyyy-MM-dd") & "' AND date(log_date_time) <= '" & Format(DateTimePicker2.Value, "yyyy-MM-dd") & "'"
+                Where = " WHERE severity = 'Normal' AND description LIKE '%Stock Adjustment:%' AND date(created_at) BETWEEN '" & Format(DateTimePicker1.Value, "yyyy-MM-dd") & "' AND '" & Format(DateTimePicker2.Value, "yyyy-MM-dd") & "'"
                 StockAdjustmentReport = AsDatatable(Table & Where, Fields, DataGridViewStockAdjustment)
             End If
             With DataGridViewStockAdjustment
                 .Columns(0).HeaderText = "Service Crew"
-                .Columns(1).HeaderText = "Action"
-                .Columns(2).HeaderText = "Description"
-                .Columns(3).HeaderText = "Date and Time"
-                .Columns(4).Visible = False
-                .Columns(5).Visible = False
-                .Columns(6).Visible = False
-                .Columns(7).Visible = False
-                .Columns(0).Width = 150
-                .Columns(1).Width = 150
-                .Columns(3).Width = 200
+                .Columns(1).HeaderText = "Group Name"
+                .Columns(2).HeaderText = "Severity"
+                .Columns(3).HeaderText = "Description"
+                .Columns(4).HeaderText = "Date and Time"
+                .Columns(0).Width = 120
+                .Columns(1).Width = 120
+                .Columns(2).Width = 120
+                .Columns(4).Width = 170
                 For Each row As DataRow In StockAdjustmentReport.Rows
                     Dim CrewID = returnfullname(row("crew_id"))
-                    DataGridViewStockAdjustment.Rows.Add(CrewID, row("log_type"), row("log_description"), row("log_date_time"), row("log_store"), row("guid"), row("loc_systemlog_id"), row("synced"))
+                    DataGridViewStockAdjustment.Rows.Add(CrewID, row("group_name"), row("severity"), row("description"), row("created_at"))
                 Next
             End With
         Catch ex As Exception
@@ -218,7 +248,7 @@ Public Class Inventory
                 Dim sql = "UPDATE loc_pos_inventory SET stock_primary = 0, stock_secondary = 0,  stock_no_of_servings = 0"
                 Dim cmd As MySqlCommand = New MySqlCommand(sql, LocalhostConn)
                 cmd.ExecuteNonQuery()
-                loadinventory()
+                GetInventory()
                 AuditTrail.LogToAuditTrail("Reset", "Inventory Reset ", "Normal")
             End If
         Catch ex As Exception
@@ -325,7 +355,7 @@ Public Class Inventory
         Try
 
             If TabControl1.SelectedIndex = 0 Then
-                loadinventory()
+                GetInventory()
             End If
 
         Catch ex As Exception

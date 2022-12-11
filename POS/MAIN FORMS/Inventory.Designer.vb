@@ -53,6 +53,14 @@ Partial Class Inventory
         Me.TabControl2 = New System.Windows.Forms.TabControl()
         Me.TabPage7 = New System.Windows.Forms.TabPage()
         Me.DataGridViewINVVIEW = New System.Windows.Forms.DataGridView()
+        Me.colIng = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.colSKU = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.colPrimary = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.colUOM = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.colServings = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.colStatus = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.colLimit = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.colDate = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Panel2 = New System.Windows.Forms.Panel()
         Me.Panel22 = New System.Windows.Forms.Panel()
         Me.ButtonPrintCurInv = New System.Windows.Forms.Button()
@@ -79,14 +87,6 @@ Partial Class Inventory
         Me.TableLayoutPanel5 = New System.Windows.Forms.TableLayoutPanel()
         Me.GroupBox10 = New System.Windows.Forms.GroupBox()
         Me.DataGridViewStockAdjustment = New System.Windows.Forms.DataGridView()
-        Me.Column1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column5 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column6 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column7 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column8 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.GroupBoxStockAdjustment = New System.Windows.Forms.GroupBox()
         Me.ButtonStockAdjustment = New System.Windows.Forms.Button()
         Me.Panel11 = New System.Windows.Forms.Panel()
@@ -100,10 +100,6 @@ Partial Class Inventory
         Me.ButtonStockIN = New System.Windows.Forms.Button()
         Me.GroupBox6 = New System.Windows.Forms.GroupBox()
         Me.DataGridViewSTOCKENTRY = New System.Windows.Forms.DataGridView()
-        Me.Column11 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column12 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column13 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column14 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Panel16 = New System.Windows.Forms.Panel()
         Me.ButtonSearchDailyTransaction = New System.Windows.Forms.Button()
         Me.DateTimePicker3 = New System.Windows.Forms.DateTimePicker()
@@ -124,6 +120,16 @@ Partial Class Inventory
         Me.Panel24 = New System.Windows.Forms.Panel()
         Me.ButtonKeyboard = New System.Windows.Forms.Button()
         Me.Label2 = New System.Windows.Forms.Label()
+        Me.Column1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column5 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column11 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column12 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column13 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column14 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column6 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Panel6.SuspendLayout()
         Me.TabControl1.SuspendLayout()
         Me.TabPage1.SuspendLayout()
@@ -246,6 +252,7 @@ Partial Class Inventory
         DataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
         Me.DataGridViewINVVIEW.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle2
         Me.DataGridViewINVVIEW.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.DataGridViewINVVIEW.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.colIng, Me.colSKU, Me.colPrimary, Me.colUOM, Me.colServings, Me.colStatus, Me.colLimit, Me.colDate})
         DataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
         DataGridViewCellStyle3.BackColor = System.Drawing.Color.White
         DataGridViewCellStyle3.Font = New System.Drawing.Font("Tahoma", 11.0!)
@@ -258,9 +265,64 @@ Partial Class Inventory
         Me.DataGridViewINVVIEW.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically
         Me.DataGridViewINVVIEW.EnableHeadersVisualStyles = False
         Me.DataGridViewINVVIEW.Location = New System.Drawing.Point(3, 40)
+        Me.DataGridViewINVVIEW.MultiSelect = False
         Me.DataGridViewINVVIEW.Name = "DataGridViewINVVIEW"
         Me.DataGridViewINVVIEW.Size = New System.Drawing.Size(1095, 365)
         Me.DataGridViewINVVIEW.TabIndex = 0
+        '
+        'colIng
+        '
+        Me.colIng.FillWeight = 20.30457!
+        Me.colIng.HeaderText = "Ingredients"
+        Me.colIng.Name = "colIng"
+        '
+        'colSKU
+        '
+        Me.colSKU.FillWeight = 20.30457!
+        Me.colSKU.HeaderText = "SKU"
+        Me.colSKU.Name = "colSKU"
+        '
+        'colPrimary
+        '
+        Me.colPrimary.FillWeight = 20.30457!
+        Me.colPrimary.HeaderText = "Primary"
+        Me.colPrimary.Name = "colPrimary"
+        '
+        'colUOM
+        '
+        Me.colUOM.FillWeight = 20.30457!
+        Me.colUOM.HeaderText = "UOM"
+        Me.colUOM.Name = "colUOM"
+        '
+        'colServings
+        '
+        Me.colServings.FillWeight = 20.30457!
+        Me.colServings.HeaderText = "Servings"
+        Me.colServings.Name = "colServings"
+        '
+        'colStatus
+        '
+        Me.colStatus.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells
+        Me.colStatus.FillWeight = 20.30457!
+        Me.colStatus.HeaderText = "Status"
+        Me.colStatus.Name = "colStatus"
+        Me.colStatus.Width = 74
+        '
+        'colLimit
+        '
+        Me.colLimit.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells
+        Me.colLimit.FillWeight = 20.30457!
+        Me.colLimit.HeaderText = "Critical Limit"
+        Me.colLimit.Name = "colLimit"
+        Me.colLimit.Width = 107
+        '
+        'colDate
+        '
+        Me.colDate.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells
+        Me.colDate.FillWeight = 170.0!
+        Me.colDate.HeaderText = "Date Created"
+        Me.colDate.Name = "colDate"
+        Me.colDate.Width = 120
         '
         'Panel2
         '
@@ -307,10 +369,10 @@ Partial Class Inventory
         'TabPage11
         '
         Me.TabPage11.Controls.Add(Me.TabControl5)
-        Me.TabPage11.Location = New System.Drawing.Point(4, 27)
+        Me.TabPage11.Location = New System.Drawing.Point(4, 22)
         Me.TabPage11.Name = "TabPage11"
         Me.TabPage11.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage11.Size = New System.Drawing.Size(1101, 408)
+        Me.TabPage11.Size = New System.Drawing.Size(1101, 413)
         Me.TabPage11.TabIndex = 1
         Me.TabPage11.Text = "TabPage11"
         Me.TabPage11.UseVisualStyleBackColor = True
@@ -323,7 +385,7 @@ Partial Class Inventory
         Me.TabControl5.Location = New System.Drawing.Point(3, 3)
         Me.TabControl5.Name = "TabControl5"
         Me.TabControl5.SelectedIndex = 0
-        Me.TabControl5.Size = New System.Drawing.Size(1095, 402)
+        Me.TabControl5.Size = New System.Drawing.Size(1095, 407)
         Me.TabControl5.TabIndex = 4
         '
         'TabPage12
@@ -333,7 +395,7 @@ Partial Class Inventory
         Me.TabPage12.Location = New System.Drawing.Point(4, 27)
         Me.TabPage12.Name = "TabPage12"
         Me.TabPage12.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage12.Size = New System.Drawing.Size(1087, 371)
+        Me.TabPage12.Size = New System.Drawing.Size(1087, 376)
         Me.TabPage12.TabIndex = 0
         Me.TabPage12.Text = "TabPage12"
         Me.TabPage12.UseVisualStyleBackColor = True
@@ -370,7 +432,7 @@ Partial Class Inventory
         Me.DataGridViewCustomInvApproved.EnableHeadersVisualStyles = False
         Me.DataGridViewCustomInvApproved.Location = New System.Drawing.Point(3, 40)
         Me.DataGridViewCustomInvApproved.Name = "DataGridViewCustomInvApproved"
-        Me.DataGridViewCustomInvApproved.Size = New System.Drawing.Size(1081, 328)
+        Me.DataGridViewCustomInvApproved.Size = New System.Drawing.Size(1081, 333)
         Me.DataGridViewCustomInvApproved.TabIndex = 3
         '
         'Panel3
@@ -641,7 +703,7 @@ Partial Class Inventory
         DataGridViewCellStyle17.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
         Me.DataGridViewStockAdjustment.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle17
         Me.DataGridViewStockAdjustment.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.DataGridViewStockAdjustment.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.Column1, Me.Column2, Me.Column3, Me.Column4, Me.Column5, Me.Column6, Me.Column7, Me.Column8})
+        Me.DataGridViewStockAdjustment.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.Column1, Me.Column2, Me.Column3, Me.Column4, Me.Column5})
         DataGridViewCellStyle18.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
         DataGridViewCellStyle18.BackColor = System.Drawing.Color.White
         DataGridViewCellStyle18.Font = New System.Drawing.Font("Tahoma", 11.0!)
@@ -657,46 +719,6 @@ Partial Class Inventory
         Me.DataGridViewStockAdjustment.Name = "DataGridViewStockAdjustment"
         Me.DataGridViewStockAdjustment.Size = New System.Drawing.Size(1097, 312)
         Me.DataGridViewStockAdjustment.TabIndex = 5
-        '
-        'Column1
-        '
-        Me.Column1.HeaderText = "Column1"
-        Me.Column1.Name = "Column1"
-        '
-        'Column2
-        '
-        Me.Column2.HeaderText = "Column2"
-        Me.Column2.Name = "Column2"
-        '
-        'Column3
-        '
-        Me.Column3.HeaderText = "Column3"
-        Me.Column3.Name = "Column3"
-        '
-        'Column4
-        '
-        Me.Column4.HeaderText = "Column4"
-        Me.Column4.Name = "Column4"
-        '
-        'Column5
-        '
-        Me.Column5.HeaderText = "Column5"
-        Me.Column5.Name = "Column5"
-        '
-        'Column6
-        '
-        Me.Column6.HeaderText = "Column6"
-        Me.Column6.Name = "Column6"
-        '
-        'Column7
-        '
-        Me.Column7.HeaderText = "Column7"
-        Me.Column7.Name = "Column7"
-        '
-        'Column8
-        '
-        Me.Column8.HeaderText = "Column8"
-        Me.Column8.Name = "Column8"
         '
         'GroupBoxStockAdjustment
         '
@@ -865,7 +887,7 @@ Partial Class Inventory
         DataGridViewCellStyle20.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
         Me.DataGridViewSTOCKENTRY.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle20
         Me.DataGridViewSTOCKENTRY.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.DataGridViewSTOCKENTRY.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.Column11, Me.Column12, Me.Column13, Me.Column14})
+        Me.DataGridViewSTOCKENTRY.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.Column11, Me.Column12, Me.Column13, Me.Column14, Me.Column6})
         DataGridViewCellStyle21.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
         DataGridViewCellStyle21.BackColor = System.Drawing.Color.White
         DataGridViewCellStyle21.Font = New System.Drawing.Font("Tahoma", 11.0!)
@@ -881,26 +903,6 @@ Partial Class Inventory
         Me.DataGridViewSTOCKENTRY.Name = "DataGridViewSTOCKENTRY"
         Me.DataGridViewSTOCKENTRY.Size = New System.Drawing.Size(1097, 312)
         Me.DataGridViewSTOCKENTRY.TabIndex = 6
-        '
-        'Column11
-        '
-        Me.Column11.HeaderText = "Column11"
-        Me.Column11.Name = "Column11"
-        '
-        'Column12
-        '
-        Me.Column12.HeaderText = "Column12"
-        Me.Column12.Name = "Column12"
-        '
-        'Column13
-        '
-        Me.Column13.HeaderText = "Column13"
-        Me.Column13.Name = "Column13"
-        '
-        'Column14
-        '
-        Me.Column14.HeaderText = "Column14"
-        Me.Column14.Name = "Column14"
         '
         'Panel16
         '
@@ -1145,6 +1147,56 @@ Partial Class Inventory
         Me.Label2.TabIndex = 153
         Me.Label2.Text = "INVENTORY"
         '
+        'Column1
+        '
+        Me.Column1.HeaderText = "Column1"
+        Me.Column1.Name = "Column1"
+        '
+        'Column2
+        '
+        Me.Column2.HeaderText = "Column2"
+        Me.Column2.Name = "Column2"
+        '
+        'Column3
+        '
+        Me.Column3.HeaderText = "Column3"
+        Me.Column3.Name = "Column3"
+        '
+        'Column4
+        '
+        Me.Column4.HeaderText = "Column4"
+        Me.Column4.Name = "Column4"
+        '
+        'Column5
+        '
+        Me.Column5.HeaderText = "Column5"
+        Me.Column5.Name = "Column5"
+        '
+        'Column11
+        '
+        Me.Column11.HeaderText = "Column11"
+        Me.Column11.Name = "Column11"
+        '
+        'Column12
+        '
+        Me.Column12.HeaderText = "Column12"
+        Me.Column12.Name = "Column12"
+        '
+        'Column13
+        '
+        Me.Column13.HeaderText = "Column13"
+        Me.Column13.Name = "Column13"
+        '
+        'Column14
+        '
+        Me.Column14.HeaderText = "Column14"
+        Me.Column14.Name = "Column14"
+        '
+        'Column6
+        '
+        Me.Column6.HeaderText = "Column6"
+        Me.Column6.Name = "Column6"
+        '
         'Inventory
         '
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None
@@ -1257,20 +1309,8 @@ Partial Class Inventory
     Friend WithEvents TableLayoutPanel5 As TableLayoutPanel
     Friend WithEvents GroupBox10 As GroupBox
     Friend WithEvents GroupBoxStockAdjustment As GroupBox
-    Friend WithEvents Column1 As DataGridViewTextBoxColumn
-    Friend WithEvents Column2 As DataGridViewTextBoxColumn
-    Friend WithEvents Column3 As DataGridViewTextBoxColumn
-    Friend WithEvents Column4 As DataGridViewTextBoxColumn
-    Friend WithEvents Column5 As DataGridViewTextBoxColumn
-    Friend WithEvents Column6 As DataGridViewTextBoxColumn
-    Friend WithEvents Column7 As DataGridViewTextBoxColumn
-    Friend WithEvents Column8 As DataGridViewTextBoxColumn
     Friend WithEvents Column9 As DataGridViewTextBoxColumn
     Friend WithEvents Column10 As DataGridViewTextBoxColumn
-    Friend WithEvents Column11 As DataGridViewTextBoxColumn
-    Friend WithEvents Column12 As DataGridViewTextBoxColumn
-    Friend WithEvents Column13 As DataGridViewTextBoxColumn
-    Friend WithEvents Column14 As DataGridViewTextBoxColumn
     Friend WithEvents TabPage6 As TabPage
     Friend WithEvents Panel20 As Panel
     Friend WithEvents Label19 As Label
@@ -1279,4 +1319,22 @@ Partial Class Inventory
     Friend WithEvents DateTimePickerZXreading As DateTimePicker
     Friend WithEvents DataGridViewZreadInvData As DataGridView
     Friend WithEvents LabelDate As Label
+    Friend WithEvents colIng As DataGridViewTextBoxColumn
+    Friend WithEvents colSKU As DataGridViewTextBoxColumn
+    Friend WithEvents colPrimary As DataGridViewTextBoxColumn
+    Friend WithEvents colUOM As DataGridViewTextBoxColumn
+    Friend WithEvents colServings As DataGridViewTextBoxColumn
+    Friend WithEvents colStatus As DataGridViewTextBoxColumn
+    Friend WithEvents colLimit As DataGridViewTextBoxColumn
+    Friend WithEvents colDate As DataGridViewTextBoxColumn
+    Friend WithEvents Column1 As DataGridViewTextBoxColumn
+    Friend WithEvents Column2 As DataGridViewTextBoxColumn
+    Friend WithEvents Column3 As DataGridViewTextBoxColumn
+    Friend WithEvents Column4 As DataGridViewTextBoxColumn
+    Friend WithEvents Column5 As DataGridViewTextBoxColumn
+    Friend WithEvents Column11 As DataGridViewTextBoxColumn
+    Friend WithEvents Column12 As DataGridViewTextBoxColumn
+    Friend WithEvents Column13 As DataGridViewTextBoxColumn
+    Friend WithEvents Column14 As DataGridViewTextBoxColumn
+    Friend WithEvents Column6 As DataGridViewTextBoxColumn
 End Class

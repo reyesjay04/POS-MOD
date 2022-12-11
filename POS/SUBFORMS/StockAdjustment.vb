@@ -116,7 +116,8 @@ Public Class StockAdjustment
                             Else
                                 where = "server_inventory_id = " & ID
                             End If
-                            AuditTrail.LogToAuditTrail("Transaction", "Menu/Inventory/Stock Adjustment: New Stock " & SystemLogDesc, "Normal")
+
+                            AuditTrail.LogToAuditTrail("Transaction", "Stock Adjustment: New Stock " & SystemLogDesc, "Normal")
 
                             GLOBAL_FUNCTION_UPDATE(table, fields, where)
                         ElseIf ComboBoxAction.Text = "TRANSFER" Then
@@ -134,7 +135,7 @@ Public Class StockAdjustment
                             Else
                                 where = "server_inventory_id = " & ID
                             End If
-                            AuditTrail.LogToAuditTrail("Transaction", "Menu/Inventory/Stock Adjustment: Stock Transfer " & SystemLogDesc, "Normal")
+                            AuditTrail.LogToAuditTrail("Transaction", "Stock Adjustment: Stock Transfer " & SystemLogDesc, "Normal")
 
                             GLOBAL_FUNCTION_UPDATE(table, fields, where)
                         ElseIf ComboBoxAction.Text = "DEDUCT" Then
@@ -152,13 +153,13 @@ Public Class StockAdjustment
                             Else
                                 where = "server_inventory_id = " & ID
                             End If
-                            AuditTrail.LogToAuditTrail("Transaction", "Menu/Inventory/Stock Adjustment: Stock Remove " & SystemLogDesc, "Normal")
+                            AuditTrail.LogToAuditTrail("Transaction", "Stock Adjustment: Stock Remove " & SystemLogDesc, "Normal")
                             GLOBAL_FUNCTION_UPDATE(table, fields, where)
                         End If
                         TextBoxIPQuantity.Clear()
 
 
-                        MDIFORM.newMDIchildInventory.loadinventory()
+                        MDIFORM.newMDIchildInventory.GetInventory()
                         MDIFORM.newMDIchildInventory.loadstockadjustmentreport(False)
                         MDIFORM.newMDIchildInventory.loadcriticalstocks()
                         MDIFORM.LabelTotalAvailStock.Text = roundsum("stock_primary", "loc_pos_inventory", "P")

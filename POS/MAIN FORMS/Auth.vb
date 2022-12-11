@@ -1,11 +1,11 @@
 ﻿Imports MySql.Data.MySqlClient
 Imports System.Threading
 Public Class Auth
-    Dim threadList As List(Of Thread) = New List(Of Thread)
-    Dim thread As Thread
-    Dim UserCount As Integer = 0
-    Dim Account
-    Dim TimerCount As Integer = 0
+    Property threadList As List(Of Thread) = New List(Of Thread)
+    Property thread As Thread
+    Property Account As String
+    Property TimerCount As Integer = 0
+    Property UserList As New List(Of AuthCls)
     Private Sub Auth_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         Try
             CheckForIllegalCrossThreadCalls = False
@@ -59,54 +59,40 @@ Public Class Auth
         Return ReturnBool
     End Function
     Private Sub SyncToLocalUsers()
-        UserCount = 0
         Try
-            With DataGridViewRESULT
-                Dim ConnectionServer As MySqlConnection = ServerCloudCon()
-                Dim ConnectionLocal As MySqlConnection = LocalhostConn()
-                Dim sql = "SELECT `user_level`, `full_name`, `username`, `password`, `contact_number`, `email`, `position`, `gender`, `active`, `guid`, `store_id`, `uniq_id` , `created_at`, `updated_at` , `pwd`, `user_code` FROM `loc_users` WHERE store_id IN ('" & ClientStoreID & "','0') AND synced IN ('Unsynced','N/A') AND active = 1"
-                Dim cmd As MySqlCommand = New MySqlCommand(sql, ConnectionServer)
-                Dim da As MySqlDataAdapter = New MySqlDataAdapter(cmd)
-                Dim DataTableServer As DataTable = New DataTable
-                da.Fill(DataTableServer)
-                .DataSource = DataTableServer
-                Console.WriteLine(sql)
-                For i As Integer = 0 To .Rows.Count - 1 Step +1
-
-                    If IfUserExist(.Rows(i).Cells(11).Value.ToString) = False Then
-
-                        Account += "Username: " & .Rows(i).Cells(2).Value.ToString & vbNewLine & "Password: **********" & vbNewLine
-                        UserCount = UserCount + 1
-
-                        table = "triggers_loc_users"
-                        fields = "(`user_level`, `full_name`, `username`, `password`, `contact_number`, `email`, `position`, `gender`, `active`, `guid`, `store_id`, `uniq_id`, `synced`, `user_code`)"
-                        value = "(
-                         '" & .Rows(i).Cells(0).Value.ToString & "'   
-                         ,'" & .Rows(i).Cells(1).Value.ToString & "'    
-                         ,'" & .Rows(i).Cells(2).Value.ToString & "'                 
-                         ,'" & .Rows(i).Cells(3).Value.ToString & "'   
-                         ,'" & .Rows(i).Cells(4).Value.ToString & "'   
-                         ,'" & .Rows(i).Cells(5).Value.ToString & "'   
-                         ,'" & .Rows(i).Cells(6).Value.ToString & "'                   
-                         ,'" & .Rows(i).Cells(7).Value.ToString & "'   
-                         ,'" & .Rows(i).Cells(8).Value.ToString & "'   
-                         ,'" & .Rows(i).Cells(9).Value.ToString & "'    
-                         ,'" & .Rows(i).Cells(10).Value.ToString & "'   
-                         ,'" & .Rows(i).Cells(11).Value.ToString & "'       
-                         ,'Synced','" & .Rows(i).Cells(15).Value.ToString & "'    )"
-
-                        GLOBAL_INSERT_FUNCTION(table:=table, fields:=fields, values:=value)
-                        If .Rows(i).Cells(6).Value.ToString <> "Admin" Then
-                            sql = "UPDATE loc_users SET synced = 'Synced' WHERE uniq_id = '" & .Rows(i).Cells(11).Value.ToString & "'"
-                            cmd = New MySqlCommand(sql, ConnectionServer)
-                            cmd.ExecuteNonQuery()
-                        End If
-                        sql = "UPDATE loc_users SET `full_name` = '" & .Rows(i).Cells(1).Value.ToString & "'  , `username` = '" & .Rows(i).Cells(2).Value.ToString & "' , `password` = '" & .Rows(i).Cells(3).Value.ToString & "'  , `contact_number` = '" & .Rows(i).Cells(4).Value.ToString & "'  WHERE uniq_id = '" & .Rows(i).Cells(11).Value.ToString & "' "
-                        cmd = New MySqlCommand(sql, ConnectionLocal)
-                        cmd.ExecuteNonQuery()
-                    End If
-                Next
-            End With
+            Dim ConnectionServer As MySqlConnection = ServerCloudCon()
+            Using mCmd = New MySqlCommand("", ConnectionServer)
+                With mCmd
+                    .Parameters.Clear()
+                    .CommandText = "SELECT `user_level`, `full_name`, `username`, `password`, `contact_number`, `email`, `position`, `gender`, `uniq_id` , `created_at`, `updated_at` , `pwd`, `user_code` FROM `loc_users` WHERE store_id IN ('" & ClientStoreID & "','0') AND synced IN ('Unsynced','N/A') AND active = 1"
+                    .Prepare()
+                    Using reader = .ExecuteReader
+                        While reader.Read
+                            If Not IfUserExist(reader("uniq_id")) Then
+                                Dim AuthClass As New AuthCls
+                                AuthClass.Userlevel = reader("user_level")
+                                AuthClass.FullName = reader("full_name")
+                                AuthClass.UserName = reader("username")
+                                AuthClass.Password = reader("password")
+                                AuthClass.Contact = reader("contact_number")
+                                AuthClass.EmailAddress = reader("email")
+                                AuthClass.Position = reader("position")
+                                AuthClass.Gender = reader("gender")
+                                AuthClass.UniqueID = reader("uniq_id")
+                                AuthClass.DateCreated = reader("created_at")
+                                AuthClass.DateModified = reader("updated_at")
+                                AuthClass.PwdUnencrypted = reader("pwd")
+                                AuthClass.UserCode = reader("user_code")
+                                UserList.Add(AuthClass)
+                                Account += $"Username: {AuthClass.UserName}{vbNewLine}Password: **********{vbNewLine}"
+                            End If
+                        End While
+                        .Dispose()
+                    End Using
+                    .Dispose()
+                End With
+            End Using
+            ConnectionServer.Close()
         Catch ex As Exception
             AuditTrail.LogToAuditTrail("System", "Auth/SyncToLocalUsers(): " & ex.ToString, "Critical")
         End Try
@@ -116,19 +102,70 @@ Public Class Auth
         Label2.Text = e.ProgressPercentage
     End Sub
     Private Sub BackgroundWorker1_RunWorkerCompleted(sender As Object, e As System.ComponentModel.RunWorkerCompletedEventArgs) Handles BackgroundWorker1.RunWorkerCompleted
-        ProgressBar1.Value = 100
-        If UserCount = 0 Then
-            Label4.Text = "No new user(s) available.  "
-            Timer1.Start()
-        Else
-            AuditTrail.LogToAuditTrail("System", "Auth: Update successful, " & Account, "Normal")
-            Label4.Text = "New user(s) available.  "
-            Dim msg = "New user account has been added" & vbNewLine & Account
-            Dim msgs = MsgBox(msg, MsgBoxStyle.OkOnly)
-            If msgs = DialogResult.OK Then
+
+        Dim hasNewUser As Integer = UserList.Count
+
+        Try
+            If hasNewUser > 0 Then
+                Dim ConnectionLocal As MySqlConnection = LocalhostConn()
+                Dim ConnectionServer As MySqlConnection = ServerCloudCon()
+                For Each row As AuthCls In UserList
+                    Using mCmd = New MySqlCommand("", ConnectionLocal)
+                        With mCmd
+                            .Parameters.Clear()
+                            .CommandText = "INSERT INTO triggers_loc_users
+                                            (
+                                                `user_level`, `full_name`, `username`, `password`, `contact_number`, `email`, 
+                                                `position`, `gender`, `active`, `store_id`, `uniq_id`, `synced`, 
+                                                `user_code`
+                                            ) VALUES (
+                                                @user_level, @full_name, @username, @password, @contact_number, @email,
+                                                @position, @gender, @active, @store_id, @uniq_id, @synced, 
+                                                @user_code
+                                            )"
+                            .Parameters.AddWithValue("@user_level", row.Userlevel)
+                            .Parameters.AddWithValue("@full_name", row.FullName)
+                            .Parameters.AddWithValue("@username", row.UserName)
+                            .Parameters.AddWithValue("@password", row.Password)
+                            .Parameters.AddWithValue("@contact_number", row.Contact)
+                            .Parameters.AddWithValue("@email", row.EmailAddress)
+                            .Parameters.AddWithValue("@position", row.Position)
+                            .Parameters.AddWithValue("@gender", row.Gender)
+                            .Parameters.AddWithValue("@active", 1)
+                            .Parameters.AddWithValue("@store_id", ClientStoreID)
+                            .Parameters.AddWithValue("@uniq_id", row.UniqueID)
+                            .Parameters.AddWithValue("@synced", "Y")
+                            .Parameters.AddWithValue("@user_code", row.UserCode)
+                            .ExecuteNonQuery()
+
+                            If row.Position <> "Admin" Then
+                                .Parameters.Clear()
+                                .Connection = ConnectionServer
+                                .CommandText = $"UPDATE loc_users SET synced = 'Synced' WHERE uniq_id = '{row.UniqueID}'"
+                                .ExecuteNonQuery()
+                            End If
+                            .Dispose()
+                        End With
+                    End Using
+                Next
+
+                ConnectionLocal.Close()
+                ConnectionServer.Close()
+
+                AuditTrail.LogToAuditTrail("System", "Auth: Update successful, " & Account, "Normal")
+                Label4.Text = "New user(s) available.  "
+                Dim msg = "New user account has been added" & vbNewLine & Account
+                Dim msgs = MsgBox(msg, MsgBoxStyle.OkOnly)
+                If msgs = DialogResult.OK Then
+                    Timer1.Start()
+                End If
+            Else
+                Label4.Text = "No new user(s) available.  "
                 Timer1.Start()
             End If
-        End If
+        Catch ex As Exception
+            AuditTrail.LogToAuditTrail("System", ex.ToString, "Critical")
+        End Try
     End Sub
     Private Sub Auth_FormClosing(sender As Object, e As FormClosingEventArgs) Handles MyBase.FormClosing
         Login.Enabled = True

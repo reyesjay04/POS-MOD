@@ -133,13 +133,18 @@
     <Compile Include="MAIN FORMS\Auth.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="MAIN FORMS\ConfCls\DevInfoCls.vb" />
-    <Compile Include="MAIN FORMS\ConfCls\FormulaCls.vb" />
-    <Compile Include="MAIN FORMS\ConfCls\MastelistCls.vb" />
-    <Compile Include="MAIN FORMS\ConfCls\MasterlistOutletCls.vb" />
-    <Compile Include="MAIN FORMS\ConfCls\OutletsCls.vb" />
-    <Compile Include="MAIN FORMS\ConfCls\ProductsCls.vb" />
-    <Compile Include="MAIN FORMS\ConfCls\SyncCls.vb" />
+    <Compile Include="MAIN FORMS\Class\Auth\AuthCls.vb" />
+    <Compile Include="MAIN FORMS\Class\Inventory\InventoryCls.vb" />
+    <Compile Include="MAIN FORMS\Class\Inventory\ModInventory.vb" />
+    <Compile Include="MAIN FORMS\Class\Reports\ModRepReturns.vb" />
+    <Compile Include="MAIN FORMS\Class\Reports\RepReturnsCls.vb" />
+    <Compile Include="MAIN FORMS\Class\ConfigManager\DevInfoCls.vb" />
+    <Compile Include="MAIN FORMS\Class\ConfigManager\FormulaCls.vb" />
+    <Compile Include="MAIN FORMS\Class\ConfigManager\MastelistCls.vb" />
+    <Compile Include="MAIN FORMS\Class\ConfigManager\MasterlistOutletCls.vb" />
+    <Compile Include="MAIN FORMS\Class\ConfigManager\OutletsCls.vb" />
+    <Compile Include="MAIN FORMS\Class\ConfigManager\ProductsCls.vb" />
+    <Compile Include="MAIN FORMS\Class\ConfigManager\SyncCls.vb" />
     <Compile Include="MAIN FORMS\ConfigManager.Designer.vb">
       <DependentUpon>ConfigManager.vb</DependentUpon>
     </Compile>
@@ -492,6 +497,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="MAIN FORMS\ChooseLayout.resx">
       <DependentUpon>ChooseLayout.vb</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="MAIN FORMS\ConfirmRefund.resx">
       <DependentUpon>ConfirmRefund.vb</DependentUpon>

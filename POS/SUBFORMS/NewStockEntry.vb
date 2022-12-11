@@ -44,12 +44,12 @@ Public Class NewStockEntry
                         where = "formula_id = " & TextBox1.Text
                     End If
 
-                    AuditTrail.LogToAuditTrail("Transaction", "Menu/Inventory/Stock Entry: " & TextBoxEQuantity.Text & " " & ComboBoxDESC.Text, "Normal")
+                    AuditTrail.LogToAuditTrail("Transaction", "Stock Entry: " & TextBoxEQuantity.Text & " " & ComboBoxDESC.Text, "Normal")
 
                     TextBoxEQuantity.Clear()
                     GLOBAL_FUNCTION_UPDATE(table, fields, where)
                     MDIFORM.newMDIchildInventory.loadstockentry(False)
-                    MDIFORM.newMDIchildInventory.loadinventory()
+                    MDIFORM.newMDIchildInventory.GetInventory()
                     MDIFORM.newMDIchildInventory.loadstockadjustmentreport(False)
                     MDIFORM.newMDIchildInventory.loadcriticalstocks()
 
