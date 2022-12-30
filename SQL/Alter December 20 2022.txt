@@ -1,0 +1,3 @@
+ALTER TABLE `loc_hold_inventory` CHANGE `org_serve` `org_serve` DOUBLE(11,2) NOT NULL;
+
+ALTER TABLE `loc_pending_orders` CHANGE `product_price` `product_price` DOUBLE(11,2) NOT NULL, CHANGE `product_total` `product_total` DOUBLE(11,2) NOT NULL;
