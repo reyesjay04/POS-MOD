@@ -77,6 +77,7 @@ Public Class HoldOrder
                     .Buttonholdoder.Enabled = False
                     .ButtonPayMent.Enabled = False
                     .ButtonPendingOrders.Enabled = True
+                    Compute()
                 End With
             End If
         End If

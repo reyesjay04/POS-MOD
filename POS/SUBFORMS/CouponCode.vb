@@ -42,9 +42,23 @@ Public Class CouponCode
             End If
             Dim LoadCouponTable = AsDatatableFontIncrease(Table, "*", DataGridViewCoupons)
             For Each row As DataRow In LoadCouponTable.Rows
-                DataGridViewCoupons.DefaultCellStyle.Font = New Font("Tahoma", 15)
-                DataGridViewCoupons.Height = 40
-                DataGridViewCoupons.Rows.Add(row("ID"), row("Couponname_"), row("Desc_"), row("Discountvalue_"), row("Referencevalue_"), row("Type"), row("Bundlebase_"), row("BBValue_"), row("Bundlepromo_"), row("BPValue_"), row("Effectivedate"), row("Expirydate"))
+                If APPLYPROMO Then
+                    If DiscAppleid Then
+                        If row("Type").ToString = "Fix-1" Then
+                            DataGridViewCoupons.DefaultCellStyle.Font = New Font("Tahoma", 15)
+                            DataGridViewCoupons.Height = 40
+                            DataGridViewCoupons.Rows.Add(row("ID"), row("Couponname_"), row("Desc_"), row("Discountvalue_"), row("Referencevalue_"), row("Type"), row("Bundlebase_"), row("BBValue_"), row("Bundlepromo_"), row("BPValue_"), row("Effectivedate"), row("Expirydate"))
+                        End If
+                    Else
+                        DataGridViewCoupons.DefaultCellStyle.Font = New Font("Tahoma", 15)
+                        DataGridViewCoupons.Height = 40
+                        DataGridViewCoupons.Rows.Add(row("ID"), row("Couponname_"), row("Desc_"), row("Discountvalue_"), row("Referencevalue_"), row("Type"), row("Bundlebase_"), row("BBValue_"), row("Bundlepromo_"), row("BPValue_"), row("Effectivedate"), row("Expirydate"))
+                    End If
+                Else
+                    DataGridViewCoupons.DefaultCellStyle.Font = New Font("Tahoma", 15)
+                    DataGridViewCoupons.Height = 40
+                    DataGridViewCoupons.Rows.Add(row("ID"), row("Couponname_"), row("Desc_"), row("Discountvalue_"), row("Referencevalue_"), row("Type"), row("Bundlebase_"), row("BBValue_"), row("Bundlepromo_"), row("BPValue_"), row("Effectivedate"), row("Expirydate"))
+                End If
             Next
         Catch ex As Exception
             AuditTrail.LogToAuditTrail("System", "CouponCode/LoadCoupons(): " & ex.ToString, "Critical")

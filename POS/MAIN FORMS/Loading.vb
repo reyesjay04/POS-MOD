@@ -9,6 +9,7 @@ Public Class Loading
     Dim IfInternetIsAvailable As Boolean
     Dim IfNeedsToReset As Boolean = False
     Dim if1stdayofthemonth
+    Property ListOfScripts As New List(Of ScriptRunnerCls)
     Private Sub Loadme()
         Try
             LabelVersion.Text = My.Settings.Version
@@ -80,7 +81,7 @@ Public Class Loading
                         For Each t In threadList
                             t.Join()
                         Next
-                        thread = New Thread(AddressOf FillScript)
+                        thread = New Thread(Sub() ListOfScripts = FillScript())
                         thread.Start()
                         threadList.Add(thread)
                         For Each t In threadList
@@ -470,7 +471,7 @@ Public Class Loading
             For Each t In threadList
                 t.Join()
             Next
-            If BackgroundWorker1.CancellationPending = True Then
+            If BackgroundWorker2.CancellationPending Then
                 e.Cancel = True
             End If
         Catch ex As Exception
@@ -596,58 +597,107 @@ Public Class Loading
         Login.txtusername.Focus()
     End Sub
 #Region "Script Runner"
-    Private Sub FillScript()
+    Private Function FillScript() As List(Of ScriptRunnerCls)
+        Dim scriptCls As New List(Of ScriptRunnerCls)
         Try
-            GLOBAL_SELECT_ALL_FUNCTION("loc_script_runner", "created_at", DataGridViewScript)
+            Dim ConnectionLocal As MySqlConnection = LocalhostConn()
+            Using mCmd = New MySqlCommand("", ConnectionLocal)
+                mCmd.CommandText = "SELECT created_at FROM loc_script_runner"
+                Using reader = mCmd.ExecuteReader
+                    While reader.Read
+                        Dim script As New ScriptRunnerCls
+                        script.CreatedAt = reader("created_at").ToString
+                        scriptCls.Add(script)
+                    End While
+                    reader.Dispose()
+                End Using
+                mCmd.Dispose()
+            End Using
+            ConnectionLocal.Close()
         Catch ex As Exception
             AuditTrail.LogToAuditTrail("System", ex.ToString, "Critical")
         End Try
-    End Sub
+        Return scriptCls
+    End Function
     Private Sub RunScript()
         Try
-            Dim ConnectionLocal As MySqlConnection = LocalhostConn()
-            Dim ConnectionCloud As MySqlConnection = ServerCloudCon()
-            Dim CreatedAt = ""
-            For i As Integer = 0 To DataGridViewScript.Rows.Count - 1 Step +1
-                CreatedAt += "'" & DataGridViewScript.Rows(i).Cells(0).Value.ToString & "',"
-            Next
-            CreatedAt = CreatedAt.TrimEnd(CChar(","))
-            If DataGridViewScript.Rows.Count > 0 Then
-                Dim sql = "SELECT * FROM admin_script_runner WHERE created_at NOT IN (" & CreatedAt & ") AND store_id IN ('All', '" & ClientStoreID & "')"
-                Dim cmd As MySqlCommand = New MySqlCommand(sql, ServerCloudCon)
-                Dim da As MySqlDataAdapter = New MySqlDataAdapter(cmd)
-                Dim dt As DataTable = New DataTable
-                da.Fill(dt)
-                For Each row As DataRow In dt.Rows
-                    Dim query = "" & row("script_command") & ""
-                    cmd = New MySqlCommand(query, ConnectionLocal)
-                    cmd.ExecuteNonQuery()
-                    If row("truncatescript") = "NO" Then
-                        query = "INSERT INTO loc_script_runner (script_command, created_at, active) VALUES ('" & row("script_id") & "','" & row("created_at") & "', " & row("active") & ")"
-                        cmd = New MySqlCommand(query, ConnectionLocal)
-                        cmd.ExecuteNonQuery()
-                    End If
-                    AuditTrail.LogToAuditTrail("Script", "Script ID: " & row("script_id"), "Normal")
-                Next
-            Else
+            If ListOfScripts.Count > 0 Then
+                Dim ConnectionLocal As MySqlConnection = LocalhostConn()
+                Dim ConnectionCloud As MySqlConnection = ServerCloudCon()
+                Dim dateRes As String = ""
 
-                Dim sql = "SELECT * FROM admin_script_runner WHERE store_id IN ('All', '" & ClientStoreID & "')"
-                Dim cmd As MySqlCommand = New MySqlCommand(sql, ServerCloudCon)
-                Dim da As MySqlDataAdapter = New MySqlDataAdapter(cmd)
-                Dim dt As DataTable = New DataTable
-                da.Fill(dt)
-                For Each row As DataRow In dt.Rows
-                    'MsgBox(row("script_command"))
-                    Dim query = "" & row("script_command") & ""
-                    cmd = New MySqlCommand(query, ConnectionLocal)
-                    cmd.ExecuteNonQuery()
-                    If row("truncatescript") = "NO" Then
-                        query = "INSERT INTO loc_script_runner (script_command, created_at, active) VALUES ('" & row("script_id") & "','" & row("created_at") & "', " & row("active") & ")"
-                        cmd = New MySqlCommand(query, ConnectionLocal)
-                        cmd.ExecuteNonQuery()
+                For Each dts As ScriptRunnerCls In ListOfScripts
+                    If dts Is ListOfScripts.Last Then
+                        dateRes &= $"'{dts.CreatedAt}'"
+                    Else
+                        dateRes &= $"'{dts.CreatedAt}',"
                     End If
-                    AuditTrail.LogToAuditTrail("Script", "Script ID: " & row("script_id"), "Normal")
                 Next
+
+                Using mCmd = New MySqlCommand("", ConnectionCloud)
+                    mCmd.CommandText = $"SELECT * FROM admin_script_runner WHERE created_at NOT IN ({dateRes}) AND store_id IN ('All', '{ClientStoreID}')"
+                    Dim dt As New DataTable
+
+                    Using reader = mCmd.ExecuteReader
+                        dt.Load(reader)
+                        reader.Dispose()
+                    End Using
+
+                    For Each row As DataRow In dt.Rows
+                        Using lmCmd = New MySqlCommand("", ConnectionLocal)
+                            lmCmd.CommandText = row("script_command").ToString
+                            lmCmd.ExecuteNonQuery()
+                            If row("truncatescript").ToString = "NO" Then
+                                lmCmd.CommandText = "INSERT INTO loc_script_runner (script_command, created_at, active) VALUES (@script_command, @createdAt, @active)"
+                                lmCmd.Parameters.Clear()
+                                lmCmd.Parameters.AddWithValue("@script_command", row("script_command"))
+                                lmCmd.Parameters.AddWithValue("@createdAt", row("created_at"))
+                                lmCmd.Parameters.AddWithValue("@active", row("active"))
+                                lmCmd.ExecuteNonQuery()
+                            End If
+                            lmCmd.Dispose()
+                        End Using
+
+                        AuditTrail.LogToAuditTrail("Script", "Script: " & row("script_command").ToString, "Normal")
+                    Next
+                    mCmd.Dispose()
+                End Using
+                ConnectionLocal.Close()
+                ConnectionCloud.Close()
+            Else
+                Dim ConnectionLocal As MySqlConnection = LocalhostConn()
+                Dim ConnectionCloud As MySqlConnection = ServerCloudCon()
+
+                Using mCmd = New MySqlCommand("", ConnectionCloud)
+                    mCmd.CommandText = $"SELECT * FROM admin_script_runner WHERE store_id IN ('All', '{ClientStoreID}')"
+                    Dim dt As New DataTable
+
+                    Using reader = mCmd.ExecuteReader
+                        dt.Load(reader)
+                        reader.Dispose()
+                    End Using
+
+                    For Each row As DataRow In dt.Rows
+                        Using lmCmd = New MySqlCommand("", ConnectionLocal)
+                            lmCmd.CommandText = row("script_command").ToString
+                            lmCmd.ExecuteNonQuery()
+                            If row("truncatescript").ToString = "NO" Then
+                                lmCmd.CommandText = "INSERT INTO loc_script_runner (script_command, created_at, active) VALUES (@script_command, @createdAt, @active)"
+                                lmCmd.Parameters.Clear()
+                                lmCmd.Parameters.AddWithValue("@script_command", row("script_command"))
+                                lmCmd.Parameters.AddWithValue("@createdAt", row("created_at"))
+                                lmCmd.Parameters.AddWithValue("@active", row("active"))
+                                lmCmd.ExecuteNonQuery()
+                            End If
+                            lmCmd.Dispose()
+                        End Using
+
+                        AuditTrail.LogToAuditTrail("Script", "Script: " & row("script_command").ToString, "Normal")
+                    Next
+                    mCmd.Dispose()
+                End Using
+                ConnectionLocal.Close()
+                ConnectionCloud.Close()
             End If
         Catch ex As Exception
             AuditTrail.LogToAuditTrail("System", ex.ToString, "Critical")

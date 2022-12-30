@@ -28,7 +28,7 @@ Partial Class PendingOrders
         Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.ButtonKeyboard = New System.Windows.Forms.Button()
-        Me.DataGridView1 = New System.Windows.Forms.DataGridView()
+        Me.dgvOrders = New System.Windows.Forms.DataGridView()
         Me.Column1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Column2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Column3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -44,7 +44,7 @@ Partial Class PendingOrders
         Me.TableLayoutPanel1 = New System.Windows.Forms.TableLayoutPanel()
         Me.GroupBox2 = New System.Windows.Forms.GroupBox()
         Me.GroupBox1 = New System.Windows.Forms.GroupBox()
-        CType(Me.DataGridView1, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.dgvOrders, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.TableLayoutPanel1.SuspendLayout()
         Me.GroupBox2.SuspendLayout()
         Me.GroupBox1.SuspendLayout()
@@ -65,17 +65,17 @@ Partial Class PendingOrders
         Me.ButtonKeyboard.TabIndex = 231
         Me.ButtonKeyboard.UseVisualStyleBackColor = False
         '
-        'DataGridView1
+        'dgvOrders
         '
-        Me.DataGridView1.AllowUserToAddRows = False
-        Me.DataGridView1.AllowUserToDeleteRows = False
-        Me.DataGridView1.AllowUserToResizeColumns = False
-        Me.DataGridView1.AllowUserToResizeRows = False
+        Me.dgvOrders.AllowUserToAddRows = False
+        Me.dgvOrders.AllowUserToDeleteRows = False
+        Me.dgvOrders.AllowUserToResizeColumns = False
+        Me.dgvOrders.AllowUserToResizeRows = False
         DataGridViewCellStyle1.BackColor = System.Drawing.Color.White
-        Me.DataGridView1.AlternatingRowsDefaultCellStyle = DataGridViewCellStyle1
-        Me.DataGridView1.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill
-        Me.DataGridView1.BackgroundColor = System.Drawing.Color.White
-        Me.DataGridView1.BorderStyle = System.Windows.Forms.BorderStyle.None
+        Me.dgvOrders.AlternatingRowsDefaultCellStyle = DataGridViewCellStyle1
+        Me.dgvOrders.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill
+        Me.dgvOrders.BackgroundColor = System.Drawing.Color.White
+        Me.dgvOrders.BorderStyle = System.Windows.Forms.BorderStyle.None
         DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
         DataGridViewCellStyle2.BackColor = System.Drawing.Color.FromArgb(CType(CType(38, Byte), Integer), CType(CType(37, Byte), Integer), CType(CType(38, Byte), Integer))
         DataGridViewCellStyle2.Font = New System.Drawing.Font("Tahoma", 11.25!)
@@ -83,9 +83,9 @@ Partial Class PendingOrders
         DataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight
         DataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText
         DataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.DataGridView1.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle2
-        Me.DataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.DataGridView1.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.Column1, Me.Column2, Me.Column3, Me.Column4, Me.Column5, Me.Column6, Me.Column7, Me.Column8})
+        Me.dgvOrders.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle2
+        Me.dgvOrders.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.dgvOrders.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.Column1, Me.Column2, Me.Column3, Me.Column4, Me.Column5, Me.Column6, Me.Column7, Me.Column8})
         DataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
         DataGridViewCellStyle3.BackColor = System.Drawing.Color.White
         DataGridViewCellStyle3.Font = New System.Drawing.Font("Tahoma", 11.25!)
@@ -93,16 +93,16 @@ Partial Class PendingOrders
         DataGridViewCellStyle3.SelectionBackColor = System.Drawing.Color.FromArgb(CType(CType(252, Byte), Integer), CType(CType(248, Byte), Integer), CType(CType(209, Byte), Integer))
         DataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.ControlText
         DataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.DataGridView1.DefaultCellStyle = DataGridViewCellStyle3
-        Me.DataGridView1.Dock = System.Windows.Forms.DockStyle.Bottom
-        Me.DataGridView1.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically
-        Me.DataGridView1.EnableHeadersVisualStyles = False
-        Me.DataGridView1.Location = New System.Drawing.Point(3, 57)
-        Me.DataGridView1.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
-        Me.DataGridView1.Name = "DataGridView1"
-        Me.DataGridView1.RowHeadersVisible = False
-        Me.DataGridView1.Size = New System.Drawing.Size(466, 105)
-        Me.DataGridView1.TabIndex = 150
+        Me.dgvOrders.DefaultCellStyle = DataGridViewCellStyle3
+        Me.dgvOrders.Dock = System.Windows.Forms.DockStyle.Bottom
+        Me.dgvOrders.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically
+        Me.dgvOrders.EnableHeadersVisualStyles = False
+        Me.dgvOrders.Location = New System.Drawing.Point(3, 57)
+        Me.dgvOrders.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
+        Me.dgvOrders.Name = "dgvOrders"
+        Me.dgvOrders.RowHeadersVisible = False
+        Me.dgvOrders.Size = New System.Drawing.Size(466, 105)
+        Me.dgvOrders.TabIndex = 150
         '
         'Column1
         '
@@ -205,7 +205,7 @@ Partial Class PendingOrders
         '
         'GroupBox2
         '
-        Me.GroupBox2.Controls.Add(Me.DataGridView1)
+        Me.GroupBox2.Controls.Add(Me.dgvOrders)
         Me.GroupBox2.Controls.Add(Me.Label1)
         Me.GroupBox2.Controls.Add(Me.ComboBoxCustomerName)
         Me.GroupBox2.Dock = System.Windows.Forms.DockStyle.Fill
@@ -241,15 +241,14 @@ Partial Class PendingOrders
         Me.Controls.Add(Me.TableLayoutPanel1)
         Me.Font = New System.Drawing.Font("Tahoma", 11.25!)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle
+        Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
         Me.MaximizeBox = False
         Me.MinimizeBox = False
         Me.Name = "PendingOrders"
-        Me.ShowIcon = False
-        Me.ShowInTaskbar = False
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
-        Me.Text = "PENDING ORDERS"
-        CType(Me.DataGridView1, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.Text = "POS | PENDING ORDERS"
+        CType(Me.dgvOrders, System.ComponentModel.ISupportInitialize).EndInit()
         Me.TableLayoutPanel1.ResumeLayout(False)
         Me.GroupBox2.ResumeLayout(False)
         Me.GroupBox2.PerformLayout()
@@ -260,7 +259,7 @@ Partial Class PendingOrders
     Friend WithEvents ButtonSelectCustomer As Button
     Friend WithEvents Label1 As Label
     Friend WithEvents ComboBoxCustomerName As ComboBox
-    Friend WithEvents DataGridView1 As DataGridView
+    Friend WithEvents dgvOrders As DataGridView
     Friend WithEvents Timer1 As Timer
     Friend WithEvents ButtonKeyboard As Button
     Friend WithEvents TableLayoutPanel1 As TableLayoutPanel

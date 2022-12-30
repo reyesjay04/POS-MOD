@@ -4,12 +4,36 @@ Public Class AuditTrailFilter
     Private Sub AuditTrailFilter_FormClosing(sender As Object, e As FormClosingEventArgs) Handles MyBase.FormClosing
         AuditTrail.Enabled = True
     End Sub
+    Property Group As String
+    Property Severity As String
+    Property UserID As String
+    Property Limit As String
+    Property FromDate As String
+    Property ToDate As String
+    Public Sub New(ByVal flGroup As String, ByVal flSeverity As String, ByVal fluserid As String, ByVal flLimit As String, ByVal flfromdate As String, ByVal fltodate As String)
 
+        ' This call is required by the designer.
+        InitializeComponent()
+
+        ' Add any initialization after the InitializeComponent() call.
+        Group = flGroup
+        Severity = flSeverity
+        UserID = fluserid
+        Limit = flLimit
+        FromDate = flfromdate
+        ToDate = fltodate
+    End Sub
     Private Sub AuditTrailFilter_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         LoadGroups()
         LoadUserNames()
         LoadSeverities()
-        ComboBox3.SelectedIndex = 0
+        cmbLimit.SelectedItem = Limit
+
+        Try
+            DateTimePicker1.Value = Date.ParseExact(FromDate, "yyyy-MM-dd", Globalization.DateTimeFormatInfo.InvariantInfo)
+            DateTimePicker2.Value = Date.ParseExact(ToDate, "yyyy-MM-dd", Globalization.DateTimeFormatInfo.InvariantInfo)
+        Catch ex As Exception
+        End Try
     End Sub
     Private Sub LoadGroups()
         Try
@@ -18,11 +42,11 @@ Public Class AuditTrailFilter
             Dim Command As MySqlCommand = New MySqlCommand(Query, ConnectionLocal)
             Using reader As MySqlDataReader = Command.ExecuteReader
                 If reader.HasRows Then
-                    ComboBox1.Items.Add("All")
+                    cmbGroupName.Items.Add("All")
                     While reader.Read
-                        ComboBox1.Items.Add(reader("group_name"))
+                        cmbGroupName.Items.Add(reader("group_name"))
                     End While
-                    ComboBox1.SelectedIndex = 0
+                    cmbGroupName.SelectedItem = Group
                 End If
             End Using
         Catch ex As Exception
@@ -36,11 +60,11 @@ Public Class AuditTrailFilter
             Dim Command As MySqlCommand = New MySqlCommand(Query, ConnectionLocal)
             Using reader As MySqlDataReader = Command.ExecuteReader
                 If reader.HasRows Then
-                    ComboBox2.Items.Add("All")
+                    cmbUser.Items.Add("All")
                     While reader.Read
-                        ComboBox2.Items.Add(reader("crew_id"))
+                        cmbUser.Items.Add(reader("crew_id"))
                     End While
-                    ComboBox2.SelectedIndex = 0
+                    cmbUser.SelectedItem = UserID
                 End If
             End Using
         Catch ex As Exception
@@ -54,11 +78,11 @@ Public Class AuditTrailFilter
             Dim Command As MySqlCommand = New MySqlCommand(Query, ConnectionLocal)
             Using reader As MySqlDataReader = Command.ExecuteReader
                 If reader.HasRows Then
-                    ComboBoxSeverity.Items.Add("All")
+                    cmbSeverities.Items.Add("All")
                     While reader.Read
-                        ComboBoxSeverity.Items.Add(reader("severity"))
+                        cmbSeverities.Items.Add(reader("severity"))
                     End While
-                    ComboBoxSeverity.SelectedIndex = 0
+                    cmbSeverities.SelectedItem = Severity
                 End If
             End Using
         Catch ex As Exception
@@ -68,12 +92,13 @@ Public Class AuditTrailFilter
 
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
         With AuditTrail
-            .ATGroupName = ComboBox1.Text
-            .ATUserName = ComboBox2.Text
+            .ATGroupName = cmbGroupName.Text
+            .ATUserName = cmbUser.Text
             .ATFromDate = Format(DateTimePicker1.Value, "yyyy-MM-dd")
             .ATToDate = Format(DateTimePicker2.Value, "yyyy-MM-dd")
-            .ATRowLimit = ComboBox3.Text
-            .ATSeverity = ComboBoxSeverity.Text
+            .ATRowLimit = cmbLimit.Text
+            .ATSeverity = cmbSeverities.Text
+            .FromFilter = True
             .LoadLogs(False)
         End With
         Close()

@@ -136,6 +136,8 @@
     <Compile Include="MAIN FORMS\Class\Auth\AuthCls.vb" />
     <Compile Include="MAIN FORMS\Class\Inventory\InventoryCls.vb" />
     <Compile Include="MAIN FORMS\Class\Inventory\ModInventory.vb" />
+    <Compile Include="MAIN FORMS\Class\Loading\ScriptRunnerCls.vb" />
+    <Compile Include="MAIN FORMS\Class\PendingOrders\PendingOrdersCls.vb" />
     <Compile Include="MAIN FORMS\Class\Reports\ModRepReturns.vb" />
     <Compile Include="MAIN FORMS\Class\Reports\RepReturnsCls.vb" />
     <Compile Include="MAIN FORMS\Class\ConfigManager\DevInfoCls.vb" />

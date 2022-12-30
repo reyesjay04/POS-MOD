@@ -11,6 +11,7 @@ Public Class AuditTrail
     Property ATToDate As String = ""
     Property ATRowLimit As String = ""
     Property ATSeverity As String = ""
+    Property FromFilter As Boolean = False
 
     Private Sub AuditTrail_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         tscRowLimit.SelectedIndex = 0
@@ -19,6 +20,9 @@ Public Class AuditTrail
 
     Public Sub LoadLogs(LoadOnly As Boolean)
         Try
+            If FromFilter Then
+                tscRowLimit.SelectedItem = ATRowLimit
+            End If
             DataGridViewAuditTrail.Rows.Clear()
             Dim ConnectionLocal As MySqlConnection = LocalhostConn()
             Dim Query As String = ""
@@ -57,7 +61,8 @@ Public Class AuditTrail
                     DataGridViewAuditTrail.Rows(i).Cells(3).Style.BackColor = Color.OrangeRed
                 End If
             Next
-
+            FromFilter = False
+            tssrowcount.Text = $"Row Count: {DataGridViewAuditTrail.Rows.Count}"
         Catch ex As Exception
             LogToAuditTrail("System", $"Audit: {ex.ToString}", "Critical")
         End Try
@@ -95,7 +100,8 @@ Public Class AuditTrail
 
     Private Sub ToolStripButton3_Click(sender As Object, e As EventArgs) Handles ToolStripButton3.Click
         Enabled = False
-        AuditTrailFilter.Show()
+        Dim filter As New AuditTrailFilter(ATGroupName, ATSeverity, ATUserName, ATRowLimit, ATFromDate, ATToDate)
+        filter.ShowDialog()
     End Sub
 
     Private Sub AuditTrail_FormClosing(sender As Object, e As FormClosingEventArgs) Handles MyBase.FormClosing
@@ -262,6 +268,7 @@ Public Class AuditTrail
             Dim CompletePath As String = CompleteDirectoryPath & "\AuditTrail" & FullDateFormatForSaving() & ".txt"
             LogToAuditTrail("Report", "Audit Trail: Txt file generated, " & CompleteDirectoryPath, "Normal")
             File.WriteAllLines(CompletePath, TxtFileLine, Encoding.UTF8)
+            MsgBox("Complete", MsgBoxStyle.Information)
         Catch ex As Exception
             LogToAuditTrail("System", "Audit: " & ex.ToString, "Critical")
         End Try
@@ -272,11 +279,12 @@ Public Class AuditTrail
     End Sub
 
     Private Sub ToolStripComboBox1_SelectedIndexChanged(sender As Object, e As EventArgs) Handles tscRowLimit.SelectedIndexChanged
-        ATGroupName = "All"
-        ATUserName = "All"
-        ATFromDate = Format(Now(), "yyyy-MM-dd")
-        ATToDate = Format(Now(), "yyyy-MM-dd")
-        ATRowLimit = tscRowLimit.Text
+        ATGroupName = If(ATGroupName = "", "All", ATGroupName)
+        ATUserName = If(ATUserName = "", "All", ATUserName)
+        ATSeverity = If(ATSeverity = "", "All", ATSeverity)
+        ATFromDate = If(ATFromDate = "", Format(Now(), "yyyy-MM-dd"), ATFromDate)
+        ATToDate = If(ATToDate = "", Format(Now(), "yyyy-MM-dd"), ATToDate)
+        ATRowLimit = If(FromFilter, ATRowLimit, If(ATRowLimit = "", tscRowLimit.Text, If(ATRowLimit <> tscRowLimit.Text, tscRowLimit.Text, ATRowLimit)))
 
         Try
             LoadLogs(False)

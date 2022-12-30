@@ -34,7 +34,24 @@ Public Class StockAdjustment
 
     Private Sub LoadOutlets()
         Try
-            GLOBAL_SELECT_ALL_FUNCTION_COMBOBOX("admin_outlets WHERE user_guid = '" & ClientGuid & "' AND store_id NOT IN(" & ClientStoreID & ")", "store_name", ComboBoxtransfer, False)
+            'GLOBAL_SELECT_ALL_FUNCTION_COMBOBOX("admin_outlets WHERE user_guid = '" & ClientGuid & "' AND store_id NOT IN(" & ClientStoreID & ")", "store_name", ComboBoxtransfer, False)
+            ComboBoxtransfer.Items.Clear()
+            Dim ConnectionServer As MySqlConnection = ServerCloudCon()
+            If ConnectionServer.State = ConnectionState.Open Then
+                Dim dtstore As New DataTable
+                Using sCmd = New MySqlCommand("", ConnectionServer)
+                    sCmd.CommandText = $"SELECT store_name FROM admin_outlets WHERE user_guid = '{ClientGuid}' AND store_id <> {ClientStoreID}"
+                    Using reader = sCmd.ExecuteReader
+                        While reader.Read
+                            ComboBoxtransfer.Items.Add(reader("store_name"))
+                        End While
+                    End Using
+                    sCmd.Dispose()
+                End Using
+            Else
+                MsgBox("Invalid cloud connection")
+            End If
+
         Catch ex As Exception
             AuditTrail.LogToAuditTrail("System", "StockAdjustment/LoadOutlets(): " & ex.ToString, "Critical")
         End Try
@@ -135,7 +152,7 @@ Public Class StockAdjustment
                             Else
                                 where = "server_inventory_id = " & ID
                             End If
-                            AuditTrail.LogToAuditTrail("Transaction", "Stock Adjustment: Stock Transfer " & SystemLogDesc, "Normal")
+                            AuditTrail.LogToAuditTrail("Transaction", "Stock Adjustment: Stock Transfer " & SystemLogDesc & ", To: " & ComboBoxtransfer.Text, "Normal")
 
                             GLOBAL_FUNCTION_UPDATE(table, fields, where)
                         ElseIf ComboBoxAction.Text = "DEDUCT" Then

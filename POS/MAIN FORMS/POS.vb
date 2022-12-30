@@ -599,6 +599,9 @@ Public Class POS
                 If Not DiscAppleid Then
                     If Not PromoApplied Then
                         Compute()
+                    Else
+                        TextBoxDISCOUNT.Text = NUMBERFORMAT(Val(TextBoxDISCOUNT.Text) - PromoTotal)
+                        TextBoxGRANDTOTAL.Text = NUMBERFORMAT(Val(TextBoxGRANDTOTAL.Text) + PromoTotal)
                     End If
                 End If
             End If
@@ -995,22 +998,25 @@ Public Class POS
     Private Sub InsertCustInfo()
         Try
             Dim ConnectionLocal As MySqlConnection = LocalhostConn()
-            Dim cmd As MySqlCommand
-            Dim sql = "INSERT INTO loc_customer_info (`transaction_number`, `cust_name`, `cust_tin`,`cust_address`, `cust_business`, `crew_id`, `store_id`, `created_at`, `active`, `synced`)
-                       VALUES (@1,@2,@3,@4,@5,@6,@7,@8,@9,@10)"
-            cmd = New MySqlCommand(sql, ConnectionLocal)
-            cmd.Parameters.Add("@1", MySqlDbType.Text).Value = S_TRANSACTION_NUMBER
-            cmd.Parameters.Add("@2", MySqlDbType.Text).Value = CUST_INFO_NAME
-            cmd.Parameters.Add("@3", MySqlDbType.Text).Value = CUST_INFO_TIN
-            cmd.Parameters.Add("@4", MySqlDbType.Text).Value = CUST_INFO_ADDRESS
-            cmd.Parameters.Add("@5", MySqlDbType.Text).Value = CUST_INFO_BUSINESS
-            cmd.Parameters.Add("@6", MySqlDbType.Text).Value = ClientCrewID
-            cmd.Parameters.Add("@7", MySqlDbType.Text).Value = ClientStoreID
-            cmd.Parameters.Add("@8", MySqlDbType.Text).Value = FullDate24HR()
-            cmd.Parameters.Add("@9", MySqlDbType.Text).Value = "1"
-            cmd.Parameters.Add("@10", MySqlDbType.Text).Value = "N"
-            cmd.ExecuteNonQuery()
 
+            Dim Query = "INSERT INTO loc_customer_info (`transaction_number`, `cust_name`, `cust_tin`,`cust_address`, `cust_business`, `crew_id`, `store_id`, `created_at`, `active`, `synced`)
+                       VALUES (@1,@2,@3,@4,@5,@6,@7,@8,@9,@10)"
+            Using mCmd = New MySqlCommand(Query, ConnectionLocal)
+                mCmd.Parameters.Clear()
+                mCmd.Parameters.Add("@1", MySqlDbType.Text).Value = S_TRANSACTION_NUMBER
+                mCmd.Parameters.Add("@2", MySqlDbType.Text).Value = CUST_INFO_NAME
+                mCmd.Parameters.Add("@3", MySqlDbType.Text).Value = CUST_INFO_TIN
+                mCmd.Parameters.Add("@4", MySqlDbType.Text).Value = CUST_INFO_ADDRESS
+                mCmd.Parameters.Add("@5", MySqlDbType.Text).Value = CUST_INFO_BUSINESS
+                mCmd.Parameters.Add("@6", MySqlDbType.Text).Value = ClientCrewID
+                mCmd.Parameters.Add("@7", MySqlDbType.Text).Value = ClientStoreID
+                mCmd.Parameters.Add("@8", MySqlDbType.Text).Value = FullDate24HR()
+                mCmd.Parameters.Add("@9", MySqlDbType.Text).Value = "1"
+                mCmd.Parameters.Add("@10", MySqlDbType.Text).Value = "N"
+                mCmd.ExecuteNonQuery()
+                mCmd.Dispose()
+            End Using
+            ConnectionLocal.Close()
         Catch ex As Exception
             AuditTrail.LogToAuditTrail("System", "POS/Customer Info : " & ex.ToString, "Critical")
         End Try
@@ -1018,8 +1024,7 @@ Public Class POS
     Private Sub InsertFMStock()
         Try
             Dim ConnectionLocal As MySqlConnection = LocalhostConn()
-            Dim cmd As MySqlCommand
-            Dim sql = "INSERT INTO loc_fm_stock 
+            Dim Query As String = "INSERT INTO loc_fm_stock 
                             (
                                 `formula_id`, `stock_primary`, `stock_secondary`, `crew_id`, `store_id`, `guid`, `created_at`, `status`
                             )
@@ -1028,21 +1033,23 @@ Public Class POS
                                 @formula_id, @stock_primary, @stock_secondary, @crew_id, @store_id, @guid, @created_at, @status
                             )"
             With DataGridViewInv
-                For i As Integer = 0 To .Rows.Count - 1 Step +1
-                    cmd = New MySqlCommand(sql, ConnectionLocal)
-                    cmd.Parameters.Clear()
-                    cmd.Parameters.AddWithValue("@formula_id", .Rows(i).Cells(1).Value)
-                    cmd.Parameters.AddWithValue("@stock_primary", .Rows(i).Cells(2).Value)
-                    cmd.Parameters.AddWithValue("@stock_secondary", .Rows(i).Cells(0).Value)
-                    cmd.Parameters.AddWithValue("@crew_id", ClientCrewID)
-                    cmd.Parameters.AddWithValue("@store_id", ClientStoreID)
-                    cmd.Parameters.AddWithValue("@guid", ClientGuid)
-                    cmd.Parameters.AddWithValue("@created_at", FullDate24HR())
-                    cmd.Parameters.AddWithValue("@status", 1)
-                    cmd.ExecuteNonQuery()
-                Next
+                Using mCmd = New MySqlCommand(Query, ConnectionLocal)
+                    For i As Integer = 0 To .Rows.Count - 1 Step +1
+                        mCmd.Parameters.Clear()
+                        mCmd.Parameters.AddWithValue("@formula_id", .Rows(i).Cells(1).Value)
+                        mCmd.Parameters.AddWithValue("@stock_primary", .Rows(i).Cells(2).Value)
+                        mCmd.Parameters.AddWithValue("@stock_secondary", .Rows(i).Cells(0).Value)
+                        mCmd.Parameters.AddWithValue("@crew_id", ClientCrewID)
+                        mCmd.Parameters.AddWithValue("@store_id", ClientStoreID)
+                        mCmd.Parameters.AddWithValue("@guid", ClientGuid)
+                        mCmd.Parameters.AddWithValue("@created_at", FullDate24HR())
+                        mCmd.Parameters.AddWithValue("@status", 1)
+                        mCmd.ExecuteNonQuery()
+                    Next
+                    mCmd.Dispose()
+                End Using
             End With
-
+            ConnectionLocal.Close()
         Catch ex As Exception
             AuditTrail.LogToAuditTrail("System", "POS/Fm Stock : " & ex.ToString, "Critical")
         End Try
@@ -1144,9 +1151,10 @@ Public Class POS
                                 (
                                     @1,@2,@3,@4,@5,@6,@7,@8,@9,@10,@11,@12,@13,@14,@15,@16,@17,@18,@19,@20,@21,@22,@23,@24,@25,@26,@27
                                 )"
-                For i As Integer = 0 To .Rows.Count - 1 Step +1
-                    Dim totalcostofgoods = 0
-                    Using Command As New MySqlCommand(sql, ConnectionLocal)
+
+                Using Command As New MySqlCommand(sql, ConnectionLocal)
+                    For i As Integer = 0 To .Rows.Count - 1 Step +1
+                        Dim totalcostofgoods = 0
                         For a As Integer = 0 To DataGridViewInv.Rows.Count - 1 Step +1
                             If DataGridViewInv.Rows(a).Cells(4).Value = .Rows(i).Cells(0).Value Then
                                 totalcostofgoods += DataGridViewInv.Rows(a).Cells(6).Value
@@ -1181,11 +1189,11 @@ Public Class POS
                         Command.Parameters.AddWithValue("@26", If(.Rows(i).Cells(21).Value > 0, .Rows(i).Cells(21).Value, 0))
                         Command.Parameters.AddWithValue("@27", If(.Rows(i).Cells(22).Value > 0, .Rows(i).Cells(22).Value, 0))
                         Command.ExecuteNonQuery()
-
-                    End Using
-                Next
+                    Next
+                    Command.Dispose()
+                End Using
+                ConnectionLocal.Close()
             End With
-
         Catch ex As Exception
             AuditTrail.LogToAuditTrail("System", "POS/Daily Transaction Details: " & ex.ToString, "Critical")
         End Try
@@ -1229,76 +1237,82 @@ Public Class POS
             Dim Query As String = ""
             With DataGridViewOrders
                 For i As Integer = 0 To .Rows.Count - 1 Step +1
-
                     If .Rows(i).Cells(15).Value > 0 Then
                         Dim DiscTotal As Double = NUMBERFORMAT(Math.Round(.Rows(i).Cells(15).Value, 2, MidpointRounding.AwayFromZero))
                         Query = "INSERT INTO loc_coupon_data (`transaction_number`, `coupon_name`, `coupon_type`, `coupon_desc`, `coupon_line`, `coupon_total`, `zreading`, `status`, `synced`) VALUES (@1, @2, @3, @4, @5, @6, @7, @8, @9)"
-                        cmd = New MySqlCommand(Query, ConnectionLocal)
-                        cmd.Parameters.Clear()
-                        cmd.Parameters.Add("@1", MySqlDbType.Text).Value = S_TRANSACTION_NUMBER
-                        cmd.Parameters.Add("@2", MySqlDbType.Text).Value = "Senior Discount 20%"
-                        cmd.Parameters.Add("@3", MySqlDbType.Text).Value = "Percentage(w/o vat)"
-                        cmd.Parameters.Add("@4", MySqlDbType.Text).Value = "N/A"
-                        cmd.Parameters.Add("@5", MySqlDbType.Text).Value = PromoLine
-                        cmd.Parameters.Add("@6", MySqlDbType.Text).Value = DiscTotal
-                        cmd.Parameters.Add("@7", MySqlDbType.Text).Value = S_Zreading
-                        cmd.Parameters.Add("@8", MySqlDbType.Text).Value = 1
-                        cmd.Parameters.Add("@9", MySqlDbType.Text).Value = "N"
-                        cmd.ExecuteNonQuery()
+                        Using mCmd = New MySqlCommand(Query, ConnectionLocal)
+                            mCmd.Parameters.Clear()
+                            mCmd.Parameters.Add("@1", MySqlDbType.Text).Value = S_TRANSACTION_NUMBER
+                            mCmd.Parameters.Add("@2", MySqlDbType.Text).Value = "Senior Discount 20%"
+                            mCmd.Parameters.Add("@3", MySqlDbType.Text).Value = "Percentage(w/o vat)"
+                            mCmd.Parameters.Add("@4", MySqlDbType.Text).Value = "N/A"
+                            mCmd.Parameters.Add("@5", MySqlDbType.Text).Value = PromoLine
+                            mCmd.Parameters.Add("@6", MySqlDbType.Text).Value = DiscTotal
+                            mCmd.Parameters.Add("@7", MySqlDbType.Text).Value = S_Zreading
+                            mCmd.Parameters.Add("@8", MySqlDbType.Text).Value = 1
+                            mCmd.Parameters.Add("@9", MySqlDbType.Text).Value = "N"
+                            mCmd.ExecuteNonQuery()
+                            mCmd.Dispose()
+                        End Using
                     End If
                     If .Rows(i).Cells(17).Value > 0 Then
                         Dim DiscTotal As Double = NUMBERFORMAT(Math.Round(.Rows(i).Cells(17).Value, 2, MidpointRounding.AwayFromZero))
                         Query = "INSERT INTO loc_coupon_data (`transaction_number`, `coupon_name`, `coupon_type`, `coupon_desc`, `coupon_line`, `coupon_total`, `zreading`, `status`, `synced`) VALUES (@1, @2, @3, @4, @5, @6, @7, @8, @9)"
-                        cmd = New MySqlCommand(Query, ConnectionLocal)
-                        cmd.Parameters.Clear()
-                        cmd.Parameters.Add("@1", MySqlDbType.Text).Value = S_TRANSACTION_NUMBER
-                        cmd.Parameters.Add("@2", MySqlDbType.Text).Value = "PWD Discount 20%"
-                        cmd.Parameters.Add("@3", MySqlDbType.Text).Value = "Percentage(w/o vat)"
-                        cmd.Parameters.Add("@4", MySqlDbType.Text).Value = "N/A"
-                        cmd.Parameters.Add("@5", MySqlDbType.Text).Value = PromoLine
-                        cmd.Parameters.Add("@6", MySqlDbType.Text).Value = DiscTotal
-                        cmd.Parameters.Add("@7", MySqlDbType.Text).Value = S_Zreading
-                        cmd.Parameters.Add("@8", MySqlDbType.Text).Value = 1
-                        cmd.Parameters.Add("@9", MySqlDbType.Text).Value = "N"
-                        cmd.ExecuteNonQuery()
+                        Using mCmd = New MySqlCommand(Query, ConnectionLocal)
+                            mCmd.Parameters.Clear()
+                            mCmd.Parameters.Add("@1", MySqlDbType.Text).Value = S_TRANSACTION_NUMBER
+                            mCmd.Parameters.Add("@2", MySqlDbType.Text).Value = "PWD Discount 20%"
+                            mCmd.Parameters.Add("@3", MySqlDbType.Text).Value = "Percentage(w/o vat)"
+                            mCmd.Parameters.Add("@4", MySqlDbType.Text).Value = "N/A"
+                            mCmd.Parameters.Add("@5", MySqlDbType.Text).Value = PromoLine
+                            mCmd.Parameters.Add("@6", MySqlDbType.Text).Value = DiscTotal
+                            mCmd.Parameters.Add("@7", MySqlDbType.Text).Value = S_Zreading
+                            mCmd.Parameters.Add("@8", MySqlDbType.Text).Value = 1
+                            mCmd.Parameters.Add("@9", MySqlDbType.Text).Value = "N"
+                            mCmd.ExecuteNonQuery()
+                            mCmd.Dispose()
+                        End Using
                     End If
                     If .Rows(i).Cells(19).Value > 0 Then
                         Dim DiscTotal As Double = NUMBERFORMAT(Math.Round(.Rows(i).Cells(19).Value, 2, MidpointRounding.AwayFromZero))
                         Query = "INSERT INTO loc_coupon_data (`transaction_number`, `coupon_name`, `coupon_type`, `coupon_desc`, `coupon_line`, `coupon_total`, `zreading`, `status`, `synced`) VALUES (@1, @2, @3, @4, @5, @6, @7, @8, @9)"
-                        cmd = New MySqlCommand(Query, ConnectionLocal)
-                        cmd.Parameters.Clear()
-                        cmd.Parameters.Add("@1", MySqlDbType.Text).Value = S_TRANSACTION_NUMBER
-                        cmd.Parameters.Add("@2", MySqlDbType.Text).Value = "Sports Discount 20%"
-                        cmd.Parameters.Add("@3", MySqlDbType.Text).Value = "Percentage(w/o vat)"
-                        cmd.Parameters.Add("@4", MySqlDbType.Text).Value = "N/A"
-                        cmd.Parameters.Add("@5", MySqlDbType.Text).Value = PromoLine
-                        cmd.Parameters.Add("@6", MySqlDbType.Text).Value = DiscTotal
-                        cmd.Parameters.Add("@7", MySqlDbType.Text).Value = S_Zreading
-                        cmd.Parameters.Add("@8", MySqlDbType.Text).Value = 1
-                        cmd.Parameters.Add("@9", MySqlDbType.Text).Value = "N"
-                        cmd.ExecuteNonQuery()
+                        Using mCmd = New MySqlCommand(Query, ConnectionLocal)
+                            mCmd.Parameters.Clear()
+                            mCmd.Parameters.Add("@1", MySqlDbType.Text).Value = S_TRANSACTION_NUMBER
+                            mCmd.Parameters.Add("@2", MySqlDbType.Text).Value = "Sports Discount 20%"
+                            mCmd.Parameters.Add("@3", MySqlDbType.Text).Value = "Percentage(w/o vat)"
+                            mCmd.Parameters.Add("@4", MySqlDbType.Text).Value = "N/A"
+                            mCmd.Parameters.Add("@5", MySqlDbType.Text).Value = PromoLine
+                            mCmd.Parameters.Add("@6", MySqlDbType.Text).Value = DiscTotal
+                            mCmd.Parameters.Add("@7", MySqlDbType.Text).Value = S_Zreading
+                            mCmd.Parameters.Add("@8", MySqlDbType.Text).Value = 1
+                            mCmd.Parameters.Add("@9", MySqlDbType.Text).Value = "N"
+                            mCmd.ExecuteNonQuery()
+                            mCmd.Dispose()
+                        End Using
                     End If
                     If .Rows(i).Cells(21).Value > 0 Then
                         Dim DiscTotal As Double = NUMBERFORMAT(Math.Round(.Rows(i).Cells(21).Value, 2, MidpointRounding.AwayFromZero))
                         Query = "INSERT INTO loc_coupon_data (`transaction_number`, `coupon_name`, `coupon_type`, `coupon_desc`, `coupon_line`, `coupon_total`, `zreading`, `status`, `synced`) VALUES (@1, @2, @3, @4, @5, @6, @7, @8, @9)"
-                        cmd = New MySqlCommand(Query, ConnectionLocal)
-                        cmd.Parameters.Clear()
-                        cmd.Parameters.Add("@1", MySqlDbType.Text).Value = S_TRANSACTION_NUMBER
-                        cmd.Parameters.Add("@2", MySqlDbType.Text).Value = "Single Parent Discount 20%"
-                        cmd.Parameters.Add("@3", MySqlDbType.Text).Value = "Percentage(w/o vat)"
-                        cmd.Parameters.Add("@4", MySqlDbType.Text).Value = "N/A"
-                        cmd.Parameters.Add("@5", MySqlDbType.Text).Value = PromoLine
-                        cmd.Parameters.Add("@6", MySqlDbType.Text).Value = DiscTotal
-                        cmd.Parameters.Add("@7", MySqlDbType.Text).Value = S_Zreading
-                        cmd.Parameters.Add("@8", MySqlDbType.Text).Value = 1
-                        cmd.Parameters.Add("@9", MySqlDbType.Text).Value = "N"
-                        cmd.ExecuteNonQuery()
+                        Using mCmd = New MySqlCommand(Query, ConnectionLocal)
+                            mCmd.Parameters.Clear()
+                            mCmd.Parameters.Add("@1", MySqlDbType.Text).Value = S_TRANSACTION_NUMBER
+                            mCmd.Parameters.Add("@2", MySqlDbType.Text).Value = "Single Parent Discount 20%"
+                            mCmd.Parameters.Add("@3", MySqlDbType.Text).Value = "Percentage(w/o vat)"
+                            mCmd.Parameters.Add("@4", MySqlDbType.Text).Value = "N/A"
+                            mCmd.Parameters.Add("@5", MySqlDbType.Text).Value = PromoLine
+                            mCmd.Parameters.Add("@6", MySqlDbType.Text).Value = DiscTotal
+                            mCmd.Parameters.Add("@7", MySqlDbType.Text).Value = S_Zreading
+                            mCmd.Parameters.Add("@8", MySqlDbType.Text).Value = 1
+                            mCmd.Parameters.Add("@9", MySqlDbType.Text).Value = "N"
+                            mCmd.ExecuteNonQuery()
+                            mCmd.Dispose()
+                        End Using
                     End If
                 Next
 
-
-
             End With
+            ConnectionLocal.Close()
         Catch ex As Exception
             AuditTrail.LogToAuditTrail("System", ex.ToString, "Critical")
             AuditTrail.LogToAuditTrail("System", "POS/Discount Data: " & ex.ToString, "Critical")
@@ -1306,32 +1320,27 @@ Public Class POS
     End Sub
     Private Sub InsertCouponData()
         Try
-            'Dim table As String = "loc_coupon_data"
-            'Dim fields As String = "(`transaction_number`, `coupon_name`, `coupon_type`, `coupon_desc`, `coupon_line`, `coupon_total`, `gc_value`, `zreading`, `status`, `synced`)"
-            'Dim value As String = "( '" & S_TRANSACTION_NUMBER & "'
-            '          ,'" & CouponName & "'
-            '          , '" & DISCOUNTTYPE & "'
-            '          , '" & CouponDesc & "'
-            '          , '" & CouponLine & "'
-            '          , '" & CouponTotal & "', " & GC_Value & ", '" & S_Zreading & "', '1', 'Unsynced')"
-            'GLOBAL_INSERT_FUNCTION(table, fields, value)
+
             PromoTotal = NUMBERFORMAT(Math.Round(PromoTotal, 2, MidpointRounding.AwayFromZero))
             Dim ConnectionLocal As MySqlConnection = LocalhostConn()
             Dim Query = "INSERT INTO loc_coupon_data (`transaction_number`, `coupon_name`, `coupon_type`, `coupon_desc`, `coupon_line`, `coupon_total`, `gc_value`, `zreading`, `status`, `synced`) VALUES (@1, @2, @3, @4, @5, @6, @7, @8, @9, @10)"
-            cmd = New MySqlCommand(Query, ConnectionLocal)
-            cmd.Parameters.Clear()
-            cmd.Parameters.Add("@1", MySqlDbType.Text).Value = S_TRANSACTION_NUMBER
-            cmd.Parameters.Add("@2", MySqlDbType.Text).Value = PromoName
-            cmd.Parameters.Add("@3", MySqlDbType.Text).Value = PromoType
-            cmd.Parameters.Add("@4", MySqlDbType.Text).Value = PromoDesc
-            cmd.Parameters.Add("@5", MySqlDbType.Text).Value = PromoLine
-            cmd.Parameters.Add("@6", MySqlDbType.Text).Value = PromoTotal
-            cmd.Parameters.Add("@7", MySqlDbType.Text).Value = PromoGCValue
-            cmd.Parameters.Add("@8", MySqlDbType.Text).Value = S_Zreading
-            cmd.Parameters.Add("@9", MySqlDbType.Text).Value = "1"
-            cmd.Parameters.Add("@10", MySqlDbType.Text).Value = "N"
-            cmd.ExecuteNonQuery()
+            Using mCmd = New MySqlCommand(Query, ConnectionLocal)
+                mCmd.Parameters.Clear()
+                mCmd.Parameters.AddWithValue("@1", S_TRANSACTION_NUMBER)
+                mCmd.Parameters.AddWithValue("@2", PromoName)
+                mCmd.Parameters.AddWithValue("@3", PromoType)
+                mCmd.Parameters.AddWithValue("@4", PromoDesc)
+                mCmd.Parameters.AddWithValue("@5", PromoLine)
+                mCmd.Parameters.AddWithValue("@6", PromoTotal)
+                mCmd.Parameters.AddWithValue("@7", PromoGCValue)
+                mCmd.Parameters.AddWithValue("@8", S_Zreading)
+                mCmd.Parameters.AddWithValue("@9", "1")
+                mCmd.Parameters.AddWithValue("@10", "N")
+                mCmd.ExecuteNonQuery()
+                mCmd.Dispose()
+            End Using
 
+            ConnectionLocal.Close()
         Catch ex As Exception
             AuditTrail.LogToAuditTrail("System", ex.ToString, "Critical")
             AuditTrail.LogToAuditTrail("System", "POS/Coupon Data: " & ex.ToString, "Critical")
@@ -1339,24 +1348,31 @@ Public Class POS
     End Sub
     Private Sub InsertSeniorDetails()
         Try
-            Dim table As String = "loc_senior_details"
-            Dim fields As String = "(`transaction_number`, `senior_id`, `senior_name`, `active`, `crew_id`, `store_id`, `guid`, `date_created`, `totalguest`, `totalid`,`phone_number`, `synced`)"
-            Dim value As String = "( '" & S_TRANSACTION_NUMBER & "'
-                      , '" & SeniorDetailsID & "'
-                      , '" & SeniorDetailsName & "'
-                      , '" & 1 & "'
-                      , '" & ClientCrewID & "'
-                      , '" & ClientStoreID & "'
-                      , '" & ClientGuid & "'
-                      , '" & S_Zreading & "'
-                      , '" & DISCGUESTCOUNT & "'
-                      , '" & DISCIDCOUNT & "'
-                      , '" & SeniorPhoneNumber & "'
-                      , 'N')"
-            GLOBAL_INSERT_FUNCTION(table, fields, value)
+
+            Dim ConnectionLocal As MySqlConnection = LocalhostConn()
+            Dim Query = "INSERT INTO loc_senior_details 
+                                (`transaction_number`, `senior_id`, `senior_name`, `active`, `crew_id`, `store_id`, `guid`, `date_created`, `totalguest`, `totalid`,`phone_number`, `synced`)
+                         VALUES
+                                (@transaction_number, @senior_id, @senior_name, @active, @crew_id, @store_id, @guid, @date_created, @totalguest, @totalid, @phone_number, @synced)"
+            Using mCmd = New MySqlCommand("", ConnectionLocal)
+                mCmd.Parameters.Clear()
+                mCmd.Parameters.AddWithValue("@transaction_number", S_TRANSACTION_NUMBER)
+                mCmd.Parameters.AddWithValue("@senior_id", SeniorDetailsID)
+                mCmd.Parameters.AddWithValue("@senior_name", SeniorDetailsName)
+                mCmd.Parameters.AddWithValue("@active", 1)
+                mCmd.Parameters.AddWithValue("@crew_id", ClientCrewID)
+                mCmd.Parameters.AddWithValue("@store_id", ClientStoreID)
+                mCmd.Parameters.AddWithValue("@guid", ClientGuid)
+                mCmd.Parameters.AddWithValue("@date_created", S_Zreading)
+                mCmd.Parameters.AddWithValue("@totalguest", DISCGUESTCOUNT)
+                mCmd.Parameters.AddWithValue("@totalid", DISCIDCOUNT)
+                mCmd.Parameters.AddWithValue("@phone_number", SeniorPhoneNumber)
+                mCmd.Parameters.AddWithValue("@synced", "N")
+                mCmd.Dispose()
+            End Using
+            ConnectionLocal.Close()
         Catch ex As Exception
             AuditTrail.LogToAuditTrail("System", ex.ToString, "Critical")
-            AuditTrail.LogToAuditTrail("System", "POS/Senior Data: " & ex.ToString, "Critical")
         End Try
     End Sub
 #End Region
@@ -2200,8 +2216,6 @@ Public Class POS
                 .Columns.Add("Origin")
                 .Columns.Add("HalfBatch")
             End With
-
-            Console.WriteLine(DataGridViewInv.Rows.Count)
 
             For Each row As DataGridViewRow In DataGridViewInv.Rows
                 Dim Prod As DataRow = INVENTORY_DATATABLE.NewRow

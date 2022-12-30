@@ -125,17 +125,17 @@ Public Class TakeOut
                 DInventory()
                 Close()
             Else
-                MessageBox.Show("Input quantity first", "", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                MessageBox.Show("Input quantity first", "", MessageBoxButtons.OK, MessageBoxIcon.Information)
             End If
         ElseIf ComboBoxTakeout.Text = "Sugar Packets" Then
             If Val(TextBoxQuantity.Text) > 0 Then
                 DInventory()
                 Close()
             Else
-                MessageBox.Show("Input quantity first", "", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                MessageBox.Show("Input quantity first", "", MessageBoxButtons.OK, MessageBoxIcon.Information)
             End If
         Else
-            MessageBox.Show("Select extra packaging/sugar syrup first", "Select", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            MessageBox.Show("Select extra packaging/sugar syrup first", "Select", MessageBoxButtons.OK, MessageBoxIcon.Information)
         End If
     End Sub
 

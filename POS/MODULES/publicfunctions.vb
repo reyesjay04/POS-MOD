@@ -1903,7 +1903,7 @@ Module publicfunctions
                 If AutoCompute Then
                     .Label76.Text = NUMBERFORMAT(SumOfColumnsToDecimal(.DataGridViewOrders, 3))
                     .TextBoxSUBTOTAL.Text = .Label76.Text
-                    Dim GRANDTOTAL As Double = Double.Parse(.Label76.Text) - Double.Parse(.TextBoxDISCOUNT.Text)
+                    Dim GRANDTOTAL As Double = If(.Label76.Text = "0.00", "0.00", Double.Parse(.Label76.Text) - Double.Parse(.TextBoxDISCOUNT.Text))
                     .TextBoxGRANDTOTAL.Text = NUMBERFORMAT(GRANDTOTAL)
                     Select Case NotResetDiscount And NotTriggerResetDisc
                         Case False
@@ -2040,5 +2040,21 @@ Module publicfunctions
         End Try
     End Sub
 
-
+    Public Sub DatagridviewStyle(ByVal dgv As DataGridView)
+        Try
+            With dgv
+                .RowHeadersVisible = False
+                .AllowUserToAddRows = False
+                .AllowUserToDeleteRows = False
+                .AllowUserToOrderColumns = False
+                .AllowUserToResizeColumns = False
+                .AllowUserToResizeRows = False
+                .Font = New Font("tahoma", 10)
+                .CellBorderStyle = DataGridViewCellBorderStyle.SingleHorizontal
+                .ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.None
+                .SelectionMode = DataGridViewSelectionMode.FullRowSelect
+            End With
+        Catch ex As Exception
+        End Try
+    End Sub
 End Module

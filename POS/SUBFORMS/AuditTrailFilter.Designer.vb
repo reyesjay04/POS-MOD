@@ -24,17 +24,17 @@ Partial Class AuditTrailFilter
     Private Sub InitializeComponent()
         Me.DateTimePicker1 = New System.Windows.Forms.DateTimePicker()
         Me.DateTimePicker2 = New System.Windows.Forms.DateTimePicker()
-        Me.ComboBox1 = New System.Windows.Forms.ComboBox()
-        Me.ComboBox2 = New System.Windows.Forms.ComboBox()
+        Me.cmbGroupName = New System.Windows.Forms.ComboBox()
+        Me.cmbUser = New System.Windows.Forms.ComboBox()
         Me.Button1 = New System.Windows.Forms.Button()
         Me.Button2 = New System.Windows.Forms.Button()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.Label3 = New System.Windows.Forms.Label()
-        Me.ComboBox3 = New System.Windows.Forms.ComboBox()
+        Me.cmbLimit = New System.Windows.Forms.ComboBox()
         Me.Label4 = New System.Windows.Forms.Label()
         Me.Label5 = New System.Windows.Forms.Label()
-        Me.ComboBoxSeverity = New System.Windows.Forms.ComboBox()
+        Me.cmbSeverities = New System.Windows.Forms.ComboBox()
         Me.SuspendLayout()
         '
         'DateTimePicker1
@@ -53,27 +53,27 @@ Partial Class AuditTrailFilter
         Me.DateTimePicker2.Size = New System.Drawing.Size(207, 22)
         Me.DateTimePicker2.TabIndex = 2
         '
-        'ComboBox1
+        'cmbGroupName
         '
-        Me.ComboBox1.BackColor = System.Drawing.SystemColors.Control
-        Me.ComboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.ComboBox1.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-        Me.ComboBox1.FormattingEnabled = True
-        Me.ComboBox1.Location = New System.Drawing.Point(14, 69)
-        Me.ComboBox1.Name = "ComboBox1"
-        Me.ComboBox1.Size = New System.Drawing.Size(420, 22)
-        Me.ComboBox1.TabIndex = 3
+        Me.cmbGroupName.BackColor = System.Drawing.SystemColors.Control
+        Me.cmbGroupName.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.cmbGroupName.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.cmbGroupName.FormattingEnabled = True
+        Me.cmbGroupName.Location = New System.Drawing.Point(14, 69)
+        Me.cmbGroupName.Name = "cmbGroupName"
+        Me.cmbGroupName.Size = New System.Drawing.Size(420, 22)
+        Me.cmbGroupName.TabIndex = 3
         '
-        'ComboBox2
+        'cmbUser
         '
-        Me.ComboBox2.BackColor = System.Drawing.SystemColors.Control
-        Me.ComboBox2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.ComboBox2.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-        Me.ComboBox2.FormattingEnabled = True
-        Me.ComboBox2.Location = New System.Drawing.Point(14, 151)
-        Me.ComboBox2.Name = "ComboBox2"
-        Me.ComboBox2.Size = New System.Drawing.Size(420, 22)
-        Me.ComboBox2.TabIndex = 5
+        Me.cmbUser.BackColor = System.Drawing.SystemColors.Control
+        Me.cmbUser.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.cmbUser.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.cmbUser.FormattingEnabled = True
+        Me.cmbUser.Location = New System.Drawing.Point(14, 151)
+        Me.cmbUser.Name = "cmbUser"
+        Me.cmbUser.Size = New System.Drawing.Size(420, 22)
+        Me.cmbUser.TabIndex = 5
         '
         'Button1
         '
@@ -128,17 +128,17 @@ Partial Class AuditTrailFilter
         Me.Label3.TabIndex = 10
         Me.Label3.Text = "User Name:"
         '
-        'ComboBox3
+        'cmbLimit
         '
-        Me.ComboBox3.BackColor = System.Drawing.SystemColors.Control
-        Me.ComboBox3.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.ComboBox3.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-        Me.ComboBox3.FormattingEnabled = True
-        Me.ComboBox3.Items.AddRange(New Object() {"All", "10", "50", "100", "500", "1000"})
-        Me.ComboBox3.Location = New System.Drawing.Point(14, 191)
-        Me.ComboBox3.Name = "ComboBox3"
-        Me.ComboBox3.Size = New System.Drawing.Size(420, 22)
-        Me.ComboBox3.TabIndex = 6
+        Me.cmbLimit.BackColor = System.Drawing.SystemColors.Control
+        Me.cmbLimit.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.cmbLimit.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.cmbLimit.FormattingEnabled = True
+        Me.cmbLimit.Items.AddRange(New Object() {"All", "10", "50", "100", "500", "1000"})
+        Me.cmbLimit.Location = New System.Drawing.Point(14, 191)
+        Me.cmbLimit.Name = "cmbLimit"
+        Me.cmbLimit.Size = New System.Drawing.Size(420, 22)
+        Me.cmbLimit.TabIndex = 6
         '
         'Label4
         '
@@ -158,16 +158,16 @@ Partial Class AuditTrailFilter
         Me.Label5.TabIndex = 13
         Me.Label5.Text = "Severity:"
         '
-        'ComboBoxSeverity
+        'cmbSeverities
         '
-        Me.ComboBoxSeverity.BackColor = System.Drawing.SystemColors.Control
-        Me.ComboBoxSeverity.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.ComboBoxSeverity.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-        Me.ComboBoxSeverity.FormattingEnabled = True
-        Me.ComboBoxSeverity.Location = New System.Drawing.Point(14, 111)
-        Me.ComboBoxSeverity.Name = "ComboBoxSeverity"
-        Me.ComboBoxSeverity.Size = New System.Drawing.Size(420, 22)
-        Me.ComboBoxSeverity.TabIndex = 4
+        Me.cmbSeverities.BackColor = System.Drawing.SystemColors.Control
+        Me.cmbSeverities.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.cmbSeverities.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.cmbSeverities.FormattingEnabled = True
+        Me.cmbSeverities.Location = New System.Drawing.Point(14, 111)
+        Me.cmbSeverities.Name = "cmbSeverities"
+        Me.cmbSeverities.Size = New System.Drawing.Size(420, 22)
+        Me.cmbSeverities.TabIndex = 4
         '
         'AuditTrailFilter
         '
@@ -175,17 +175,17 @@ Partial Class AuditTrailFilter
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.White
         Me.ClientSize = New System.Drawing.Size(451, 254)
-        Me.Controls.Add(Me.ComboBoxSeverity)
+        Me.Controls.Add(Me.cmbSeverities)
         Me.Controls.Add(Me.Label5)
         Me.Controls.Add(Me.Label4)
-        Me.Controls.Add(Me.ComboBox3)
+        Me.Controls.Add(Me.cmbLimit)
         Me.Controls.Add(Me.Label3)
         Me.Controls.Add(Me.Label2)
         Me.Controls.Add(Me.Label1)
         Me.Controls.Add(Me.Button2)
         Me.Controls.Add(Me.Button1)
-        Me.Controls.Add(Me.ComboBox2)
-        Me.Controls.Add(Me.ComboBox1)
+        Me.Controls.Add(Me.cmbUser)
+        Me.Controls.Add(Me.cmbGroupName)
         Me.Controls.Add(Me.DateTimePicker2)
         Me.Controls.Add(Me.DateTimePicker1)
         Me.Font = New System.Drawing.Font("Tahoma", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -202,15 +202,15 @@ Partial Class AuditTrailFilter
 
     Friend WithEvents DateTimePicker1 As DateTimePicker
     Friend WithEvents DateTimePicker2 As DateTimePicker
-    Friend WithEvents ComboBox1 As ComboBox
-    Friend WithEvents ComboBox2 As ComboBox
+    Friend WithEvents cmbGroupName As ComboBox
+    Friend WithEvents cmbUser As ComboBox
     Friend WithEvents Button1 As Button
     Friend WithEvents Button2 As Button
     Friend WithEvents Label1 As Label
     Friend WithEvents Label2 As Label
     Friend WithEvents Label3 As Label
-    Friend WithEvents ComboBox3 As ComboBox
+    Friend WithEvents cmbLimit As ComboBox
     Friend WithEvents Label4 As Label
     Friend WithEvents Label5 As Label
-    Friend WithEvents ComboBoxSeverity As ComboBox
+    Friend WithEvents cmbSeverities As ComboBox
 End Class
