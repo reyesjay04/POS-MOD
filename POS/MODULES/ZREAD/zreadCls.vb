@@ -122,9 +122,9 @@ Public Class zreadCls
             ' Same value as Vat Amount (zrVatAmount)
             zrAddVat = zrVatAmount
             'Total Gift card value used
-            zrGCUsed = sum("gc_value", "loc_coupon_data WHERE zreading = " & ZReadDate & " AND coupon_type = 'Fix-1'")
+            zrGCUsed = sum("coupon_total", $"loc_coupon_data WHERE zreading = '{ZReadDate}' AND coupon_type = 'Fix-1'")
             'Total Value of Gift card
-            zrGC = sum("coupon_total", "loc_coupon_data WHERE zreading = " & ZReadDate & " AND coupon_type = 'Fix-1' ")
+            zrGC = sum("gc_value", $"loc_coupon_data WHERE zreading = '{ZReadDate}' AND coupon_type = 'Fix-1' ")
             'Zero always
             zrGovTax = 0
             'Gross Sales (zrGrossSales):60 / 1.12(Tax) = Vatable Sales (zrVatableSales):53.57

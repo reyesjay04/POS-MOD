@@ -77,7 +77,7 @@ Public Class AdvancedCustomReport
         Try
             Dim WhereExtension As String = " GROUP BY LD.transaction_number ORDER BY LD.created_at ASC"
             Dim ActiveQuery As String = ""
-            Dim FieldsNormal As String = "LD.transaction_number As transaction_number, LD.grosssales as grosssales, LD.vatablesales as vatablesales, LD.vatpercentage as vatpercentage, LD.lessvat as lessvat, LD.vatexemptsales as vatexemptsales, SUM(LC.coupon_total) as totaldiscount, LD.transaction_type as transaction_type, LD.amountdue as amountdue, SUM(LC.gc_value) as gc_value , LD.created_at as dateCreated, LD.vatpercentage as AddVat, LD.Active as Status"
+            Dim FieldsNormal As String = "LD.transaction_number As transaction_number, LD.grosssales as grosssales, LD.vatablesales as vatablesales, LD.vatpercentage as vatpercentage, LD.lessvat as lessvat, LD.vatexemptsales as vatexemptsales, SUM(LC.coupon_total) as totaldiscount, LD.transaction_type as transaction_type, LD.amountdue as amountdue, SUM(LC.coupon_total) as gc_used , LD.created_at as dateCreated, LD.vatpercentage as AddVat, LD.Active as Status"
             Dim LeftJointNormal As String = " LEFT JOIN loc_coupon_data LC ON LD.transaction_number = LC.transaction_number "
             Dim AddWhere As String = " LC.coupon_type = 'Fix-1'"
 
@@ -239,10 +239,10 @@ Public Class AdvancedCustomReport
                 For Each row As DataRow In CustomReportdt.Rows
 
                     Dim GCVal As String = ""
-                    If row("gc_value").ToString = "" Then
+                    If row("gc_used").ToString = "" Then
                         GCVal = "0"
                     Else
-                        GCVal = row("gc_value")
+                        GCVal = row("gc_used")
                     End If
 
                     Dim DiscVal As String = ""
@@ -282,7 +282,7 @@ Public Class AdvancedCustomReport
                             VatPercentage += VatPercentageDgv
                             LessVat += LessVatDgv
                             VatExempt += VatExemptDgv
-                            NetSales += NetSalesDgv
+                            NetSales += NetSalesDgv + GCVal
                             AddVat += AddVatDgv
                             TotalDisc += Val(DiscVal)
                         End If

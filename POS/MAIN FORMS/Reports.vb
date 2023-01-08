@@ -538,21 +538,25 @@ Public Class Reports
             DataGridViewCustomReport.Rows.Clear()
             CustomReport(ToolStripComboBoxProducts.Text, ToolStripComboBoxTaxType.Text, ToolStripComboBoxTransactionType.Text, ToolStripComboBoxDiscType.Text)
             ToolStripStatusLabel2.Text = DataGridViewCustomReport.Rows.Count
-            TotalDiscountCustomReports = sum("coupon_total", "loc_coupon_data WHERE zreading >= '" & Format(DateTimePicker17.Value, "yyyy-MM-dd") & "' AND  zreading <= '" & Format(DateTimePicker18.Value, "yyyy-MM-dd") & "' AND status = 1")
+
+            TotalDiscountCustomReports = 0
+            If ToolStripComboBoxOption.SelectedIndex <> 2 Then
+                TotalDiscountCustomReports = sum("coupon_total", "loc_coupon_data WHERE zreading >= '" & Format(DateTimePicker17.Value, "yyyy-MM-dd") & "' AND  zreading <= '" & Format(DateTimePicker18.Value, "yyyy-MM-dd") & "' AND status = 1")
+            End If
+
         Catch ex As Exception
             AuditTrail.LogToAuditTrail("System", "Reports/ToolStripButton2: " & ex.ToString, "Critical")
         End Try
     End Sub
-    Dim CustomReportLessVat As Double = 0
-    Dim CustomReportVat As Double = 0
-    Dim CustomReportdt As DataTable
+
+
 
     Private Sub CustomReport(ProductName, TaxType, TransactionType, DiscountType)
         Try
             Dim ConnectionLocal As MySqlConnection = LocalhostConn()
-            Dim cmd As MySqlCommand
-            Dim da As MySqlDataAdapter
-            CustomReportdt = New DataTable
+            Dim cmd As New MySqlCommand
+            Dim da As New MySqlDataAdapter
+            Dim CustomReportdt As New DataTable
             Dim sql As String = ""
 
             Dim DateFrom = Format(DateTimePicker17.Value, "yyyy-MM-dd")
@@ -803,225 +807,14 @@ Public Class Reports
                 cmd = New MySqlCommand(sql, ConnectionLocal)
                 da = New MySqlDataAdapter(cmd)
                 da.Fill(CustomReportdt)
-
                 For Each row As DataRow In CustomReportdt.Rows
                     Dim total As Double = If(row("transaction_type") = "Complimentary Expenses", 0, row("total"))
                     DataGridViewCustomReport.Rows.Add(row("product_name"), row("transaction_number"), row("quantity"), row("price"), NUMBERFORMAT(total), row("created_at"), row("product_sku"))
                 Next
             End If
 
-            Dim sql1 As String = ""
-            Dim cmd1 As MySqlCommand
+            ConnectionLocal.Close()
 
-            Dim list As List(Of String) = New List(Of String)
-
-            For i As Integer = 0 To DataGridViewCustomReport.Rows.Count - 1 Step +1
-                list.Add(DataGridViewCustomReport.Rows(i).Cells(1).Value)
-            Next
-
-            Dim result As List(Of String) = list.Distinct().ToList
-
-            CustomReportVat = 0
-            CustomReportLessVat = 0
-            ' Display result.
-            For Each element As String In result
-                If ProductName = "All" Then
-                    If TaxType = "All" Then
-                        If TransactionType = "All" Then
-                            If DiscountType = "All" Then
-                                sql1 = "SELECT vatablesales, lessvat FROM loc_daily_transaction WHERE zreading >= '" & Format(DateTimePicker17.Value, "yyyy-MM-dd") & "' AND zreading <= '" & Format(DateTimePicker18.Value, "yyyy-MM-dd") & "' AND transaction_number = '" & element & "'"
-                            Else
-                                sql1 = "SELECT vatablesales, lessvat FROM loc_daily_transaction WHERE zreading >= '" & Format(DateTimePicker17.Value, "yyyy-MM-dd") & "' AND zreading <= '" & Format(DateTimePicker18.Value, "yyyy-MM-dd") & "' AND transaction_number = '" & element & "' AND discount_type = '" & DiscountType & "'"
-                            End If
-                        ElseIf TransactionType = "All(Cash)" Then
-                            If DiscountType = "All" Then
-                                sql1 = "SELECT vatablesales, lessvat FROM loc_daily_transaction WHERE zreading >= '" & Format(DateTimePicker17.Value, "yyyy-MM-dd") & "' AND zreading <= '" & Format(DateTimePicker18.Value, "yyyy-MM-dd") & "' AND transaction_number = '" & element & "' AND transaction_type IN('Walk-In','Registered')"
-                            Else
-                                sql1 = "SELECT vatablesales, lessvat FROM loc_daily_transaction WHERE zreading >= '" & Format(DateTimePicker17.Value, "yyyy-MM-dd") & "' AND zreading <= '" & Format(DateTimePicker18.Value, "yyyy-MM-dd") & "' AND transaction_number = '" & element & "' AND transaction_type IN('Walk-In','Registered') AND discount_type = '" & DiscountType & "'"
-                            End If
-                        ElseIf TransactionType = "All(Others)" Then
-                            If DiscountType = "All" Then
-                                sql1 = "SELECT vatablesales, lessvat FROM loc_daily_transaction WHERE zreading >= '" & Format(DateTimePicker17.Value, "yyyy-MM-dd") & "' AND zreading <= '" & Format(DateTimePicker18.Value, "yyyy-MM-dd") & "' AND transaction_number = '" & element & "' AND transaction_type NOT IN('Walk-In','Registered')"
-                            Else
-                                sql1 = "SELECT vatablesales, lessvat FROM loc_daily_transaction WHERE zreading >= '" & Format(DateTimePicker17.Value, "yyyy-MM-dd") & "' AND zreading <= '" & Format(DateTimePicker18.Value, "yyyy-MM-dd") & "' AND transaction_number = '" & element & "' AND transaction_type NOT IN('Walk-In','Registered') AND discount_type = '" & DiscountType & "'"
-                            End If
-                        Else
-                            If DiscountType = "All" Then
-                                sql1 = "SELECT vatablesales, lessvat FROM loc_daily_transaction WHERE zreading >= '" & Format(DateTimePicker17.Value, "yyyy-MM-dd") & "' AND zreading <= '" & Format(DateTimePicker18.Value, "yyyy-MM-dd") & "' AND transaction_type = '" & TransactionType & "' AND transaction_number = '" & element & "'"
-                            Else
-                                sql1 = "SELECT vatablesales, lessvat FROM loc_daily_transaction WHERE zreading >= '" & Format(DateTimePicker17.Value, "yyyy-MM-dd") & "' AND zreading <= '" & Format(DateTimePicker18.Value, "yyyy-MM-dd") & "' AND transaction_type = '" & TransactionType & "' AND transaction_number = '" & element & "' AND discount_type = '" & DiscountType & "'"
-                            End If
-                        End If
-                    Else
-                        If TaxType = "VAT" Then
-                            If TransactionType = "All" Then
-                                If DiscountType = "All" Or DiscountType = "N/A" Then
-                                    sql1 = "SELECT vatablesales, lessvat FROM loc_daily_transaction WHERE zreading >= '" & Format(DateTimePicker17.Value, "yyyy-MM-dd") & "' AND zreading <= '" & Format(DateTimePicker18.Value, "yyyy-MM-dd") & "' AND discount_type = 'N/A' AND zeroratedsales = 0 AND transaction_number = '" & element & "'"
-                                End If
-                            ElseIf TransactionType = "All(Cash)" Then
-                                If DiscountType = "All" Or DiscountType = "N/A" Then
-                                    sql1 = "SELECT vatablesales, lessvat FROM loc_daily_transaction WHERE zreading >= '" & Format(DateTimePicker17.Value, "yyyy-MM-dd") & "' AND zreading <= '" & Format(DateTimePicker18.Value, "yyyy-MM-dd") & "' AND discount_type = 'N/A' AND zeroratedsales = 0 AND transaction_number = '" & element & "' AND transaction_type IN('Walk-In','Registered')"
-                                End If
-                            ElseIf TransactionType = "All(Others)" Then
-                                If DiscountType = "All" Or DiscountType = "N/A" Then
-                                    sql1 = "SELECT vatablesales, lessvat FROM loc_daily_transaction WHERE zreading >= '" & Format(DateTimePicker17.Value, "yyyy-MM-dd") & "' AND zreading <= '" & Format(DateTimePicker18.Value, "yyyy-MM-dd") & "' AND discount_type = 'N/A' AND zeroratedsales = 0 AND transaction_number = '" & element & "' AND transaction_type NOT IN('Walk-In','Registered')"
-                                End If
-                            Else
-                                If DiscountType = "All" Or DiscountType = "N/A" Then
-                                    sql1 = "SELECT vatablesales, lessvat FROM loc_daily_transaction WHERE zreading >= '" & Format(DateTimePicker17.Value, "yyyy-MM-dd") & "' AND zreading <= '" & Format(DateTimePicker18.Value, "yyyy-MM-dd") & "' AND discount_type = 'N/A' AND zeroratedsales = 0 AND transaction_type = '" & TransactionType & "' AND transaction_number = '" & element & "'"
-                                End If
-                            End If
-                        ElseIf TaxType = "NONVAT" Then
-                            Dim Types As String = "'Senior Discount 20%','PWD Discount 20%','Sports Discount 20%'"
-                            If TransactionType = "All" Then
-                                If DiscountType = "All" Or DiscountType = "Percentage(w/o vat)" Then
-                                    sql1 = "SELECT vatablesales, lessvat FROM loc_daily_transaction WHERE zreading >= '" & Format(DateTimePicker17.Value, "yyyy-MM-dd") & "' AND zreading <= '" & Format(DateTimePicker18.Value, "yyyy-MM-dd") & "' AND discount_type IN (" & Types & ") AND transaction_number = '" & element & "'"
-                                End If
-                            ElseIf TransactionType = "All(Cash)" Then
-                                If DiscountType = "All" Or DiscountType = "Percentage(w/o vat)" Then
-                                    sql1 = "SELECT vatablesales, lessvat FROM loc_daily_transaction WHERE zreading >= '" & Format(DateTimePicker17.Value, "yyyy-MM-dd") & "' AND zreading <= '" & Format(DateTimePicker18.Value, "yyyy-MM-dd") & "' AND discount_type IN (" & Types & ") AND transaction_number = '" & element & "' AND transaction_type IN('Walk-In','Registered')"
-                                End If
-                            ElseIf TransactionType = "All(Others)" Then
-                                If DiscountType = "All" Or DiscountType = "Percentage(w/o vat)" Then
-                                    sql1 = "SELECT vatablesales, lessvat FROM loc_daily_transaction WHERE zreading >= '" & Format(DateTimePicker17.Value, "yyyy-MM-dd") & "' AND zreading <= '" & Format(DateTimePicker18.Value, "yyyy-MM-dd") & "' AND discount_type IN (" & Types & ") AND transaction_number = '" & element & "' AND transaction_type NOT IN('Walk-In','Registered')"
-                                End If
-                            Else
-                                If DiscountType = "All" Or DiscountType = "Percentage(w/o vat)" Then
-                                    sql1 = "SELECT vatablesales, lessvat FROM loc_daily_transaction WHERE zreading >= '" & Format(DateTimePicker17.Value, "yyyy-MM-dd") & "' AND zreading <= '" & Format(DateTimePicker18.Value, "yyyy-MM-dd") & "' AND discount_type IN (" & Types & ") AND transaction_type = '" & TransactionType & "' AND transaction_number = '" & element & "'"
-                                End If
-                            End If
-                        ElseIf TaxType = "ZERO RATED" Then
-                            If TransactionType = "All" Then
-                                If DiscountType = "All" Then
-                                    sql1 = "SELECT vatablesales, lessvat FROM loc_daily_transaction WHERE zreading >= '" & Format(DateTimePicker17.Value, "yyyy-MM-dd") & "' AND zreading <= '" & Format(DateTimePicker18.Value, "yyyy-MM-dd") & "' AND zeroratedsales > 0 AND transaction_number = '" & element & "'"
-                                Else
-                                    sql1 = "SELECT vatablesales, lessvat FROM loc_daily_transaction WHERE zreading >= '" & Format(DateTimePicker17.Value, "yyyy-MM-dd") & "' AND zreading <= '" & Format(DateTimePicker18.Value, "yyyy-MM-dd") & "' AND zeroratedsales > 0 AND transaction_number = '" & element & "' AND discount_type = '" & DiscountType & "'"
-                                End If
-                            ElseIf TransactionType = "All(Cash)" Then
-                                If DiscountType = "All" Then
-                                    sql1 = "SELECT vatablesales, lessvat FROM loc_daily_transaction WHERE zreading >= '" & Format(DateTimePicker17.Value, "yyyy-MM-dd") & "' AND zreading <= '" & Format(DateTimePicker18.Value, "yyyy-MM-dd") & "' AND zeroratedsales > 0 AND transaction_number = '" & element & "' AND transaction_type IN('Walk-In','Registered')"
-                                Else
-                                    sql1 = "SELECT vatablesales, lessvat FROM loc_daily_transaction WHERE zreading >= '" & Format(DateTimePicker17.Value, "yyyy-MM-dd") & "' AND zreading <= '" & Format(DateTimePicker18.Value, "yyyy-MM-dd") & "' AND zeroratedsales > 0 AND transaction_number = '" & element & "' AND transaction_type IN('Walk-In','Registered') AND discount_type = '" & DiscountType & "'"
-                                End If
-                            ElseIf TransactionType = "All(Others)" Then
-                                If DiscountType = "All" Then
-                                    sql1 = "SELECT vatablesales, lessvat FROM loc_daily_transaction WHERE zreading >= '" & Format(DateTimePicker17.Value, "yyyy-MM-dd") & "' AND zreading <= '" & Format(DateTimePicker18.Value, "yyyy-MM-dd") & "' AND zeroratedsales > 0 AND transaction_number = '" & element & "' AND transaction_type NOT IN('Walk-In','Registered')"
-                                Else
-                                    sql1 = "SELECT vatablesales, lessvat FROM loc_daily_transaction WHERE zreading >= '" & Format(DateTimePicker17.Value, "yyyy-MM-dd") & "' AND zreading <= '" & Format(DateTimePicker18.Value, "yyyy-MM-dd") & "' AND zeroratedsales > 0 AND transaction_number = '" & element & "' AND transaction_type NOT IN('Walk-In','Registered') AND discount_type = '" & DiscountType & "'"
-                                End If
-                            Else
-                                If DiscountType = "All" Then
-                                    sql1 = "SELECT vatablesales, lessvat FROM loc_daily_transaction WHERE zreading >= '" & Format(DateTimePicker17.Value, "yyyy-MM-dd") & "' AND zreading <= '" & Format(DateTimePicker18.Value, "yyyy-MM-dd") & "' AND zeroratedsales > 0 AND transaction_type = '" & TransactionType & "' AND transaction_number = '" & element & "'"
-                                Else
-                                    sql1 = "SELECT vatablesales, lessvat FROM loc_daily_transaction WHERE zreading >= '" & Format(DateTimePicker17.Value, "yyyy-MM-dd") & "' AND zreading <= '" & Format(DateTimePicker18.Value, "yyyy-MM-dd") & "' AND zeroratedsales > 0 AND transaction_type = '" & TransactionType & "' AND transaction_number = '" & element & "' AND discount_type = '" & DiscountType & "'"
-                                End If
-                            End If
-                        End If
-                    End If
-                Else
-                    If TaxType = "All" Then
-                        If TransactionType = "All" Then
-                            If DiscountType = "All" Then
-                                sql1 = "SELECT LD.vatablesales, LD.lessvat FROM loc_daily_transaction LD INNER JOIN loc_daily_transaction_details LDT ON LD.transaction_number = LDT.transaction_number WHERE LD.zreading >= '" & Format(DateTimePicker17.Value, "yyyy-MM-dd") & "' AND LD.zreading <= '" & Format(DateTimePicker18.Value, "yyyy-MM-dd") & "' AND LD.transaction_number = '" & element & "' AND LDT.product_name = '" & ProductName & "'"
-                            Else
-                                sql1 = "SELECT LD.vatablesales, LD.lessvat FROM loc_daily_transaction LD INNER JOIN loc_daily_transaction_details LDT ON LD.transaction_number = LDT.transaction_number WHERE LD.zreading >= '" & Format(DateTimePicker17.Value, "yyyy-MM-dd") & "' AND LD.zreading <= '" & Format(DateTimePicker18.Value, "yyyy-MM-dd") & "' AND LD.transaction_number = '" & element & "' AND LDT.product_name = '" & ProductName & "' AND discount_type = '" & DiscountType & "'"
-                            End If
-                        ElseIf TransactionType = "All(Cash)" Then
-                            If DiscountType = "All" Then
-                                sql1 = "SELECT LD.vatablesales, LD.lessvat FROM loc_daily_transaction LD INNER JOIN loc_daily_transaction_details LDT ON LD.transaction_number = LDT.transaction_number WHERE LD.zreading >= '" & Format(DateTimePicker17.Value, "yyyy-MM-dd") & "' AND LD.zreading <= '" & Format(DateTimePicker18.Value, "yyyy-MM-dd") & "' AND LD.transaction_number = '" & element & "' AND LDT.product_name = '" & ProductName & "' AND LD.transaction_type IN('Walk-In','Registered')"
-                            Else
-                                sql1 = "SELECT LD.vatablesales, LD.lessvat FROM loc_daily_transaction LD INNER JOIN loc_daily_transaction_details LDT ON LD.transaction_number = LDT.transaction_number WHERE LD.zreading >= '" & Format(DateTimePicker17.Value, "yyyy-MM-dd") & "' AND LD.zreading <= '" & Format(DateTimePicker18.Value, "yyyy-MM-dd") & "' AND LD.transaction_number = '" & element & "' AND LDT.product_name = '" & ProductName & "' AND LD.transaction_type IN('Walk-In','Registered') AND discount_type = '" & DiscountType & "'"
-                            End If
-                        ElseIf TransactionType = "All(Others)" Then
-                            If DiscountType = "All" Then
-                                sql1 = "SELECT LD.vatablesales, LD.lessvat FROM loc_daily_transaction LD INNER JOIN loc_daily_transaction_details LDT ON LD.transaction_number = LDT.transaction_number WHERE LD.zreading >= '" & Format(DateTimePicker17.Value, "yyyy-MM-dd") & "' AND LD.zreading <= '" & Format(DateTimePicker18.Value, "yyyy-MM-dd") & "' AND LD.transaction_number = '" & element & "' AND LDT.product_name = '" & ProductName & "' AND LD.transaction_type NOT IN('Walk-In','Registered')"
-                            Else
-                                sql1 = "SELECT LD.vatablesales, LD.lessvat FROM loc_daily_transaction LD INNER JOIN loc_daily_transaction_details LDT ON LD.transaction_number = LDT.transaction_number WHERE LD.zreading >= '" & Format(DateTimePicker17.Value, "yyyy-MM-dd") & "' AND LD.zreading <= '" & Format(DateTimePicker18.Value, "yyyy-MM-dd") & "' AND LD.transaction_number = '" & element & "' AND LDT.product_name = '" & ProductName & "' AND LD.transaction_type NOT IN('Walk-In','Registered') AND discount_type = '" & DiscountType & "'"
-                            End If
-                        Else
-                            If DiscountType = "All" Then
-                                sql1 = "SELECT LD.vatablesales, LD.lessvat FROM loc_daily_transaction LD INNER JOIN loc_daily_transaction_details LDT ON LD.transaction_number = LDT.transaction_number WHERE LD.zreading >= '" & Format(DateTimePicker17.Value, "yyyy-MM-dd") & "' AND LD.zreading <= '" & Format(DateTimePicker18.Value, "yyyy-MM-dd") & "' AND LD.transaction_type = '" & TransactionType & "' AND LD.transaction_number = '" & element & "' AND LDT.product_name = '" & ProductName & "'"
-                            Else
-                                sql1 = "SELECT LD.vatablesales, LD.lessvat FROM loc_daily_transaction LD INNER JOIN loc_daily_transaction_details LDT ON LD.transaction_number = LDT.transaction_number WHERE LD.zreading >= '" & Format(DateTimePicker17.Value, "yyyy-MM-dd") & "' AND LD.zreading <= '" & Format(DateTimePicker18.Value, "yyyy-MM-dd") & "' AND LD.transaction_type = '" & TransactionType & "' AND LD.transaction_number = '" & element & "' AND LDT.product_name = '" & ProductName & "' AND discount_type = '" & DiscountType & "'"
-                            End If
-                        End If
-                    Else
-                        If TaxType = "VAT" Then
-                            If TransactionType = "All" Then
-                                If DiscountType = "All" Or DiscountType = "N/A" Then
-                                    sql1 = "SELECT LD.vatablesales, LD.lessvat FROM loc_daily_transaction LD INNER JOIN loc_daily_transaction_details LDT ON LD.transaction_number = LDT.transaction_number WHERE LD.zreading >= '" & Format(DateTimePicker17.Value, "yyyy-MM-dd") & "' AND LD.zreading <= '" & Format(DateTimePicker18.Value, "yyyy-MM-dd") & "' AND LD.discount_type = 'N/A' AND zeroratedsales = 0 AND LD.transaction_number = '" & element & "' AND LDT.product_name = '" & ProductName & "'"
-                                End If
-                            ElseIf TransactionType = "All(Cash)" Then
-                                If DiscountType = "All" Or DiscountType = "N/A" Then
-                                    sql1 = "SELECT LD.vatablesales, LD.lessvat FROM loc_daily_transaction LD INNER JOIN loc_daily_transaction_details LDT ON LD.transaction_number = LDT.transaction_number WHERE LD.zreading >= '" & Format(DateTimePicker17.Value, "yyyy-MM-dd") & "' AND LD.zreading <= '" & Format(DateTimePicker18.Value, "yyyy-MM-dd") & "' AND LD.discount_type = 'N/A' AND zeroratedsales = 0 AND LD.transaction_number = '" & element & "' AND LDT.product_name = '" & ProductName & "' AND LD.transaction_type IN('Walk-In','Registered')"
-                                End If
-                            ElseIf TransactionType = "All(Others)" Then
-                                If DiscountType = "All" Or DiscountType = "N/A" Then
-                                    sql1 = "SELECT LD.vatablesales, LD.lessvat FROM loc_daily_transaction LD INNER JOIN loc_daily_transaction_details LDT ON LD.transaction_number = LDT.transaction_number WHERE LD.zreading >= '" & Format(DateTimePicker17.Value, "yyyy-MM-dd") & "' AND LD.zreading <= '" & Format(DateTimePicker18.Value, "yyyy-MM-dd") & "' AND LD.discount_type = 'N/A' AND zeroratedsales = 0 AND LD.transaction_number = '" & element & "' AND LDT.product_name = '" & ProductName & "' AND LD.transaction_type NOT IN('Walk-In','Registered')"
-                                End If
-                            Else
-                                If DiscountType = "All" Or DiscountType = "N/A" Then
-                                    sql1 = "SELECT LD.vatablesales, LD.lessvat FROM loc_daily_transaction LD INNER JOIN loc_daily_transaction_details LDT ON LD.transaction_number = LDT.transaction_number WHERE LD.zreading >= '" & Format(DateTimePicker17.Value, "yyyy-MM-dd") & "' AND LD.zreading <= '" & Format(DateTimePicker18.Value, "yyyy-MM-dd") & "' AND LD.discount_type = 'N/A' AND zeroratedsales = 0 AND LD.transaction_type = '" & TransactionType & "' AND LD.transaction_number = '" & element & "' AND LDT.product_name = '" & ProductName & "'"
-                                End If
-                            End If
-                        ElseIf TaxType = "NONVAT" Then
-                            Dim Types As String = "'Senior Discount 20%','PWD Discount 20%','Sports Discount 20%'"
-                            If TransactionType = "All" Then
-                                If DiscountType = "All" Or DiscountType = "Percentage(w/o vat)" Then
-                                    sql1 = "SELECT LD.vatablesales, LD.lessvat FROM loc_daily_transaction LD INNER JOIN loc_daily_transaction_details LDT ON LD.transaction_number = LDT.transaction_number WHERE LD.zreading >= '" & Format(DateTimePicker17.Value, "yyyy-MM-dd") & "' AND LD.zreading <= '" & Format(DateTimePicker18.Value, "yyyy-MM-dd") & "' AND LD.discount_type IN (" & Types & ") AND LD.transaction_number = '" & element & "' AND LDT.product_name = '" & ProductName & "'"
-                                End If
-                            ElseIf TransactionType = "All(Cash)" Then
-                                If DiscountType = "All" Or DiscountType = "Percentage(w/o vat)" Then
-                                    sql1 = "SELECT LD.vatablesales, LD.lessvat FROM loc_daily_transaction LD INNER JOIN loc_daily_transaction_details LDT ON LD.transaction_number = LDT.transaction_number WHERE LD.zreading >= '" & Format(DateTimePicker17.Value, "yyyy-MM-dd") & "' AND LD.zreading <= '" & Format(DateTimePicker18.Value, "yyyy-MM-dd") & "' AND LD.discount_type IN (" & Types & ") AND LD.transaction_number = '" & element & "' AND LDT.product_name = '" & ProductName & "' AND LD.transaction_type IN('Walk-In','Registered')"
-                                End If
-                            ElseIf TransactionType = "All(Others)" Then
-                                If DiscountType = "All" Or DiscountType = "Percentage(w/o vat)" Then
-                                    sql1 = "SELECT LD.vatablesales, LD.lessvat FROM loc_daily_transaction LD INNER JOIN loc_daily_transaction_details LDT ON LD.transaction_number = LDT.transaction_number WHERE LD.zreading >= '" & Format(DateTimePicker17.Value, "yyyy-MM-dd") & "' AND LD.zreading <= '" & Format(DateTimePicker18.Value, "yyyy-MM-dd") & "' AND LD.discount_type IN (" & Types & ") AND LD.transaction_number = '" & element & "' AND LDT.product_name = '" & ProductName & "' AND LD.transaction_type NOT IN('Walk-In','Registered')"
-                                End If
-                            Else
-                                If DiscountType = "All" Or DiscountType = "Percentage(w/o vat)" Then
-                                    sql1 = "SELECT LD.vatablesales, LD.lessvat FROM loc_daily_transaction LD INNER JOIN loc_daily_transaction_details LDT ON LD.transaction_number = LDT.transaction_number WHERE LD.zreading >= '" & Format(DateTimePicker17.Value, "yyyy-MM-dd") & "' AND LD.zreading <= '" & Format(DateTimePicker18.Value, "yyyy-MM-dd") & "' AND LD.discount_type IN (" & Types & ") AND LD.transaction_type = '" & TransactionType & "' AND LD.transaction_number = '" & element & "' AND LDT.product_name = '" & ProductName & "'"
-                                End If
-                            End If
-                        ElseIf TaxType = "ZERO RATED" Then
-                            If TransactionType = "All" Then
-                                If DiscountType = "All" Then
-                                    sql1 = "SELECT LD.vatablesales, LD.lessvat FROM loc_daily_transaction LD INNER JOIN loc_daily_transaction_details LDT ON LD.transaction_number = LDT.transaction_number WHERE LD.zreading >= '" & Format(DateTimePicker17.Value, "yyyy-MM-dd") & "' AND LD.zreading <= '" & Format(DateTimePicker18.Value, "yyyy-MM-dd") & "' AND LD.zeroratedsales > 0 AND LD.transaction_number = '" & element & "' AND LDT.product_name = '" & ProductName & "'"
-                                Else
-                                    sql1 = "SELECT LD.vatablesales, LD.lessvat FROM loc_daily_transaction LD INNER JOIN loc_daily_transaction_details LDT ON LD.transaction_number = LDT.transaction_number WHERE LD.zreading >= '" & Format(DateTimePicker17.Value, "yyyy-MM-dd") & "' AND LD.zreading <= '" & Format(DateTimePicker18.Value, "yyyy-MM-dd") & "' AND LD.zeroratedsales > 0 AND LD.transaction_number = '" & element & "' AND LDT.product_name = '" & ProductName & "' AND LD.discount_type = '" & DiscountType & "'"
-                                End If
-                            ElseIf TransactionType = "All(Cash)" Then
-                                If DiscountType = "All" Then
-                                    sql1 = "SELECT LD.vatablesales, LD.lessvat FROM loc_daily_transaction LD INNER JOIN loc_daily_transaction_details LDT ON LD.transaction_number = LDT.transaction_number WHERE LD.zreading >= '" & Format(DateTimePicker17.Value, "yyyy-MM-dd") & "' AND LD.zreading <= '" & Format(DateTimePicker18.Value, "yyyy-MM-dd") & "' AND LD.zeroratedsales > 0 AND LD.transaction_number = '" & element & "' AND LDT.product_name = '" & ProductName & "' AND LD.transaction_type IN('Walk-In','Registered')"
-                                Else
-                                    sql1 = "SELECT LD.vatablesales, LD.lessvat FROM loc_daily_transaction LD INNER JOIN loc_daily_transaction_details LDT ON LD.transaction_number = LDT.transaction_number WHERE LD.zreading >= '" & Format(DateTimePicker17.Value, "yyyy-MM-dd") & "' AND LD.zreading <= '" & Format(DateTimePicker18.Value, "yyyy-MM-dd") & "' AND LD.zeroratedsales > 0 AND LD.transaction_number = '" & element & "' AND LDT.product_name = '" & ProductName & "' AND LD.transaction_type IN('Walk-In','Registered') AND LD.discount_type = '" & DiscountType & "'"
-                                End If
-                            ElseIf TransactionType = "All(Others)" Then
-                                If DiscountType = "All" Then
-                                    sql1 = "SELECT LD.vatablesales, LD.lessvat FROM loc_daily_transaction LD INNER JOIN loc_daily_transaction_details LDT ON LD.transaction_number = LDT.transaction_number WHERE LD.zreading >= '" & Format(DateTimePicker17.Value, "yyyy-MM-dd") & "' AND LD.zreading <= '" & Format(DateTimePicker18.Value, "yyyy-MM-dd") & "' AND LD.zeroratedsales > 0 AND LD.transaction_number = '" & element & "' AND LDT.product_name = '" & ProductName & "' AND LD.transaction_type NOT IN('Walk-In','Registered')"
-                                Else
-                                    sql1 = "SELECT LD.vatablesales, LD.lessvat FROM loc_daily_transaction LD INNER JOIN loc_daily_transaction_details LDT ON LD.transaction_number = LDT.transaction_number WHERE LD.zreading >= '" & Format(DateTimePicker17.Value, "yyyy-MM-dd") & "' AND LD.zreading <= '" & Format(DateTimePicker18.Value, "yyyy-MM-dd") & "' AND LD.zeroratedsales > 0 AND LD.transaction_number = '" & element & "' AND LDT.product_name = '" & ProductName & "' AND LD.transaction_type NOT IN('Walk-In','Registered') AND LD.discount_type = '" & DiscountType & "'"
-                                End If
-                            Else
-                                If DiscountType = "All" Then
-                                    sql1 = "SELECT LD.vatablesales, LD.lessvat FROM loc_daily_transaction LD INNER JOIN loc_daily_transaction_details LDT ON LD.transaction_number = LDT.transaction_number WHERE LD.zreading >= '" & Format(DateTimePicker17.Value, "yyyy-MM-dd") & "' AND LD.zreading <= '" & Format(DateTimePicker18.Value, "yyyy-MM-dd") & "' AND LD.zeroratedsales > 0 AND LD.transaction_type = '" & TransactionType & "' AND LD.transaction_number = '" & element & "' AND LDT.product_name = '" & ProductName & "'"
-                                Else
-                                    sql1 = "SELECT LD.vatablesales, LD.lessvat FROM loc_daily_transaction LD INNER JOIN loc_daily_transaction_details LDT ON LD.transaction_number = LDT.transaction_number WHERE LD.zreading >= '" & Format(DateTimePicker17.Value, "yyyy-MM-dd") & "' AND LD.zreading <= '" & Format(DateTimePicker18.Value, "yyyy-MM-dd") & "' AND LD.zeroratedsales > 0 AND LD.transaction_type = '" & TransactionType & "' AND LD.transaction_number = '" & element & "' AND LDT.product_name = '" & ProductName & "' AND LD.discount_type = '" & DiscountType & "'"
-                                End If
-                            End If
-                        End If
-                    End If
-                End If
-                cmd1 = New MySqlCommand(sql1, ConnectionLocal)
-                Using reader As MySqlDataReader = cmd1.ExecuteReader
-                    If reader.HasRows Then
-                        While reader.Read
-                            CustomReportVat += reader("vatablesales")
-                            CustomReportLessVat += reader("lessvat")
-                        End While
-                    End If
-                End Using
-            Next
         Catch ex As Exception
             AuditTrail.LogToAuditTrail("System", "Reports/CustomReport(): " & ex.ToString, "Critical")
         End Try
@@ -2036,6 +1829,7 @@ Public Class Reports
     End Sub
 
     Private Sub ToolStripButton3_Click(sender As Object, e As EventArgs) Handles ToolStripButton3.Click
+
         Try
             Dim document As PdfDocument = New PdfDocument
             document.Info.Title = "Created with PDFsharp"
@@ -2059,19 +1853,27 @@ Public Class Reports
             Dim TotalVatExempt As Double = 0
             Dim TotalRefund As Double = 0
             Dim TotalAddVat As Double
+            Dim TotalVatableSales As Double = 0
+            Dim TotalLessVat As Double = 0
             Dim ConnectionLocal As MySqlConnection = LocalhostConn()
 
             For Each element As String In result
-                Dim Query = "SELECT amountdue, grosssales, vatexemptsales, active, vatpercentage FROM loc_daily_transaction WHERE transaction_number = '" & element & "'"
+                Dim Query = "SELECT LD.amountdue, LD.grosssales, LD.vatexemptsales, LD.active, LD.vatpercentage, LD.vatablesales, LD.lessvat , SUM(LC.coupon_total) as gc_used
+                FROM loc_daily_transaction LD LEFT JOIN loc_coupon_data LC ON LD.transaction_number = LC.transaction_number AND LC.coupon_type = 'Fix-1' WHERE LD.transaction_number = '" & element & "'"
                 Dim Cmd As MySqlCommand = New MySqlCommand(Query, ConnectionLocal)
+                'Console.WriteLine(Query)
                 Using reader As MySqlDataReader = Cmd.ExecuteReader
                     If reader.HasRows Then
                         While reader.Read
+
                             If reader("active") = 1 Then
-                                TotalNetSales += reader("amountdue")
+                                Dim GCVal As Double = If(Not IsDBNull(reader("gc_used")), If(reader("gc_used").ToString <> "", CType(reader("gc_used").ToString, Double), 0), 0)
+                                TotalNetSales += reader("amountdue") + GCVal
                                 TotalGrossSales += reader("grosssales")
                                 TotalVatExempt += reader("vatexemptsales")
                                 TotalAddVat += reader("vatpercentage")
+                                TotalVatableSales += reader("vatablesales")
+                                TotalLessVat += reader("lessvat")
                             Else
                                 TotalRefund += reader("grosssales")
                             End If
@@ -2138,9 +1940,9 @@ Public Class Reports
                         gfx.DrawString("Total Gross Sales: " & NUMBERFORMAT(TotalGrossSales), font, XBrushes.Black, 50, 133 + RowCount)
                         gfx.DrawString("Total Items: " & SumOfColumnsToInt(DataGridViewCustomReport, 2), font, XBrushes.Black, 50, 143 + RowCount)
                         gfx.DrawString("Total Discount: " & NUMBERFORMAT(TotalDiscountCustomReports), font, XBrushes.Black, 50, 153 + RowCount)
-                        gfx.DrawString("Vatable Sales: " & NUMBERFORMAT(CustomReportVat), font, XBrushes.Black, 50, 163 + RowCount)
+                        gfx.DrawString("Vatable Sales: " & NUMBERFORMAT(TotalVatableSales), font, XBrushes.Black, 50, 163 + RowCount)
                         gfx.DrawString("Net Sales: " & NUMBERFORMAT(TotalNetSales), font, XBrushes.Black, 50, 173 + RowCount)
-                        gfx.DrawString("Less Vat: " & NUMBERFORMAT(CustomReportLessVat), font, XBrushes.Black, 50, 183 + RowCount)
+                        gfx.DrawString("Less Vat: " & NUMBERFORMAT(TotalLessVat), font, XBrushes.Black, 50, 183 + RowCount)
                         gfx.DrawString("Add Vat: " & NUMBERFORMAT(TotalAddVat), font, XBrushes.Black, 50, 193 + RowCount)
                         gfx.DrawString("Vat Exempt Sales: " & NUMBERFORMAT(TotalVatExempt), font, XBrushes.Black, 50, 203 + RowCount)
                         gfx.DrawString("Refunded/ Cancel: " & NUMBERFORMAT(TotalRefund), font, XBrushes.Black, 50, 213 + RowCount)
@@ -2185,9 +1987,9 @@ Public Class Reports
                         gfx.DrawString("Total Gross Sales: " & NUMBERFORMAT(TotalGrossSales), font, XBrushes.Black, 50, 133 + RowCount)
                         gfx.DrawString("Total Items: " & SumOfColumnsToInt(DataGridViewCustomReport, 2), font, XBrushes.Black, 50, 143 + RowCount)
                         gfx.DrawString("Total Discount: " & NUMBERFORMAT(TotalDiscountCustomReports), font, XBrushes.Black, 50, 153 + RowCount)
-                        gfx.DrawString("Vatable Sales: " & NUMBERFORMAT(CustomReportVat), font, XBrushes.Black, 50, 163 + RowCount)
+                        gfx.DrawString("Vatable Sales: " & NUMBERFORMAT(TotalVatableSales), font, XBrushes.Black, 50, 163 + RowCount)
                         gfx.DrawString("Net Sales: " & NUMBERFORMAT(TotalNetSales), font, XBrushes.Black, 50, 173 + RowCount)
-                        gfx.DrawString("Less Vat: " & NUMBERFORMAT(CustomReportLessVat), font, XBrushes.Black, 50, 183 + RowCount)
+                        gfx.DrawString("Less Vat: " & NUMBERFORMAT(TotalLessVat), font, XBrushes.Black, 50, 183 + RowCount)
                         gfx.DrawString("Add Vat: " & NUMBERFORMAT(TotalAddVat), font, XBrushes.Black, 50, 193 + RowCount)
                         gfx.DrawString("Vat Exempt Sales: " & NUMBERFORMAT(TotalVatExempt), font, XBrushes.Black, 50, 203 + RowCount)
                         gfx.DrawString("Refunded/ Cancel: " & NUMBERFORMAT(TotalRefund), font, XBrushes.Black, 50, 213 + RowCount)
