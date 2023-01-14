@@ -5610,6 +5610,7 @@ Partial Class SettingsForm
         Me.DataGridViewHeader.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically
         Me.DataGridViewHeader.EnableHeadersVisualStyles = False
         Me.DataGridViewHeader.Location = New System.Drawing.Point(3, 101)
+        Me.DataGridViewHeader.MultiSelect = False
         Me.DataGridViewHeader.Name = "DataGridViewHeader"
         Me.DataGridViewHeader.RowHeadersVisible = False
         Me.DataGridViewHeader.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
@@ -5720,6 +5721,7 @@ Partial Class SettingsForm
         Me.DataGridViewFooter.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically
         Me.DataGridViewFooter.EnableHeadersVisualStyles = False
         Me.DataGridViewFooter.Location = New System.Drawing.Point(3, 101)
+        Me.DataGridViewFooter.MultiSelect = False
         Me.DataGridViewFooter.Name = "DataGridViewFooter"
         Me.DataGridViewFooter.RowHeadersVisible = False
         Me.DataGridViewFooter.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
@@ -5845,6 +5847,7 @@ Partial Class SettingsForm
         Me.DataGridViewVALIDITY.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically
         Me.DataGridViewVALIDITY.EnableHeadersVisualStyles = False
         Me.DataGridViewVALIDITY.Location = New System.Drawing.Point(3, 101)
+        Me.DataGridViewVALIDITY.MultiSelect = False
         Me.DataGridViewVALIDITY.Name = "DataGridViewVALIDITY"
         Me.DataGridViewVALIDITY.RowHeadersVisible = False
         Me.DataGridViewVALIDITY.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
@@ -5955,6 +5958,7 @@ Partial Class SettingsForm
         Me.DataGridViewRefundExchange.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically
         Me.DataGridViewRefundExchange.EnableHeadersVisualStyles = False
         Me.DataGridViewRefundExchange.Location = New System.Drawing.Point(3, 101)
+        Me.DataGridViewRefundExchange.MultiSelect = False
         Me.DataGridViewRefundExchange.Name = "DataGridViewRefundExchange"
         Me.DataGridViewRefundExchange.RowHeadersVisible = False
         Me.DataGridViewRefundExchange.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect

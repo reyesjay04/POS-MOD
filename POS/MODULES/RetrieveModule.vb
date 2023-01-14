@@ -943,7 +943,6 @@ Module RetrieveModule
                     Prod("partners") = FillDt(i)(15)
                     Prod("arrangement") = FillDt(i)(16)
                     UPDATE_PRODUCTS_DATATABLE.Rows.Add(Prod)
-
                 Next
             Next
         Catch ex As Exception

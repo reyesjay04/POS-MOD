@@ -22,7 +22,8 @@ Public Class ConfigManager
     Dim CLOUDCONDATA As Boolean = False
 
     Dim TestModeIsOFF As Boolean = True
-    Property listOfProducts As List(Of ProductsCls)
+    Property listOfProducts As New List(Of ProductsCls)
+    Property listOfReceiptInfo As New List(Of ReceiptInfoCls)
     Property MasterList As MasterlistCls
     Property MasterDevInfo As DevInfoCls
     Property listOfOutlets As List(Of OutletsCls)
@@ -1473,8 +1474,20 @@ Public Class ConfigManager
                     End Select
                 End If
 
-
                 If i = 70 Then
+
+                    Select Case SetReceiptInfoStats
+                        Case SyncCls.ReceiptInfoSync.Stats.isReady, SyncCls.ReceiptInfoSync.Stats.isFetchInterrupt
+                            threadActivation = New Thread(Sub() listOfReceiptInfo = GetReceiptInfo())
+                            threadActivation.Start()
+                            threadListActivation.Add(threadActivation)
+                            For Each t In threadListActivation
+                                t.Join()
+                            Next
+                    End Select
+                End If
+
+                If i = 80 Then
                     thread1 = New Thread(AddressOf FillDgvProd)
                     thread1.Start()
                     threadListActivation.Add(thread1)
@@ -1553,6 +1566,16 @@ Public Class ConfigManager
                             Next
                     End Select
 
+                    Select Case SetReceiptInfoStats
+                        Case SyncCls.ReceiptInfoSync.Stats.isFetchComplete, SyncCls.ReceiptInfoSync.Stats.isProcessInterrupt
+                            thread1 = New Thread(AddressOf InsertToReceiptInfo)
+                            thread1.Start()
+                            threadListActivation.Add(thread1)
+                            For Each t In threadListActivation
+                                t.Join()
+                            Next
+                    End Select
+
                 End If
             Next
         Catch ex As Exception
@@ -1570,7 +1593,8 @@ Public Class ConfigManager
             SetFormStats = SyncCls.FormulaSync.Stats.isProcessComplete And
             SetPartStats = SyncCls.PartnersSync.Stats.isProcessComplete And
             SetCoupStats = SyncCls.CouponSync.Stats.isProcessComplete And
-            SetStockCatStats = SyncCls.StockCatSync.Stats.isProcessComplete Then
+            SetStockCatStats = SyncCls.StockCatSync.Stats.isProcessComplete And
+            SetReceiptInfoStats = SyncCls.ReceiptInfoSync.Stats.isProcessComplete Then
 
             SyncTo = Now
             Dim TS As TimeSpan = SyncTo - SyncFrom
@@ -1598,6 +1622,50 @@ Public Class ConfigManager
 
     End Sub
 #Region "FETCH DATA"
+    Property SetReceiptInfoStats As SyncCls.ReceiptInfoSync.Stats = SyncCls.ReceiptInfoSync.Stats.isReady
+    Property SetReceiptInfoLastIndex As New SyncCls.ReceiptInfoSync
+    Public Function GetReceiptInfo() As List(Of ReceiptInfoCls)
+        Dim listofReceiptcls As New List(Of ReceiptInfoCls)
+        Try
+            Dim SqlCount As String = ""
+
+            Dim Cond As String = ""
+
+            If SetReceiptInfoStats = SyncCls.CategorySync.Stats.isFetchInterrupt Then
+                Cond = $"WHERE id > {SetReceiptInfoLastIndex.lastFetchID}"
+            End If
+
+            SqlCount = $"SELECT * FROM admin_receipt_info_org {Cond}"
+
+            SetReceiptInfoStats = SyncCls.ProductsSync.Stats.isFetching
+
+            rtbLogStats.Text += $"{FullDate24HR()} :    Getting cloud server's receipt info data.{vbNewLine}"
+
+            Dim Connection As MySqlConnection = TestCloudConnection()
+
+            Using CmdCount As New MySqlCommand(SqlCount, Connection)
+                Using Reader = CmdCount.ExecuteReader
+                    While Reader.Read
+                        Dim nwListOfReceipt As New ReceiptInfoCls With {
+                            .Code = Reader("type").ToString,
+                            .Description = Reader("description").ToString,
+                            .Status = Reader("status").ToString
+                        }
+                        listofReceiptcls.Add(nwListOfReceipt)
+                        SetReceiptInfoLastIndex.lastFetchID = Reader("id")
+                    End While
+                End Using
+            End Using
+
+            SetReceiptInfoStats = SyncCls.CategorySync.Stats.isFetchComplete
+            rtbLogStats.Text += FullDate24HR() & " :    Complete(Fetching of categories data)" & vbNewLine
+
+        Catch ex As Exception
+            SetReceiptInfoStats = SyncCls.CategorySync.Stats.isFetchInterrupt
+            rtbLogStats.Text += FullDate24HR() & " :    Failed(Fetching of categories data)" & vbNewLine
+        End Try
+        Return listofReceiptcls
+    End Function
     Property SetCatStats As SyncCls.CategorySync.Stats = SyncCls.CategorySync.Stats.isReady
     Property SetCatLastIndex As New SyncCls.CategorySync
     Public Sub GetCategories()
@@ -1676,21 +1744,21 @@ Public Class ConfigManager
                 While Reader.Read
                     Dim nwListofProd As New ProductsCls With {
                          .product_id = Reader("product_id"),
-                         .product_sku = Reader("product_sku"),
-                         .product_name = Reader("product_name"),
-                         .formula_id = Reader("formula_id"),
-                         .product_barcode = Reader("product_barcode"),
-                         .product_category = Reader("product_category"),
+                         .product_sku = Reader("product_sku").ToString,
+                         .product_name = Reader("product_name").ToString,
+                         .formula_id = Reader("formula_id").ToString,
+                         .product_barcode = Reader("product_barcode").ToString,
+                         .product_category = Reader("product_category").ToString,
                          .product_price = Reader("product_price"),
-                         .product_desc = Reader("product_desc"),
+                         .product_desc = Reader("product_desc").ToString,
                          .product_image = Reader("product_image"),
-                         .product_status = Reader("product_status"),
+                         .product_status = If(Reader("product_status").ToString = "", "1", Reader("product_status").ToString),
                          .date_modified = Reader("date_modified"),
                          .inventory_id = Reader("inventory_id"),
-                         .addontype = Reader("addontype"),
+                         .addontype = Reader("addontype").ToString,
                          .half_batch = Reader("half_batch"),
-                         .partners = Reader("partners"),
-                         .arrangement = Reader("arrangement")
+                         .partners = Reader("partners").ToString,
+                         .arrangement = Reader("arrangement").ToString
                         }
                     listofProdcls.Add(nwListofProd)
                     SetProdLastIndex.lastFetchID = Reader("product_id")
@@ -1953,7 +2021,7 @@ Public Class ConfigManager
     Private Sub InsertToStockCategory()
         Try
             rtbLogStats.Text += FullDate24HR() & " :    Inserting data to local server's table(Stock Adjustment Categories)." & vbNewLine
-            SetStockCatStats = SyncCls.ProductsSync.Stats.isProcessing
+            SetStockCatStats = SyncCls.StockCatSync.Stats.isProcessing
 
             With DataGridViewStockAdjustment
                 Dim ConnectionLocal As MySqlConnection = TestLocalConnection()
@@ -1973,10 +2041,10 @@ Public Class ConfigManager
                 ConnectionLocal.Close()
             End With
             rtbLogStats.Text += FullDate24HR() & " :    Complete(Stock Adjustment Categories data insertion)" & vbNewLine
-            SetStockCatStats = SyncCls.ProductsSync.Stats.isProcessComplete
+            SetStockCatStats = SyncCls.StockCatSync.Stats.isProcessComplete
         Catch ex As Exception
             rtbLogStats.Text += FullDate24HR() & " :    Failed(Stock Adjustment  data insertion)" & vbNewLine
-            SetStockCatStats = SyncCls.ProductsSync.Stats.isProcessInterrupt
+            SetStockCatStats = SyncCls.StockCatSync.Stats.isProcessInterrupt
         End Try
     End Sub
     Private Sub InsertPartnersTransacton()
@@ -2090,6 +2158,48 @@ Public Class ConfigManager
             rtbLogStats.Text += FullDate24HR() & " :    Failed(Formulas data insertion)" & vbNewLine
             SetFormStats = SyncCls.FormulaSync.Stats.isProcessInterrupt
 
+        End Try
+    End Sub
+
+    Private Sub InsertToReceiptInfo()
+        Try
+            rtbLogStats.Text += FullDate24HR() & " :    Inserting data to local server's table(Receipt Info)" & vbNewLine
+            SetReceiptInfoStats = SyncCls.ReceiptInfoSync.Stats.isProcessing
+
+            Dim ConnectionLocal As MySqlConnection = TestLocalConnection()
+
+            For Each rp As ReceiptInfoCls In listOfReceiptInfo.Skip(SetReceiptInfoLastIndex.lastInsertID)
+
+                Dim Query = "INSERT INTO loc_receipt 
+                                (
+                                    `type`, `description`, `created_by`, `created_at`, `updated_by`, `updated_at`, `status`
+                                )
+                             VALUES 
+                                (
+                                    @type, @description, @created_by, @created_at, @updated_by, @updated_at, @status
+                                )"
+                Using cmdlocal As New MySqlCommand(Query, ConnectionLocal)
+                    cmdlocal.Parameters.Clear()
+                    With rp
+                        cmdlocal.Parameters.AddWithValue("@type", .Code)
+                        cmdlocal.Parameters.AddWithValue("@description", .Description)
+                        cmdlocal.Parameters.AddWithValue("@created_by", "Server")
+                        cmdlocal.Parameters.AddWithValue("@created_at", FullDate24HR())
+                        cmdlocal.Parameters.AddWithValue("@updated_by", "Server")
+                        cmdlocal.Parameters.AddWithValue("@updated_at", FullDate24HR())
+                        cmdlocal.Parameters.AddWithValue("@status", .Status)
+                        SetReceiptInfoLastIndex.lastInsertID += 1
+                    End With
+
+                    cmdlocal.ExecuteNonQuery()
+                End Using
+            Next
+
+            rtbLogStats.Text += FullDate24HR() & " :    Complete(Receipt Info data insertion)" & vbNewLine
+            SetReceiptInfoStats = SyncCls.ReceiptInfoSync.Stats.isProcessComplete
+        Catch ex As Exception
+            rtbLogStats.Text += FullDate24HR() & " :    Failed(Products data insertion)" & vbNewLine
+            SetReceiptInfoStats = SyncCls.ReceiptInfoSync.Stats.isProcessInterrupt
         End Try
     End Sub
     Private Sub SerialKey()
