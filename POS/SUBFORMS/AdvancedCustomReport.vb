@@ -77,7 +77,7 @@ Public Class AdvancedCustomReport
         Try
             Dim WhereExtension As String = " GROUP BY LD.transaction_number ORDER BY LD.created_at ASC"
             Dim ActiveQuery As String = ""
-            Dim FieldsNormal As String = "LD.transaction_number As transaction_number, LD.grosssales as grosssales, LD.vatablesales as vatablesales, LD.vatpercentage as vatpercentage, LD.lessvat as lessvat, LD.vatexemptsales as vatexemptsales, SUM(LC.coupon_total) as totaldiscount, LD.transaction_type as transaction_type, LD.amountdue as amountdue, SUM(LC.coupon_total) as gc_used , LD.created_at as dateCreated, LD.vatpercentage as AddVat, LD.Active as Status"
+            Dim FieldsNormal As String = "LD.transaction_number As transaction_number, LD.grosssales as grosssales, LD.vatablesales as vatablesales, LD.vatpercentage as vatpercentage, LD.lessvat as lessvat, LD.vatexemptsales as vatexemptsales, SUM(LC.coupon_total) as totaldiscount, LD.transaction_type as transaction_type, LD.amountdue as amountdue, SUM(LC.coupon_total) as gc_used , LD.created_at as dateCreated, LD.vatpercentage as AddVat, LD.Active as Status, LC.coupon_type as CouponType"
             Dim LeftJointNormal As String = " LEFT JOIN loc_coupon_data LC ON LD.transaction_number = LC.transaction_number "
             Dim AddWhere As String = " LC.coupon_type = 'Fix-1'"
 
@@ -231,62 +231,61 @@ Public Class AdvancedCustomReport
             GrossRefund = 0
             VatPercentage = 0
 
-            If sql <> "" Then
-                cmd = New MySqlCommand(sql, ConnectionLocal)
-                da = New MySqlDataAdapter(cmd)
-                da.Fill(CustomReportdt)
-                grossRefund = 0
-                For Each row As DataRow In CustomReportdt.Rows
+            cmd = New MySqlCommand(sql, ConnectionLocal)
+            da = New MySqlDataAdapter(cmd)
+            da.Fill(CustomReportdt)
+            GrossRefund = 0
+            For Each row As DataRow In CustomReportdt.Rows
 
-                    Dim GCVal As String = ""
-                    If row("gc_used").ToString = "" Then
-                        GCVal = "0"
-                    Else
-                        GCVal = row("gc_used")
+                Dim GCVal As String = ""
+                If row("gc_used").ToString = "" Then
+                    GCVal = "0"
+                Else
+                    GCVal = row("gc_used")
+                End If
+
+                Dim DiscVal As String = ""
+                If row("totaldiscount").ToString = "" Then
+                    DiscVal = "0"
+                Else
+                    DiscVal = row("totaldiscount")
+
+                End If
+                Dim trxType = ""
+
+                Dim GrossSalesDgv As Double = 0
+                Dim VatableSalesDgv As Double = 0
+                Dim VatPercentageDgv As Double = 0
+                Dim LessVatDgv As Double = 0
+                Dim VatExemptDgv As Double = 0
+                Dim NetSalesDgv As Double = 0
+                Dim AddVatDgv As Double = 0
+
+                If row("transaction_type") = "Complimentary Expenses" Then
+                    trxType = "Complimentary"
+                    GCVal = "0.00"
+                    DiscVal = "0.00"
+                Else
+                    Dim Status = row("Status")
+                    trxType = row("transaction_type")
+                    GrossSalesDgv = row("grosssales")
+                    VatableSalesDgv = row("vatablesales")
+                    VatPercentageDgv = row("vatpercentage")
+                    LessVatDgv = row("lessvat")
+                    VatExemptDgv = row("vatexemptsales")
+                    NetSalesDgv = row("amountdue")
+                    AddVatDgv = row("AddVat")
+                    If Status <> 2 Then
+                        GrossSales += GrossSalesDgv
+                        VatableSales += VatableSalesDgv
+                        VatPercentage += VatPercentageDgv
+                        LessVat += LessVatDgv
+                        VatExempt += VatExemptDgv
+                        NetSales += If(row("CouponType").ToString = "Fix-1", NetSalesDgv + GCVal, NetSalesDgv)
+                        AddVat += AddVatDgv
+                        TotalDisc += Val(DiscVal)
                     End If
-
-                    Dim DiscVal As String = ""
-                    If row("totaldiscount").ToString = "" Then
-                        DiscVal = "0"
-                    Else
-                        DiscVal = row("totaldiscount")
-
-                    End If
-                    Dim trxType = ""
-
-                    Dim GrossSalesDgv As Double = 0
-                    Dim VatableSalesDgv As Double = 0
-                    Dim VatPercentageDgv As Double = 0
-                    Dim LessVatDgv As Double = 0
-                    Dim VatExemptDgv As Double = 0
-                    Dim NetSalesDgv As Double = 0
-                    Dim AddVatDgv As Double = 0
-
-                    If row("transaction_type") = "Complimentary Expenses" Then
-                        trxType = "Complimentary"
-                        GCVal = "0.00"
-                        DiscVal = "0.00"
-                    Else
-                        Dim Status = row("Status")
-                        trxType = row("transaction_type")
-                        GrossSalesDgv = row("grosssales")
-                        VatableSalesDgv = row("vatablesales")
-                        VatPercentageDgv = row("vatpercentage")
-                        LessVatDgv = row("lessvat")
-                        VatExemptDgv = row("vatexemptsales")
-                        NetSalesDgv = row("amountdue")
-                        AddVatDgv = row("AddVat")
-                        If Status <> 2 Then
-                            GrossSales += GrossSalesDgv
-                            VatableSales += VatableSalesDgv
-                            VatPercentage += VatPercentageDgv
-                            LessVat += LessVatDgv
-                            VatExempt += VatExemptDgv
-                            NetSales += NetSalesDgv + GCVal
-                            AddVat += AddVatDgv
-                            TotalDisc += Val(DiscVal)
-                        End If
-                    End If
+                End If
 
                     If row("Status") = 2 Then
                         GrossRefund += GrossSalesDgv
@@ -294,9 +293,9 @@ Public Class AdvancedCustomReport
 
                     DataGridViewCustomReport.Rows.Add(row("transaction_number"), GrossSalesDgv, VatableSalesDgv, VatPercentageDgv, LessVatDgv, VatExemptDgv, GCVal, DiscVal, trxType, NetSalesDgv, row("dateCreated"), AddVatDgv)
                 Next
-            End If
 
-            Dim sql1 As String = ""
+
+                Dim sql1 As String = ""
             Dim cmd1 As MySqlCommand
 
             Dim list As List(Of String) = New List(Of String)
@@ -546,21 +545,7 @@ Public Class AdvancedCustomReport
             Next
 
             Dim result As List(Of String) = list.Distinct().ToList
-            Dim TotalNetSales As Double = 0
             Dim ConnectionLocal As MySqlConnection = LocalhostConn()
-
-            For Each element As String In result
-                'Console.WriteLine(element.ToString)
-                Dim Query = "SELECT amountdue FROM loc_daily_transaction WHERE transaction_number = '" & element & "'"
-                Dim Cmd As MySqlCommand = New MySqlCommand(Query, ConnectionLocal)
-                Using reader As MySqlDataReader = Cmd.ExecuteReader
-                    If reader.HasRows Then
-                        While reader.Read
-                            TotalNetSales += reader("amountdue")
-                        End While
-                    End If
-                End Using
-            Next
 
             If DataGridViewCustomReport.Rows.Count > 0 Then
                 ' Create a new PDF document
