@@ -531,6 +531,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="MAIN FORMS\Reports.resx">
       <DependentUpon>Reports.vb</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="MAIN FORMS\SynctoCloud.resx">
       <DependentUpon>SynctoCloud.vb</DependentUpon>
@@ -686,6 +687,16 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="posicon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\Documents\Visual Studio 2015\Projects\DGPOSCommon\POSCommon\POSCommon.vbproj">
+      <Project>{95518019-e954-47a7-82c6-2a25a6774c0b}</Project>
+      <Name>POSCommon</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\DG_DGMGW\DG_DGMGW.vbproj">
+      <Project>{61c729c6-64a0-4cb4-a0da-e266d2df46f0}</Project>
+      <Name>DG_DGMGW</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

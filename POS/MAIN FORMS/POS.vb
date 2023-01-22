@@ -1237,74 +1237,76 @@ Public Class POS
             Dim Query As String = ""
             With DataGridViewOrders
                 For i As Integer = 0 To .Rows.Count - 1 Step +1
+                    Query = "INSERT INTO loc_coupon_data (`transaction_number`, `coupon_name`, `coupon_type`, `coupon_desc`, `coupon_line`, `coupon_total`, `zreading`, `status`, `synced`, `reference_id`) VALUES (@1, @2, @3, @4, @5, @6, @7, @8, @9, @10)"
                     If .Rows(i).Cells(15).Value > 0 Then
                         Dim DiscTotal As Double = NUMBERFORMAT(Math.Round(.Rows(i).Cells(15).Value, 2, MidpointRounding.AwayFromZero))
-                        Query = "INSERT INTO loc_coupon_data (`transaction_number`, `coupon_name`, `coupon_type`, `coupon_desc`, `coupon_line`, `coupon_total`, `zreading`, `status`, `synced`) VALUES (@1, @2, @3, @4, @5, @6, @7, @8, @9)"
                         Using mCmd = New MySqlCommand(Query, ConnectionLocal)
                             mCmd.Parameters.Clear()
-                            mCmd.Parameters.Add("@1", MySqlDbType.Text).Value = S_TRANSACTION_NUMBER
-                            mCmd.Parameters.Add("@2", MySqlDbType.Text).Value = "Senior Discount 20%"
-                            mCmd.Parameters.Add("@3", MySqlDbType.Text).Value = "Percentage(w/o vat)"
-                            mCmd.Parameters.Add("@4", MySqlDbType.Text).Value = "N/A"
-                            mCmd.Parameters.Add("@5", MySqlDbType.Text).Value = PromoLine
-                            mCmd.Parameters.Add("@6", MySqlDbType.Text).Value = DiscTotal
-                            mCmd.Parameters.Add("@7", MySqlDbType.Text).Value = S_Zreading
-                            mCmd.Parameters.Add("@8", MySqlDbType.Text).Value = 1
-                            mCmd.Parameters.Add("@9", MySqlDbType.Text).Value = "N"
+                            mCmd.Parameters.AddWithValue("@1", S_TRANSACTION_NUMBER)
+                            mCmd.Parameters.AddWithValue("@2", "Senior Discount 20%")
+                            mCmd.Parameters.AddWithValue("@3", "Percentage(w/o vat)")
+                            mCmd.Parameters.AddWithValue("@4", "N/A")
+                            mCmd.Parameters.AddWithValue("@5", PromoLine)
+                            mCmd.Parameters.AddWithValue("@6", DiscTotal)
+                            mCmd.Parameters.AddWithValue("@7", S_Zreading)
+                            mCmd.Parameters.AddWithValue("@8", 1)
+                            mCmd.Parameters.AddWithValue("@9", "N")
+                            mCmd.Parameters.AddWithValue("@10", DiscountID)
+
                             mCmd.ExecuteNonQuery()
                             mCmd.Dispose()
                         End Using
                     End If
                     If .Rows(i).Cells(17).Value > 0 Then
                         Dim DiscTotal As Double = NUMBERFORMAT(Math.Round(.Rows(i).Cells(17).Value, 2, MidpointRounding.AwayFromZero))
-                        Query = "INSERT INTO loc_coupon_data (`transaction_number`, `coupon_name`, `coupon_type`, `coupon_desc`, `coupon_line`, `coupon_total`, `zreading`, `status`, `synced`) VALUES (@1, @2, @3, @4, @5, @6, @7, @8, @9)"
                         Using mCmd = New MySqlCommand(Query, ConnectionLocal)
                             mCmd.Parameters.Clear()
-                            mCmd.Parameters.Add("@1", MySqlDbType.Text).Value = S_TRANSACTION_NUMBER
-                            mCmd.Parameters.Add("@2", MySqlDbType.Text).Value = "PWD Discount 20%"
-                            mCmd.Parameters.Add("@3", MySqlDbType.Text).Value = "Percentage(w/o vat)"
-                            mCmd.Parameters.Add("@4", MySqlDbType.Text).Value = "N/A"
-                            mCmd.Parameters.Add("@5", MySqlDbType.Text).Value = PromoLine
-                            mCmd.Parameters.Add("@6", MySqlDbType.Text).Value = DiscTotal
-                            mCmd.Parameters.Add("@7", MySqlDbType.Text).Value = S_Zreading
-                            mCmd.Parameters.Add("@8", MySqlDbType.Text).Value = 1
-                            mCmd.Parameters.Add("@9", MySqlDbType.Text).Value = "N"
+                            mCmd.Parameters.AddWithValue("@1", S_TRANSACTION_NUMBER)
+                            mCmd.Parameters.AddWithValue("@2", "PWD Discount 20%")
+                            mCmd.Parameters.AddWithValue("@3", "Percentage(w/o vat)")
+                            mCmd.Parameters.AddWithValue("@4", "N/A")
+                            mCmd.Parameters.AddWithValue("@5", PromoLine)
+                            mCmd.Parameters.AddWithValue("@6", DiscTotal)
+                            mCmd.Parameters.AddWithValue("@7", S_Zreading)
+                            mCmd.Parameters.AddWithValue("@8", 1)
+                            mCmd.Parameters.AddWithValue("@9", "N")
+                            mCmd.Parameters.AddWithValue("@10", DiscountID)
                             mCmd.ExecuteNonQuery()
                             mCmd.Dispose()
                         End Using
                     End If
                     If .Rows(i).Cells(19).Value > 0 Then
                         Dim DiscTotal As Double = NUMBERFORMAT(Math.Round(.Rows(i).Cells(19).Value, 2, MidpointRounding.AwayFromZero))
-                        Query = "INSERT INTO loc_coupon_data (`transaction_number`, `coupon_name`, `coupon_type`, `coupon_desc`, `coupon_line`, `coupon_total`, `zreading`, `status`, `synced`) VALUES (@1, @2, @3, @4, @5, @6, @7, @8, @9)"
                         Using mCmd = New MySqlCommand(Query, ConnectionLocal)
                             mCmd.Parameters.Clear()
-                            mCmd.Parameters.Add("@1", MySqlDbType.Text).Value = S_TRANSACTION_NUMBER
-                            mCmd.Parameters.Add("@2", MySqlDbType.Text).Value = "Sports Discount 20%"
-                            mCmd.Parameters.Add("@3", MySqlDbType.Text).Value = "Percentage(w/o vat)"
-                            mCmd.Parameters.Add("@4", MySqlDbType.Text).Value = "N/A"
-                            mCmd.Parameters.Add("@5", MySqlDbType.Text).Value = PromoLine
-                            mCmd.Parameters.Add("@6", MySqlDbType.Text).Value = DiscTotal
-                            mCmd.Parameters.Add("@7", MySqlDbType.Text).Value = S_Zreading
-                            mCmd.Parameters.Add("@8", MySqlDbType.Text).Value = 1
-                            mCmd.Parameters.Add("@9", MySqlDbType.Text).Value = "N"
+                            mCmd.Parameters.AddWithValue("@1", S_TRANSACTION_NUMBER)
+                            mCmd.Parameters.AddWithValue("@2", "Sports Discount 20%")
+                            mCmd.Parameters.AddWithValue("@3", "Percentage(w/o vat)")
+                            mCmd.Parameters.AddWithValue("@4", "N/A")
+                            mCmd.Parameters.AddWithValue("@5", PromoLine)
+                            mCmd.Parameters.AddWithValue("@6", DiscTotal)
+                            mCmd.Parameters.AddWithValue("@7", S_Zreading)
+                            mCmd.Parameters.AddWithValue("@8", 1)
+                            mCmd.Parameters.AddWithValue("@9", "N")
+                            mCmd.Parameters.AddWithValue("@10", DiscountID)
                             mCmd.ExecuteNonQuery()
                             mCmd.Dispose()
                         End Using
                     End If
                     If .Rows(i).Cells(21).Value > 0 Then
                         Dim DiscTotal As Double = NUMBERFORMAT(Math.Round(.Rows(i).Cells(21).Value, 2, MidpointRounding.AwayFromZero))
-                        Query = "INSERT INTO loc_coupon_data (`transaction_number`, `coupon_name`, `coupon_type`, `coupon_desc`, `coupon_line`, `coupon_total`, `zreading`, `status`, `synced`) VALUES (@1, @2, @3, @4, @5, @6, @7, @8, @9)"
                         Using mCmd = New MySqlCommand(Query, ConnectionLocal)
                             mCmd.Parameters.Clear()
-                            mCmd.Parameters.Add("@1", MySqlDbType.Text).Value = S_TRANSACTION_NUMBER
-                            mCmd.Parameters.Add("@2", MySqlDbType.Text).Value = "Single Parent Discount 20%"
-                            mCmd.Parameters.Add("@3", MySqlDbType.Text).Value = "Percentage(w/o vat)"
-                            mCmd.Parameters.Add("@4", MySqlDbType.Text).Value = "N/A"
-                            mCmd.Parameters.Add("@5", MySqlDbType.Text).Value = PromoLine
-                            mCmd.Parameters.Add("@6", MySqlDbType.Text).Value = DiscTotal
-                            mCmd.Parameters.Add("@7", MySqlDbType.Text).Value = S_Zreading
-                            mCmd.Parameters.Add("@8", MySqlDbType.Text).Value = 1
-                            mCmd.Parameters.Add("@9", MySqlDbType.Text).Value = "N"
+                            mCmd.Parameters.AddWithValue("@1", S_TRANSACTION_NUMBER)
+                            mCmd.Parameters.AddWithValue("@2", "Single Parent Discount 20%")
+                            mCmd.Parameters.AddWithValue("@3", "Percentage(w/o vat)")
+                            mCmd.Parameters.AddWithValue("@4", "N/A")
+                            mCmd.Parameters.AddWithValue("@5", PromoLine)
+                            mCmd.Parameters.AddWithValue("@6", DiscTotal)
+                            mCmd.Parameters.AddWithValue("@7", S_Zreading)
+                            mCmd.Parameters.AddWithValue("@8", 1)
+                            mCmd.Parameters.AddWithValue("@9", "N")
+                            mCmd.Parameters.AddWithValue("@10", DiscountID)
                             mCmd.ExecuteNonQuery()
                             mCmd.Dispose()
                         End Using
@@ -1323,7 +1325,7 @@ Public Class POS
 
             PromoTotal = NUMBERFORMAT(Math.Round(PromoTotal, 2, MidpointRounding.AwayFromZero))
             Dim ConnectionLocal As MySqlConnection = LocalhostConn()
-            Dim Query = "INSERT INTO loc_coupon_data (`transaction_number`, `coupon_name`, `coupon_type`, `coupon_desc`, `coupon_line`, `coupon_total`, `gc_value`, `zreading`, `status`, `synced`) VALUES (@1, @2, @3, @4, @5, @6, @7, @8, @9, @10)"
+            Dim Query = "INSERT INTO loc_coupon_data (`transaction_number`, `coupon_name`, `coupon_type`, `coupon_desc`, `coupon_line`, `coupon_total`, `gc_value`, `zreading`, `status`, `synced`, `reference_id`) VALUES (@1, @2, @3, @4, @5, @6, @7, @8, @9, @10, @11)"
             Using mCmd = New MySqlCommand(Query, ConnectionLocal)
                 mCmd.Parameters.Clear()
                 mCmd.Parameters.AddWithValue("@1", S_TRANSACTION_NUMBER)
@@ -1336,6 +1338,7 @@ Public Class POS
                 mCmd.Parameters.AddWithValue("@8", S_Zreading)
                 mCmd.Parameters.AddWithValue("@9", "1")
                 mCmd.Parameters.AddWithValue("@10", "N")
+                mCmd.Parameters.AddWithValue("@11", PromoID)
                 mCmd.ExecuteNonQuery()
                 mCmd.Dispose()
             End Using

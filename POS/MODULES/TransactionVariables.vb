@@ -6,6 +6,8 @@
     Public SeniorDetailsID As String
     Public SeniorDetailsName As String
     Public SeniorPhoneNumber As String
+
+    Public DiscountID As Integer
     Public DiscountName As String
     Public DiscountType As String = "N/A"
 
@@ -14,6 +16,7 @@
     Public SeniorGCDiscount As Boolean = False
 
     Public PromoApplied As Boolean = False
+    Public PromoID As Integer
     Public PromoName As String
     Public PromoDesc As String
     Public PromoLine As Integer = 10
@@ -45,10 +48,12 @@
             DiscountName = ""
             DiscountType = "N/A"
 
+            DiscountID = 0
             DISCGUESTCOUNT = 0
             DISCIDCOUNT = 0
             SeniorGCDiscount = False
 
+            PromoID = 0
             PromoApplied = False
             PromoName = ""
             PromoDesc = ""

@@ -137,7 +137,7 @@ Public Class Reports
                 ButtonZReading.Enabled = False
                 ButtonZREADREPRINT.Enabled = False
                 ButtonEJournalPDF.Enabled = False
-                ButtonUserLogs.Enabled = False
+                ButtonMGW.Enabled = False
                 ButtonEJournal.Enabled = False
                 ButtonAuditTrail.Enabled = False
             End If
@@ -3067,5 +3067,18 @@ Public Class Reports
         AuditTrail.Show()
     End Sub
 
+    Private Sub ButtonMGW_Click(sender As Object, e As EventArgs) Handles ButtonMGW.Click
+        Try
+            Dim ins As System.Reflection.Assembly
+            ins = System.Reflection.Assembly.LoadFile(Application.StartupPath & "\DG_DGMGW.dll")
 
+            Dim params As String = "user_type^" & ClientRole & ",connection^" & LocalConnectionString & ",export_path^" & S_ExportPath
+
+            Dim obj As Object = ins.CreateInstance("DG_DGMGW.DG_DGMGW", True, Nothing, Nothing, New String() {params}, Nothing, Nothing)
+            Dim frm As Form = CType(obj, Form)
+            frm.ShowDialog()
+        Catch ex As Exception
+            MsgBox(ex.ToString)
+        End Try
+    End Sub
 End Class

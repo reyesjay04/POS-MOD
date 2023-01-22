@@ -143,6 +143,7 @@ Public Class CouponCode
                 End If
             Else
                 Dim DiscountValue = DataGridViewCoupons.SelectedRows(0).Cells(3).Value / 100
+                Discounts.COUPONID = DataGridViewCoupons.SelectedRows(0).Cells(0).Value
                 Discounts.COUPONNAME = Me.DataGridViewCoupons.Item(1, Me.DataGridViewCoupons.CurrentRow.Index).Value.ToString
                 Discounts.COUPONVALUE = DiscountValue
                 PromoType = Me.DataGridViewCoupons.Item(5, Me.DataGridViewCoupons.CurrentRow.Index).Value.ToString
@@ -186,8 +187,6 @@ Public Class CouponCode
                     PromoTotal = NUMBERFORMAT(PRTOTALDISCOUNT)
                     PromoApplied = True
                     PromoName = Me.DataGridViewCoupons.Item(1, Me.DataGridViewCoupons.CurrentRow.Index).Value.ToString
-
-
                 End With
             Else
                 PromoCodeDefault()
@@ -226,6 +225,7 @@ Public Class CouponCode
                 End With
             End If
 
+            PromoID = DataGridViewCoupons.SelectedRows(0).Cells(0).Value
             PromoType = Me.DataGridViewCoupons.Item(5, Me.DataGridViewCoupons.CurrentRow.Index).Value.ToString
 
             Close()
@@ -357,6 +357,7 @@ Public Class CouponCode
                     End If
                 End If
             End With
+            PromoID = DataGridViewCoupons.SelectedRows(0).Cells(0).Value
             If Not SeniorGCDiscount Then
                 PromoType = Me.DataGridViewCoupons.Item(5, Me.DataGridViewCoupons.CurrentRow.Index).Value.ToString
             Else
@@ -426,6 +427,7 @@ Public Class CouponCode
                     PromoTotal = NUMBERFORMAT(PRTOTALDISCOUNT)
                     PromoApplied = True
                     PromoName = Me.DataGridViewCoupons.Item(1, Me.DataGridViewCoupons.CurrentRow.Index).Value.ToString
+                    PromoID = DataGridViewCoupons.SelectedRows(0).Cells(0).Value
                     MsgBox("Applied")
                 End If
             End With
@@ -544,7 +546,7 @@ Public Class CouponCode
                     MsgBox("Condition not meet")
                 End If
             End With
-
+            PromoID = DataGridViewCoupons.SelectedRows(0).Cells(0).Value
             PromoType = Me.DataGridViewCoupons.Item(5, Me.DataGridViewCoupons.CurrentRow.Index).Value.ToString
 
             Close()
@@ -650,6 +652,7 @@ Public Class CouponCode
                     MsgBox("Condition not meet")
                 End If
             End With
+            PromoID = DataGridViewCoupons.SelectedRows(0).Cells(0).Value
             PromoType = Me.DataGridViewCoupons.Item(5, Me.DataGridViewCoupons.CurrentRow.Index).Value.ToString
             Close()
         Catch ex As Exception
@@ -761,7 +764,7 @@ Public Class CouponCode
                     MsgBox("Condition not meet")
                 End If
             End With
-
+            PromoID = DataGridViewCoupons.SelectedRows(0).Cells(0).Value
             PromoType = Me.DataGridViewCoupons.Item(5, Me.DataGridViewCoupons.CurrentRow.Index).Value.ToString
 
             Close()
@@ -839,7 +842,7 @@ Public Class CouponCode
                     MsgBox("Applied")
                 End With
             End If
-
+            PromoID = DataGridViewCoupons.SelectedRows(0).Cells(0).Value
             PromoType = Me.DataGridViewCoupons.Item(5, Me.DataGridViewCoupons.CurrentRow.Index).Value.ToString
 
             Close()

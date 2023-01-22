@@ -1,7 +1,7 @@
 ﻿Imports MySql.Data.MySqlClient
 
 Public Class SeniorDetails
-
+    Public COUPONID As Integer
     Public COUPONNAME As String
     Public COUPONVALUE As Double
     Public NOTDISCOUNTEDAMOUNT As Double
@@ -54,6 +54,8 @@ Public Class SeniorDetails
                     Else
                         SeniorPhoneNumber &= "-" & Trim(TextBoxPhoneNumber.Text)
                     End If
+
+                    DiscountID = COUPONID
                     DISCGUESTCOUNT = Double.Parse(TextBoxNumberOfGuest.Text)
                     DISCIDCOUNT = Double.Parse(TextBoxNumberOfID.Text)
                     ApplyDiscount()

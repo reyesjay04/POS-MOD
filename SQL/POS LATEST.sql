@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 14, 2023 at 01:17 PM
+-- Generation Time: Jan 22, 2023 at 07:26 AM
 -- Server version: 10.4.13-MariaDB
 -- PHP Version: 7.4.7
 
@@ -184,6 +184,7 @@ DROP TABLE IF EXISTS `loc_coupon_data`;
 CREATE TABLE IF NOT EXISTS `loc_coupon_data` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `transaction_number` text NOT NULL,
+  `reference_id` int(11) NOT NULL,
   `coupon_name` text NOT NULL,
   `coupon_desc` text NOT NULL,
   `coupon_type` text NOT NULL,
@@ -487,6 +488,21 @@ CREATE TABLE IF NOT EXISTS `loc_message` (
   `origin` text NOT NULL,
   `seen` int(11) NOT NULL,
   PRIMARY KEY (`message_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `loc_mgw_settings`
+--
+
+DROP TABLE IF EXISTS `loc_mgw_settings`;
+CREATE TABLE IF NOT EXISTS `loc_mgw_settings` (
+  `lms_id` int(11) NOT NULL AUTO_INCREMENT,
+  `lms_busdate` date NOT NULL,
+  `lms_batch_number` int(11) NOT NULL,
+  `lms_type` varchar(10) NOT NULL,
+  PRIMARY KEY (`lms_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------

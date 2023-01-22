@@ -136,7 +136,7 @@ Public Class xreadCls
             'Gross Sales (xrGrossSales) + Gift Card Used(xrGCSum) - Less Vat(xrLessVatVE) - Vat Amount()xrVatAmount - Discount (xrLessDiscVE)
 
 
-            xrCashTotal = sum("amountdue", $"loc_daily_transaction WHERE zreading = '{ZReadDate}'  AND active = 1")
+            xrCashTotal = sum("amountdue", $"loc_daily_transaction WHERE zreading = '{ZReadDate}' AND active = 1 ")
 
             xrCreditCard = 0
             xrDebitCard = 0
