@@ -44,8 +44,10 @@
                     If TextBoxMONEY.Text = "" Then
                         TextBoxMONEY.Text = 0
                     End If
-                    TEXTBOXMONEYVALUE = TextBoxMONEY.Text
-                    TEXTBOXCHANGEVALUE = TextBoxCHANGE.Text
+
+                    TEXTBOXMONEYVALUE = CType(TextBoxMONEY.Text, Double)
+                    TEXTBOXCHANGEVALUE = CType(TextBoxCHANGE.Text, Double)
+
                     .BackgroundWorkerTransactions.WorkerSupportsCancellation = True
                     .BackgroundWorkerTransactions.WorkerReportsProgress = True
                     .BackgroundWorkerTransactions.RunWorkerAsync()

@@ -19,6 +19,6 @@
     End Sub
 
     Private Sub Label12_DoubleClick(sender As Object, e As EventArgs) Handles Label12.DoubleClick
-        MsgBox("v1.0-01222023")
+        MsgBox("v1.0-02042023")
     End Sub
 End Class

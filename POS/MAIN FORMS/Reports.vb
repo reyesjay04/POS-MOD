@@ -33,24 +33,16 @@ Public Class Reports
     Private previewsales As New PrintPreviewDialog
     Private previewtransactiontype As New PrintPreviewDialog
 
-    Dim buttons As DataGridViewButtonColumn = New DataGridViewButtonColumn()
-    Dim user_id As String
-    Dim pagingAdapter As MySqlDataAdapter
-    Dim pagingDS As DataSet
-    Dim scrollVal As Integer
-    Dim fullname As String
-    Dim tbl As String
-    Dim flds As String
-    Public Shared transaction_number As String
-
-    Dim data As String
-    Dim data2 As String
-    Dim total
-
     Property genxreadReport As xreadCls
     Property genzreadreport As zreadCls
     Property genrepzreadreport As zreadReprintCls
     Property ReturnsList As New List(Of RepReturnsCls)
+    Property FirstLoadReportSales As Boolean = True
+    Property FirstLoadExpenseReport As Boolean = True
+    Property FirstLoadTransactionLogs As Boolean = True
+    Property FirstLoadCrewSales As Boolean = True
+    Property FirstLoadRefunds As Boolean = True
+    Property FirstLoadDeposit As Boolean = True
     Private Sub Reports_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         Try
 
@@ -103,27 +95,15 @@ Public Class Reports
         Try
             ComboBoxTransactionType.SelectedIndex = 0
             ToolStripComboBoxStatus.SelectedIndex = 0
+
             TabControl1.TabPages.Remove(TabPage3)
+
             CreateXmlPath()
 
             SelectDisctinctDaily()
-            reportsdailytransaction(False)
-            reportssystemlogs(False)
-            reportssales(False)
-            reportstransactionlogs(False)
-            expensereports(False)
             LoadUsers()
             LoadCouponTypes()
-
-            reportsreturnsandrefunds(False)
-            viewdeposit(False)
-
-            LoadCrewSales(False)
-
-            If DataGridViewDaily.Rows.Count > 0 Then
-                Dim arg = New DataGridViewCellEventArgs(0, 0)
-                DataGridViewDaily_CellClick(sender, arg)
-            End If
+            LoadProducts()
 
             If S_Zreading = Format(Now().AddDays(1), "yyyy-MM-dd") Then
                 ButtonZReading.Enabled = False
@@ -132,7 +112,6 @@ Public Class Reports
             ToolStripComboBoxTaxType.SelectedIndex = 0
             ToolStripComboBoxTransactionType.SelectedIndex = 0
 
-            LoadProducts()
             If ClientRole = "Crew" Then
                 ButtonZReading.Enabled = False
                 ButtonZREADREPRINT.Enabled = False
@@ -150,9 +129,50 @@ Public Class Reports
 
             ToolStripComboBoxOption.SelectedIndex = 0
             LabelDate.Text = "Z-READ DATE: " & StringToDate(S_Zreading)
+
+            reportsdailytransaction(False)
+            If DataGridViewDaily.Rows.Count > 0 Then
+                Dim arg = New DataGridViewCellEventArgs(0, 0)
+                DataGridViewDaily_CellClick(sender, arg)
+            End If
         Catch ex As Exception
 
         End Try
+    End Sub
+
+    Private Sub TabControl1_SelectedIndexChanged(sender As Object, e As EventArgs) Handles TabControl1.SelectedIndexChanged
+        Select Case TabControl1.SelectedIndex
+            Case 1
+                If FirstLoadReportSales Then
+                    reportssales(False)
+                    FirstLoadReportSales = False
+                End If
+            Case 3
+                If FirstLoadExpenseReport Then
+                    expensereports(False)
+                    FirstLoadExpenseReport = False
+                End If
+            Case 4
+                If FirstLoadTransactionLogs Then
+                    reportstransactionlogs(False)
+                    FirstLoadTransactionLogs = False
+                End If
+            Case 5
+                If FirstLoadCrewSales Then
+                    LoadCrewSales(False)
+                    FirstLoadCrewSales = False
+                End If
+            Case 6
+                If FirstLoadRefunds Then
+                    reportsreturnsandrefunds(False)
+                    FirstLoadRefunds = False
+                End If
+            Case 7
+                If FirstLoadDeposit Then
+                    viewdeposit(False)
+                    FirstLoadDeposit = False
+                End If
+        End Select
     End Sub
     Private Sub LoadCrewSales(bool As Boolean)
         Try
@@ -313,15 +333,7 @@ Public Class Reports
     End Sub
     Public Sub reportstransactionlogs(ByVal searchdate As Boolean)
         Try
-            'table = "`loc_system_logs`"
-            'fields = "`log_type`, `log_description`, `log_date_time`"
-            'If searchdate = False Then
-            '    where = " log_type = 'TRANSACTION' AND date(log_date_time) = CURRENT_DATE() AND log_store = '" & ClientStoreID & "' AND guid = '" & ClientGuid & "' "
-            '    GLOBAL_SELECT_ALL_FUNCTION_WHERE(table:=table, datagrid:=DataGridViewTRANSACTIONLOGS, fields:=fields, where:=where)
-            'Else
-            '    where = " log_type = 'TRANSACTION' AND date(log_date_time) >= '" & Format(DateTimePicker11.Value, "yyyy-MM-dd") & "' AND date(log_date_time) <= '" & Format(DateTimePicker12.Value, "yyyy-MM-dd") & "' AND log_store = '" & ClientStoreID & "' AND guid = '" & ClientGuid & "' "
-            '    GLOBAL_SELECT_ALL_FUNCTION_WHERE(table:=table, datagrid:=DataGridViewTRANSACTIONLOGS, fields:=fields, where:=where)
-            'End If
+
             Dim trxLogs As New DataTable
             Dim fields = "crew_id, description, created_at"
             trxLogs = AsDatatable($"loc_audit_trail WHERE group_name = 'Transaction' ", fields, DataGridViewReturns)
@@ -480,8 +492,6 @@ Public Class Reports
 
         Catch ex As Exception
             AuditTrail.LogToAuditTrail("System", "Reports/viewtransactiondetails(): " & ex.ToString, "Critical")
-        Finally
-            da.Dispose()
         End Try
     End Sub
     Public Sub viewdeposit(ByVal searchdate As Boolean)
@@ -819,7 +829,7 @@ Public Class Reports
             AuditTrail.LogToAuditTrail("System", "Reports/CustomReport(): " & ex.ToString, "Critical")
         End Try
     End Sub
-    Private Sub ToolStripButton6_Click(sender As Object, e As EventArgs) Handles ToolStripButton6.Click
+    Private Sub ToolStripButton6_Click(sender As Object, e As EventArgs) Handles tsbsearchdaily.Click
         reportsdailytransaction(True)
         DataGridViewTransactionDetails.Rows.Clear()
     End Sub
@@ -867,7 +877,7 @@ Public Class Reports
         Dim XMLName As String = ""
         Dim isSuccess As Boolean = True
         If DataGridViewTransactionDetails.Rows.Count > 0 Then
-            total = SumOfColumnsToDecimal(DataGridViewTransactionDetails, 3)
+            'total = SumOfColumnsToDecimal(DataGridViewTransactionDetails, 3)
             Try
                 If DataGridViewDaily.SelectedRows.Count = 1 Then
                     Dim TotalLines As Integer = 0
@@ -877,9 +887,10 @@ Public Class Reports
                     Else
                         BodyLine = 500
                     End If
-                    Dim CountHeaderLine As Integer = count("id", "loc_receipt WHERE type = 'Header' AND status = 1")
+
+                    Dim CountHeaderLine As Integer = count("id", "loc_receipt WHERE type = 'Header' AND status = 'Y'")
                     Dim ProductLine As Integer = 0
-                    Dim CountFooterLine As Integer = count("id", "loc_receipt WHERE type = 'Footer' AND status = 1")
+                    Dim CountFooterLine As Integer = count("id", "loc_receipt WHERE type = 'Footer' AND status = 'Y'")
 
                     CountHeaderLine *= 10
                     CountFooterLine *= 10
@@ -1182,7 +1193,7 @@ Public Class Reports
         Try
             Dim TotalLines As Integer = 0
             Dim BodyLine As Integer = 650
-            Dim CountHeaderLine As Integer = count("id", "loc_receipt WHERE type = 'Header' AND status = 1")
+            Dim CountHeaderLine As Integer = count("id", "loc_receipt WHERE type = 'Header' AND status = 'Y'")
             Dim ProductLine As Integer = 0
 
             Dim sql = $"SELECT product_sku , SUM(quantity), SUM(total), product_category FROM loc_daily_transaction_details WHERE DATE(zreading) BETWEEN @dtFrom AND @dtTo AND active = 1  GROUP BY product_name"
@@ -1771,7 +1782,7 @@ Public Class Reports
 
             Dim TotalLines As Integer = 0
             Dim BodyLine As Integer = 150
-            Dim CountHeaderLine As Integer = count("id", "loc_receipt WHERE type = 'Header' AND status = 1")
+            Dim CountHeaderLine As Integer = count("id", "loc_receipt WHERE type = 'Header' AND status = 'Y'")
             Dim ProductLine As Integer = 0
 
             CountHeaderLine *= 10
@@ -2754,9 +2765,7 @@ Public Class Reports
             AdvancedCustomReport.Close()
         End If
     End Sub
-    Private Sub ToolStripComboBoxStatus_TextChanged(sender As Object, e As EventArgs) Handles ToolStripComboBoxStatus.SelectedIndexChanged
-        ToolStripButton6.PerformClick()
-    End Sub
+
     Dim sfd As SaveFileDialog = New SaveFileDialog()
     Private Sub Button2_Click(sender As Object, e As EventArgs) Handles ButtonXREAD.Click
         Dim isSuccess As Boolean = True
@@ -3081,4 +3090,6 @@ Public Class Reports
             MsgBox(ex.ToString)
         End Try
     End Sub
+
+
 End Class

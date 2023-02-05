@@ -130,6 +130,7 @@ Public Class PendingOrders
         If POS.DataGridViewOrders.RowCount = 0 Then
             If dgvOrders.RowCount > 0 Then
                 PopulateOrders()
+
                 GLOBAL_DELETE_ALL_FUNCTION(tablename:="loc_pending_orders", where:=" customer_name = '" & ComboBoxCustomerName.Text & "'")
                 GLOBAL_DELETE_ALL_FUNCTION(tablename:="loc_hold_inventory", where:=" name = '" & ComboBoxCustomerName.Text & "'")
 

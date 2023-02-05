@@ -59,8 +59,10 @@ Module Addmodule
                     Exit For
                 End If
 
-                CommandServer = New MySqlCommand("INSERT INTO `Triggers_admin_daily_transaction`(`loc_transaction_id`, `transaction_number`, `grosssales`, `totaldiscount`, `amounttendered`, `change`, `amountdue`, `vatablesales`, `vatexemptsales`, `zeroratedsales`, `vatpercentage`, `lessvat`, `transaction_type`, `discount_type`, `totaldiscountedamount`, `si_number`, `crew_id`, `guid`, `active`, `store_id`, `created_at`, `shift`, `zreading`)
-                                             VALUES (@1,@2,@3,@4,@5,@6,@7,@8,@9,@10,@11,@12,@13,@14,@15,@16,@17,@18,@19,@20,@21,@22,@23)", ConnectionServer)
+                CommandServer = New MySqlCommand("", ConnectionServer)
+                CommandServer.Parameters.Clear()
+                CommandServer.CommandText = "INSERT INTO `Triggers_admin_daily_transaction`(`loc_transaction_id`, `transaction_number`, `grosssales`, `totaldiscount`, `amounttendered`, `change`, `amountdue`, `vatablesales`, `vatexemptsales`, `zeroratedsales`, `vatpercentage`, `lessvat`, `transaction_type`, `discount_type`, `totaldiscountedamount`, `si_number`, `crew_id`, `guid`, `active`, `store_id`, `created_at`, `shift`, `zreading`)
+                                             VALUES (@1,@2,@3,@4,@5,@6,@7,@8,@9,@10,@11,@12,@13,@14,@15,@16,@17,@18,@19,@20,@21,@22,@23)"
 
                 CommandServer.Parameters.Add("@1", MySqlDbType.Int64).Value = DtSales(i)(0)
                 CommandServer.Parameters.Add("@2", MySqlDbType.VarChar).Value = DtSales(i)(1)
@@ -87,17 +89,16 @@ Module Addmodule
                 CommandServer.Parameters.Add("@23", MySqlDbType.Text).Value = DtSales(i)(22)
                 CommandServer.ExecuteNonQuery()
 
-                QueryLocal = "UPDATE loc_daily_transaction SET synced = 'S' WHERE transaction_number = '" & DtSales(i)(1) & "'"
+                QueryLocal = "UPDATE loc_daily_transaction SET synced = 'Y' WHERE transaction_number = '" & DtSales(i)(1) & "'"
                 Command = New MySqlCommand(QueryLocal, Connectionlocal)
                 Command.ExecuteNonQuery()
             Next
 
             ConnectionServer.Close()
-
             Connectionlocal.Close()
 
         Catch ex As Exception
-            AuditTrail.LogToAuditTrail("System", "ModAdd/AutoSyncSales(): " & ex.ToString, "Critical")
+            AuditTrail.LogToAuditTrail("System", "Auto sync sales: " & ex.ToString, "Critical", False)
         End Try
     End Sub
 
@@ -126,9 +127,13 @@ Module Addmodule
                 If POS.POSWorkerCanceled = True Then
                     Exit For
                 End If
-                CommandServer = New MySqlCommand("INSERT INTO Triggers_admin_daily_transaction_details(`loc_details_id`, `product_id`, `product_sku`, `product_name`, `quantity`, `price`, `total`, `crew_id`
+
+                CommandServer = New MySqlCommand("", ConnectionServer)
+                CommandServer.Parameters.Clear()
+                CommandServer.CommandText = "INSERT INTO Triggers_admin_daily_transaction_details(`loc_details_id`, `product_id`, `product_sku`, `product_name`, `quantity`, `price`, `total`, `crew_id`
                                             , `transaction_number`, `active`, `created_at`, `guid`, `store_id`, `total_cost_of_goods`, `product_category` , `zreading`, `transaction_type`) 
-                    VALUES (@a0, @a1, @a2, @a3, @a4, @a5, @a6, @a7, @a8, @a9, @a10, @a11, @a12, @a13, @a14, @a15, @a16)", ConnectionServer)
+                    VALUES (@a0, @a1, @a2, @a3, @a4, @a5, @a6, @a7, @a8, @a9, @a10, @a11, @a12, @a13, @a14, @a15, @a16)"
+
                 CommandServer.Parameters.Add("@a0", MySqlDbType.Int64).Value = DtSales(i)(0)
                 CommandServer.Parameters.Add("@a1", MySqlDbType.Int64).Value = DtSales(i)(1)
                 CommandServer.Parameters.Add("@a2", MySqlDbType.VarChar).Value = DtSales(i)(2)
@@ -147,18 +152,16 @@ Module Addmodule
                 CommandServer.Parameters.Add("@a15", MySqlDbType.VarChar).Value = DtSales(i)(15)
                 CommandServer.Parameters.Add("@a16", MySqlDbType.VarChar).Value = DtSales(i)(16)
 
-
-                QueryLocal = "UPDATE loc_daily_transaction_details SET synced = 'S' WHERE details_id = '" & DtSales(i)(0) & "'"
+                QueryLocal = "UPDATE loc_daily_transaction_details SET synced = 'Y' WHERE details_id = '" & DtSales(i)(0) & "'"
                 Command = New MySqlCommand(QueryLocal, Connectionlocal)
                 Command.ExecuteNonQuery()
             Next
 
             ConnectionServer.Close()
-
             Connectionlocal.Close()
 
         Catch ex As Exception
-            AuditTrail.LogToAuditTrail("System", "ModAdd/AutoSyncSalesDetails(): " & ex.ToString, "Critical")
+            AuditTrail.LogToAuditTrail("System", "Auto sync sales details: " & ex.ToString, "Critical", False)
         End Try
     End Sub
 
@@ -216,7 +219,7 @@ Module Addmodule
                     CommandServer.Parameters.Add("@6", MySqlDbType.Text).Value = DateSynced
                     CommandServer.ExecuteNonQuery()
 
-                    Dim sql = "UPDATE loc_pos_inventory SET `synced`='Synced' WHERE inventory_id = " & DtInventory(i)(0)
+                    Dim sql = "UPDATE loc_pos_inventory SET `synced` = 'Y' WHERE inventory_id = " & DtInventory(i)(0)
                     CommandLocal = New MySqlCommand(sql, ConnectionLocal)
                     CommandLocal.ExecuteNonQuery()
                 Next
@@ -225,7 +228,7 @@ Module Addmodule
 
             End With
         Catch ex As Exception
-            AuditTrail.LogToAuditTrail("System", "ModAdd/AutoSyncInventory(): " & ex.ToString, "Critical")
+            AuditTrail.LogToAuditTrail("System", "Auto sync inventory: " & ex.ToString, "Critical", False)
         End Try
     End Sub
 #Region "Save XML Info"

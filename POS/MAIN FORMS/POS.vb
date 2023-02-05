@@ -202,7 +202,7 @@ Public Class POS
                                 TotalProductPrice = TwoDecimalPlaces(TotalPrice)
                             End If
                             DataGridViewOrders.SelectedRows(0).Cells(1).Value = TextBoxQTY.Text
-                            DataGridViewOrders.SelectedRows(0).Cells(3).Value = TotalProductPrice
+                            DataGridViewOrders.SelectedRows(0).Cells(3).Value = NUMBERFORMAT(TotalProductPrice)
 
                             Compute()
 
@@ -1426,14 +1426,16 @@ Public Class POS
                 SiNumberToString = S_SI_NUMBER.ToString(S_SIFormat)
             End If
 
-            GLOBAL_FUNCTION_UPDATE("loc_settings", "S_Trn_No = " & S_TRANSACTION_NUMBER, "settings_id = 1")
-            GLOBAL_FUNCTION_UPDATE("loc_settings", "S_SI_No = " & S_SI_NUMBER, "settings_id = 1")
+            If S_TrainingMode = False Then
 
-            For i = 0 To 100
-                BackgroundWorkerTransactions.ReportProgress(i)
-                If i = 0 Then
-                    WaitFrm.Label1.Text = "Transaction is processing. Please wait."
-                    If S_TrainingMode = False Then
+                GLOBAL_FUNCTION_UPDATE("loc_settings", "S_Trn_No = " & S_TRANSACTION_NUMBER, "settings_id = 1")
+                GLOBAL_FUNCTION_UPDATE("loc_settings", "S_SI_No = " & S_SI_NUMBER, "settings_id = 1")
+
+                For i = 0 To 100
+                    BackgroundWorkerTransactions.ReportProgress(i)
+                    If i = 0 Then
+                        WaitFrm.Label1.Text = "Transaction is processing. Please wait."
+
                         ThreadOrder = New Thread(AddressOf InsertFMStock)
                         ThreadOrder.Start()
                         THREADLIST.Add(ThreadOrder)
@@ -1510,12 +1512,12 @@ Public Class POS
                             Next
                         End If
                     End If
-                End If
-                Thread.Sleep(10)
-            Next
-            For Each t In THREADLIST
-                t.Join()
-            Next
+                    Thread.Sleep(10)
+                Next
+                For Each t In THREADLIST
+                    t.Join()
+                Next
+            End If
 
         Catch ex As Exception
             AuditTrail.LogToAuditTrail("System", "POS/BackgroundWorkerTransactions: " & ex.ToString, "Critical")
@@ -1557,9 +1559,9 @@ Public Class POS
                 Else
                     BodyLine = 540
                 End If
-                Dim CountHeaderLine As Integer = count("id", "loc_receipt WHERE type = 'Header' AND status = 1")
+                Dim CountHeaderLine As Integer = count("id", "loc_receipt WHERE type = 'Header' AND status = 'Y'")
                 Dim ProductLine As Integer = 0
-                Dim CountFooterLine As Integer = count("id", "loc_receipt WHERE type = 'Footer' AND status = 1")
+                Dim CountFooterLine As Integer = count("id", "loc_receipt WHERE type = 'Footer' AND status = 'Y'")
                 CountHeaderLine *= 10
                 CountFooterLine *= 10
                 Dim DiscountLine As Integer = 0

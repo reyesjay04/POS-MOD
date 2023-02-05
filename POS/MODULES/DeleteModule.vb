@@ -6,11 +6,9 @@ Imports MySql.Data.MySqlClient
 Module DeleteModule
     Public Sub GLOBAL_DELETE_ALL_FUNCTION(ByVal tablename As String, ByVal where As String)
         Try
-            sql = "DELETE FROM " & tablename & " WHERE " & where
-            With cmd
-                .Connection = LocalhostConn()
-                .CommandText = sql
-            End With
+            Dim ConnectionLocal As MySqlConnection = LocalhostConn()
+            Dim sql = "DELETE FROM " & tablename & " WHERE " & where
+            Dim cmd As New MySqlCommand(sql, ConnectionLocal)
             cmd.ExecuteNonQuery()
         Catch ex As Exception
             AuditTrail.LogToAuditTrail("System", "ModDelete/GLOBAL_DELETE_ALL_FUNCTION(): " & ex.ToString, "Critical")
@@ -41,6 +39,7 @@ Module DeleteModule
             Dim Query As String = "SELECT counter_value FROM `tbcountertable` WHERE counter_id = 1"
             Dim Command As New MySqlCommand(Query, ConnectionLocal)
             Dim res = Command.ExecuteScalar
+
             If res = Nothing Then
                 ReturnBool = False
             Else
@@ -52,37 +51,36 @@ Module DeleteModule
                 TruncateTableAll(value)
             Next
 
-            Query = "UPDATE `loc_settings` SET S_Old_Grand_Total = 0 WHERE settings_id = 1"
-            cmd = New MySqlCommand(Query, ConnectionLocal)
-            cmd.ExecuteNonQuery()
-            S_OLDGRANDTOTAL = 0
+            Using mCmd = New MySqlCommand("", ConnectionLocal)
+                With mCmd
+                    .CommandText = "UPDATE `loc_settings` SET S_Old_Grand_Total = 0 WHERE settings_id = 1"
+                    .ExecuteNonQuery()
+                    S_OLDGRANDTOTAL = 0
 
-            Query = "UPDATE `loc_settings` SET S_Trn_No = 0 WHERE settings_id = 1"
-            cmd = New MySqlCommand(Query, ConnectionLocal)
-            cmd.ExecuteNonQuery()
-            S_TRANSACTION_NUMBER = 0
+                    .CommandText = "UPDATE `loc_settings` SET S_Trn_No = 0 WHERE settings_id = 1"
+                    .ExecuteNonQuery()
+                    S_TRANSACTION_NUMBER = 0
 
-            Query = "UPDATE `loc_settings` SET S_SI_No = 0 WHERE settings_id = 1"
-            cmd = New MySqlCommand(Query, ConnectionLocal)
-            cmd.ExecuteNonQuery()
-            S_SI_NUMBER = 0
+                    .CommandText = "UPDATE `loc_settings` SET S_SI_No = 0 WHERE settings_id = 1"
+                    .ExecuteNonQuery()
+                    S_SI_NUMBER = 0
 
-            If ReturnBool Then
-                counterValue += 1
-                Query = "UPDATE `tbcountertable` SET counter_value = '" & counterValue & "' WHERE counter_id = 1"
-                cmd = New MySqlCommand(Query, ConnectionLocal)
-                cmd.ExecuteNonQuery()
-            Else
-                counterValue = 1
-                Query = "INSERT INTO `tbcountertable` (counter_value, date_created) VALUES ('" & counterValue & "', '" & FullDate24HR() & "')"
-                cmd = New MySqlCommand(Query, ConnectionLocal)
-                cmd.ExecuteNonQuery()
-            End If
+                    If ReturnBool Then
+                        counterValue += 1
+                        .CommandText = "UPDATE `tbcountertable` SET counter_value = '" & counterValue & "' WHERE counter_id = 1"
+                        .ExecuteNonQuery()
+                    Else
+                        counterValue = 1
+                        .CommandText = "INSERT INTO `tbcountertable` (counter_value, date_created) VALUES ('" & counterValue & "', '" & FullDate24HR() & "')"
+                        .ExecuteNonQuery()
+                    End If
+                End With
+                mCmd.Dispose()
+            End Using
 
             My.Settings.zcounter = 0
             My.Settings.Save()
             ConnectionLocal.Close()
-            cmd.Dispose()
 
             AuditTrail.LogToAuditTrail("System", "Automatic Reset POS" & ClientCrewID, "Normal")
             FormIsOpen()

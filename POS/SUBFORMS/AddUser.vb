@@ -176,33 +176,7 @@ Public Class AddUser
         End Try
 
     End Sub
-    Private Sub edituser()
 
-        'userid = DataGridViewUserSettings.SelectedRows(0).Cells(14).Value.ToString()
-        TextBoxCONPASS.Enabled = False
-        Try
-            sql = "SELECT * FROM loc_users WHERE uniq_id = '" & userid & "' "
-            cmd = New MySqlCommand(sql, LocalhostConn)
-            da = New MySqlDataAdapter(cmd)
-            dt = New DataTable
-            da.Fill(dt)
-            For Each row As DataRow In dt.Rows
-                TextBoxFULLNAME.Text = row("full_name")
-                TextBoxUSERNAME.Text = row("username")
-                TextBoxEMAIL.Text = row("email")
-                TextBoxCONTACT.Text = row("contact_number")
-                gender = row("gender")
-            Next
-            If gender = "Male" Then
-                RadioButtonMALE.Checked = True
-            Else
-                RadioButtonFEMALE.Checked = True
-            End If
-
-        Catch ex As Exception
-            AuditTrail.LogToAuditTrail("System", "AddUser/edituser(): " & ex.ToString, "Critical")
-        End Try
-    End Sub
 
     Private Sub AddUser_FormClosing(sender As Object, e As FormClosingEventArgs) Handles MyBase.FormClosing
         MDIFORM.newMDIchildUser.Enabled = True

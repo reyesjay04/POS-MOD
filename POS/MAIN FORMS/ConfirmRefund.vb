@@ -84,9 +84,9 @@ Public Class ConfirmRefund
 
             Dim TotalLines As Integer = 0
             Dim BodyLine As Integer = 560
-            Dim CountHeaderLine As Integer = count("id", "loc_receipt WHERE type = 'Header' AND status = 1")
+            Dim CountHeaderLine As Integer = count("id", "loc_receipt WHERE type = 'Header' AND status = 'Y'")
             Dim ProductLine As Integer = 0
-            Dim CountFooterLine As Integer = count("id", "loc_receipt WHERE type = 'Footer' AND status = 1")
+            Dim CountFooterLine As Integer = count("id", "loc_receipt WHERE type = 'Footer' AND status = 'Y'")
 
             CountHeaderLine *= 10
             CountFooterLine *= 10

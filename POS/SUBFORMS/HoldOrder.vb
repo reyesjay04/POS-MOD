@@ -10,8 +10,8 @@ Public Class HoldOrder
             MsgBox("Input customer name first")
             TextBoxCustomerName.Clear()
         Else
-            sql = "SELECT * FROM loc_pending_orders WHERE customer_name = '" & TextBoxCustomerName.Text & "'"
-            cmd = New MySqlCommand(sql, LocalhostConn())
+            Dim sql = "SELECT * FROM loc_pending_orders WHERE customer_name = '" & TextBoxCustomerName.Text & "'"
+            Dim cmd = New MySqlCommand(sql, LocalhostConn())
             RowsReturned = cmd.ExecuteScalar
             If RowsReturned > 0 Then
                 MsgBox("Customer Exist")

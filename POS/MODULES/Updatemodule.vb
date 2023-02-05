@@ -6,11 +6,11 @@ Module Updatemodule
             Dim sql = "UPDATE " + table + " SET " + fields + " WHERE " & where
             Dim cmd As MySqlCommand = New MySqlCommand(sql, ConnectionLocal)
             cmd.ExecuteNonQuery()
+            cmd.Dispose()
         Catch ex As Exception
             AuditTrail.LogToAuditTrail("System", "ModUpdate/GLOBAL_FUNCTION_UPDATE(): " & ex.ToString, "Critical")
         Finally
             ConnectionLocal.Close()
-            cmd.Dispose()
         End Try
     End Sub
 

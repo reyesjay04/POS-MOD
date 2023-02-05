@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 22, 2023 at 07:26 AM
+-- Generation Time: Feb 03, 2023 at 03:06 PM
 -- Server version: 10.4.13-MariaDB
 -- PHP Version: 7.4.7
 
@@ -787,6 +787,7 @@ CREATE TABLE IF NOT EXISTS `loc_settings` (
   `S_SI_No` int(11) NOT NULL,
   `S_Trn_No` int(11) NOT NULL,
   `S_ZeroRated_Tax` text NOT NULL,
+  `S_DB_Version` varchar(50) NOT NULL,
   PRIMARY KEY (`settings_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 

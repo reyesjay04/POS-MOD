@@ -741,8 +741,8 @@ Public Class zreadCls
         Try
             Dim ConnectionLocal As MySqlConnection = LocalhostConn()
             zrZReadDate = Format(DateAdd("d", 1, zrZReadDate), "yyyy-MM-dd")
-            sql = "UPDATE loc_settings SET S_Zreading = '" & zrZReadDate & "'"
-            cmd = New MySqlCommand(sql, ConnectionLocal)
+            Dim sql = "UPDATE loc_settings SET S_Zreading = '" & zrZReadDate & "'"
+            Dim cmd = New MySqlCommand(sql, ConnectionLocal)
             cmd.ExecuteNonQuery()
             cmd.Dispose()
 

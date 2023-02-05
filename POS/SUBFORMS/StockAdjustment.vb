@@ -113,12 +113,14 @@ Public Class StockAdjustment
                         Dim InvPrimary As Double = 0
                         Dim InvSecondary As Double = 0
                         Dim InvServings As Double = 0
+
                         For Each row As DataRow In InvDT.Rows
                             InvPrimary = row("stock_primary")
                             InvSecondary = row("stock_secondary")
                             InvServings = row("stock_no_of_servings")
                         Next
                         LocalhostConn.Close()
+
                         If ComboBoxAction.Text = "ADD" Then
                             Dim TotalPrimary As Double = Primary + InvPrimary
                             Dim TotalSecondary As Double = Secondary + InvSecondary
@@ -128,13 +130,14 @@ Public Class StockAdjustment
                             Dim table = "loc_pos_inventory"
                             Dim fields = "`stock_primary`=" & TotalPrimary & ",`stock_secondary`= " & TotalSecondary & " , `stock_no_of_servings`= " & TotalNoOfServings & ", `date_modified` = '" & FullDate24HR() & "'"
                             Dim where = ""
+
                             If Origin = "Local" Then
                                 where = "formula_id = " & ID
                             Else
                                 where = "server_inventory_id = " & ID
                             End If
 
-                            AuditTrail.LogToAuditTrail("Transaction", "Stock Adjustment: New Stock " & SystemLogDesc, "Normal")
+                            AuditTrail.LogToAuditTrail("Transaction", "Stock Adjustment: New Stock " & ID, "Normal")
 
                             GLOBAL_FUNCTION_UPDATE(table, fields, where)
                         ElseIf ComboBoxAction.Text = "TRANSFER" Then
@@ -152,7 +155,7 @@ Public Class StockAdjustment
                             Else
                                 where = "server_inventory_id = " & ID
                             End If
-                            AuditTrail.LogToAuditTrail("Transaction", "Stock Adjustment: Stock Transfer " & SystemLogDesc & ", To: " & ComboBoxtransfer.Text, "Normal")
+                            AuditTrail.LogToAuditTrail("Transaction", "Stock Adjustment: Stock Transfer " & ID & ", To: " & ComboBoxtransfer.Text, "Normal")
 
                             GLOBAL_FUNCTION_UPDATE(table, fields, where)
                         ElseIf ComboBoxAction.Text = "DEDUCT" Then
@@ -170,7 +173,7 @@ Public Class StockAdjustment
                             Else
                                 where = "server_inventory_id = " & ID
                             End If
-                            AuditTrail.LogToAuditTrail("Transaction", "Stock Adjustment: Stock Remove " & SystemLogDesc, "Normal")
+                            AuditTrail.LogToAuditTrail("Transaction", "Stock Adjustment: Stock Remove " & ID, "Normal")
                             GLOBAL_FUNCTION_UPDATE(table, fields, where)
                         End If
                         TextBoxIPQuantity.Clear()
@@ -280,7 +283,7 @@ Public Class StockAdjustment
                 Dim msg = MessageBox.Show("Are you sure do you want to activate this category ?", "Activation", MessageBoxButtons.YesNo, MessageBoxIcon.Information)
                 If msg = DialogResult.Yes Then
                     Dim sql = "UPDATE `loc_transfer_data` SET `active`=@1 , `updated_at`=@2 WHERE transfer_id = " & DataGridViewDeactivatedReasonCat.SelectedRows(0).Cells(0).Value
-                    cmd = New MySqlCommand(sql, LocalhostConn)
+                    Dim cmd = New MySqlCommand(sql, LocalhostConn)
                     cmd.Parameters.Add("@1", MySqlDbType.Text).Value = "1"
                     cmd.Parameters.Add("@2", MySqlDbType.Text).Value = FullDate24HR()
                     cmd.ExecuteNonQuery()

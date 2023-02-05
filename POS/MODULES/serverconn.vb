@@ -5,14 +5,16 @@ Module serverlocalconn
             Dim ConnectionLocal = LocalhostConn()
             Dim sql = "SELECT `C_Server`, `C_Username`, `C_Password`, `C_Database`, `C_Port` FROM loc_settings WHERE settings_id = 1"
             Dim cmd As MySqlCommand = New MySqlCommand(sql, ConnectionLocal)
-            Dim da As MySqlDataAdapter = New MySqlDataAdapter(cmd)
-            Dim dt As DataTable = New DataTable
-            da.Fill(dt)
-            CloudConnectionString = "server=" & ConvertB64ToString(dt(0)(0)) &
-            ";userid= " & ConvertB64ToString(dt(0)(1)) &
-            ";password=" & ConvertB64ToString(dt(0)(2)) &
-            ";port=" & ConvertB64ToString(dt(0)(4)) &
-            ";database=" & ConvertB64ToString(dt(0)(3))
+
+            Using reader = cmd.ExecuteReader
+                If reader.HasRows Then
+                    While reader.Read
+                        CloudConnectionString = $"server={ConvertB64ToString(reader("C_Server").ToString)};userid={ConvertB64ToString(reader("C_Username").ToString)};password={ConvertB64ToString(reader("C_Password").ToString)};port={ConvertB64ToString(reader("C_Port").ToString)};database={ConvertB64ToString(reader("C_Database").ToString)};"
+                    End While
+                End If
+                reader.Close()
+            End Using
+
         Catch ex As Exception
         End Try
     End Sub

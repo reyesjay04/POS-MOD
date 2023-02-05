@@ -33,10 +33,12 @@ Module RetrieveModule
                 MessageBox.Show("Input password first", "Login Form", MessageBoxButtons.OK, MessageBoxIcon.Error)
                 Login.txtpassword.Focus()
             Else
+                Dim da As New MySqlDataAdapter
+                Dim dt As New DataTable
                 Try
                     cipherText = ConvertPassword(SourceString:=Login.txtpassword.Text)
-                    sql = "SELECT * FROM loc_users WHERE username = @Username AND password = @Password AND active = 1;"
-                    cmd = New MySqlCommand(sql, LocalhostConn())
+                    Dim sql = "SELECT * FROM loc_users WHERE username = @Username AND password = @Password AND active = 1;"
+                    Dim cmd = New MySqlCommand(sql, LocalhostConn())
                     With cmd
                         .Parameters.Clear()
                         .Parameters.AddWithValue("@Username", Login.txtusername.Text)
@@ -50,8 +52,6 @@ Module RetrieveModule
                         End While
                         reader.Close()
                     End With
-                    da = New MySqlDataAdapter
-                    dt = New DataTable
                     da.SelectCommand = cmd
                     da.Fill(dt)
                 Catch ex As MySqlException
@@ -247,8 +247,9 @@ Module RetrieveModule
                     Dim new_Button_product As New Button
                     Dim buttonname As String = row("product_sku")
                     Dim newlabel As New Label
+
                     productprice = row("product_price")
-                    productID = row("product_id")
+
                     With new_Button_product
                         .Name = buttonname
                         .Text = productprice
@@ -390,12 +391,13 @@ Module RetrieveModule
                 .ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.None
                 .SelectionMode = DataGridViewSelectionMode.FullRowSelect
             End With
+            cmd.Dispose()
+            da.Dispose()
         Catch ex As Exception
             AuditTrail.LogToAuditTrail("System", "ModRet/AsDatatable(): " & ex.ToString, "Critical")
         Finally
             ConnectionLocal.Close()
-            cmd.Dispose()
-            da.Dispose()
+
         End Try
         Return dttable
     End Function
@@ -421,12 +423,12 @@ Module RetrieveModule
                 .SelectionMode = DataGridViewSelectionMode.FullRowSelect
                 .rowtemplate.height = 30
             End With
+            cmd.Dispose()
+            da.Dispose()
         Catch ex As Exception
             AuditTrail.LogToAuditTrail("System", "ModRet/AsDatatableFontIncrease(): " & ex.ToString, "Critical")
         Finally
             ConnectionLocal.Close()
-            cmd.Dispose()
-            da.Dispose()
         End Try
         Return dttable
     End Function
@@ -490,6 +492,7 @@ Module RetrieveModule
         Try
             Dim ConnectionLocal As MySqlConnection = LocalhostConn()
             Dim ConnectionCloud As MySqlConnection = ServerCloudCon()
+
             Dim sql = "SELECT " + fields + " FROM " + table
 
             Dim cmd As MySqlCommand
@@ -498,20 +501,23 @@ Module RetrieveModule
             Else
                 cmd = New MySqlCommand(sql, ConnectionCloud)
             End If
-            Dim da As MySqlDataAdapter = New MySqlDataAdapter(cmd)
-            Dim dt As DataTable = New DataTable
+
+            Dim da As New MySqlDataAdapter(cmd)
+            Dim dt As New DataTable
+
             da.Fill(dt)
             With combobox
                 For i As Integer = 0 To dt.Rows.Count - 1 Step +1
                     .Items.Add(dt(i)(0))
                 Next
             End With
+
+            cmd.Dispose()
+            da.Dispose()
             ConnectionLocal.Close()
             ConnectionCloud.Close()
         Catch ex As Exception
             AuditTrail.LogToAuditTrail("System", "ModRet/GLOBAL_SELECT_ALL_FUNCTION_COMBOBOX(): " & ex.ToString, "Critical")
-        Finally
-            da.Dispose()
         End Try
     End Sub
     Public Function GLOBAL_SELECT_FUNCTION_RETURN(ByVal table As String, ByVal fields As String, ByVal values As String, ByVal returnvalrow As String)

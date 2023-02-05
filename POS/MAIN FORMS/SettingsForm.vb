@@ -512,106 +512,96 @@ Public Class SettingsForm
         rowindex()
         loadtransactions()
     End Sub
-    Dim productimage As String
     Dim grandtotal As Decimal
     Private Sub loadtransactions()
         Try
             Dim countrow As Integer = 0
             FlowLayoutPanel1.Controls.Clear()
-            Dim sql = "SELECT product_id, product_name, quantity, price, total, product_sku FROM loc_daily_transaction_details WHERE transaction_number = '" & DataGridViewITEMRETURN1.SelectedRows(0).Cells(0).Value.ToString & "' AND active = 1"
-            Dim query As String = "SELECT amountdue FROM loc_daily_transaction WHERE transaction_number = '" & DataGridViewITEMRETURN1.SelectedRows(0).Cells(0).Value.ToString & "'"
-            Dim cmdquery As MySqlCommand = New MySqlCommand(query, LocalhostConn())
-            Dim queryda As MySqlDataAdapter = New MySqlDataAdapter(cmdquery)
-            Dim dt1 As DataTable = New DataTable
-            queryda.Fill(dt1)
-            Using readerObj As MySqlDataReader = cmdquery.ExecuteReader
-                While readerObj.Read
-                    grandtotal = readerObj("amountdue")
-                End While
+            Dim ConnectionLocal As MySqlConnection = LocalhostConn()
+            Dim dt As New DataTable
+
+            Using mCmd = New MySqlCommand("", ConnectionLocal)
+                mCmd.Parameters.Clear()
+                mCmd.CommandText = "SELECT amountdue FROM loc_daily_transaction WHERE transaction_number = @TrxNo"
+                mCmd.Parameters.AddWithValue("@TrxNo", DataGridViewITEMRETURN1.SelectedRows(0).Cells(0).Value.ToString)
+                grandtotal = mCmd.ExecuteScalar
+
+                mCmd.CommandText = "SELECT ldt.product_id, ldt.product_name, ldt.quantity, ldt.price, ldt.total, ldt.product_sku , lap.product_image FROM loc_daily_transaction_details ldt 
+                                    LEFT JOIN loc_admin_products lap ON lap.product_id = ldt.product_id WHERE ldt.transaction_number = @TrxNo AND ldt.active = 1"
+
+                Using dReader As New MySqlDataAdapter(mCmd)
+                    dReader.Fill(dt)
+                End Using
+
+                mCmd.Dispose()
             End Using
-            cmd = New MySqlCommand
-            da = New MySqlDataAdapter(cmd)
-            dt = New DataTable()
-            With cmd
-                .CommandText = sql
-                .Connection = LocalhostConn()
-                da.Fill(dt)
-                For Each row As DataRow In dt.Rows
-                    countrow += 1
-                    Dim buttonname As String = row("product_name")
-                    sql = "select product_image from loc_admin_products where product_id = " & row("product_id")
-                    cmd = New MySqlCommand
-                    With cmd
-                        .CommandText = sql
-                        .Connection = LocalhostConn()
-                        Using readerobj As MySqlDataReader = cmd.ExecuteReader
-                            While readerobj.Read
-                                productimage = readerobj("product_image")
-                            End While
-                        End Using
+
+            For Each row As DataRow In dt.Rows
+                countrow += 1
+                Dim buttonname As String = row("product_name")
+                Dim drawproduct As New Panel
+                Dim myname As New Label
+                Dim myqty As New Label
+                Dim myprice As New Label
+                Dim mytotal As New Label
+                Dim myimage As New Button
+
+                With drawproduct
+                    .Name = buttonname
+                    .Text = buttonname
+                    .BorderStyle = BorderStyle.None
+                    .ForeColor = Color.White
+                    .Font = New Font("kelson sans normal", 10)
+                    .Width = 345
+                    .Height = 140
+                    .Cursor = Cursors.Hand
+                    With myname
+                        .Location = New Point(200, 10)
+                        .Text = row("product_sku")
+                        .ForeColor = Color.Black
+                        .Font = New Font("kelson sans normal", 10, FontStyle.Bold)
+                        .Width = 200
                     End With
-                    Dim drawproduct As New Panel
-                    Dim myname As New Label
-                    Dim myqty As New Label
-                    Dim myprice As New Label
-                    Dim mytotal As New Label
-                    Dim myimage As New Button
-                    With drawproduct
-                        .Name = buttonname
-                        .Text = buttonname
-                        .BorderStyle = BorderStyle.None
-                        .ForeColor = Color.White
+                    With myqty
                         .Font = New Font("kelson sans normal", 10)
-                        .Width = 345
-                        .Height = 140
-                        .Cursor = Cursors.Hand
-                        With myname
-                            .Location = New Point(200, 10)
-                            .Text = row("product_sku")
-                            .ForeColor = Color.Black
-                            .Font = New Font("kelson sans normal", 10, FontStyle.Bold)
-                            .Width = 200
-                        End With
-                        With myqty
-                            .Font = New Font("kelson sans normal", 10)
-                            .Location = New Point(200, 35)
-                            .Text = "Quantity: " & row("quantity")
-                            .ForeColor = Color.Black
-                            .Width = 200
-                        End With
-                        With myprice
-                            .Font = New Font("kelson sans normal", 10)
-                            .Location = New Point(200, 60)
-                            .Text = "Price: " & row("price")
-                            .ForeColor = Color.Black
-                            .Width = 200
-                        End With
-                        With mytotal
-                            .Font = New Font("kelson sans normal", 10)
-                            .Location = New Point(200, 85)
-                            .Text = "Total: " & row("total")
-                            .ForeColor = Color.Black
-                            .Width = 200
-                        End With
-                        With myimage
-                            .Location = New Point(5, 5)
-                            .Width = 166.5
-                            .Height = 120
-                            .BackgroundImage = Base64ToImage(productimage)
-                            .BackgroundImageLayout = ImageLayout.Stretch
-                            .FlatStyle = FlatStyle.Flat
-                            .FlatAppearance.BorderSize = 0
-                            .BackgroundImageLayout = ImageLayout.Stretch
-                        End With
+                        .Location = New Point(200, 35)
+                        .Text = "Quantity: " & row("quantity")
+                        .ForeColor = Color.Black
+                        .Width = 200
                     End With
-                    drawproduct.Controls.Add(myname)
-                    drawproduct.Controls.Add(myqty)
-                    drawproduct.Controls.Add(myprice)
-                    drawproduct.Controls.Add(mytotal)
-                    drawproduct.Controls.Add(myimage)
-                    FlowLayoutPanel1.Controls.Add(drawproduct)
-                Next
-                With DataGridViewITEMRETURN1
+                    With myprice
+                        .Font = New Font("kelson sans normal", 10)
+                        .Location = New Point(200, 60)
+                        .Text = "Price: " & row("price")
+                        .ForeColor = Color.Black
+                        .Width = 200
+                    End With
+                    With mytotal
+                        .Font = New Font("kelson sans normal", 10)
+                        .Location = New Point(200, 85)
+                        .Text = "Total: " & row("total")
+                        .ForeColor = Color.Black
+                        .Width = 200
+                    End With
+                    With myimage
+                        .Location = New Point(5, 5)
+                        .Width = 166.5
+                        .Height = 120
+                        .BackgroundImage = Base64ToImage(row("product_image"))
+                        .BackgroundImageLayout = ImageLayout.Stretch
+                        .FlatStyle = FlatStyle.Flat
+                        .FlatAppearance.BorderSize = 0
+                        .BackgroundImageLayout = ImageLayout.Stretch
+                    End With
+                End With
+                drawproduct.Controls.Add(myname)
+                drawproduct.Controls.Add(myqty)
+                drawproduct.Controls.Add(myprice)
+                drawproduct.Controls.Add(mytotal)
+                drawproduct.Controls.Add(myimage)
+                FlowLayoutPanel1.Controls.Add(drawproduct)
+            Next
+            With DataGridViewITEMRETURN1
                     LabelIRTRANSNUM.Text = .SelectedRows(0).Cells(0).Value.ToString
                     LabelIRSUBTOTAL.Text = countrow & " item(s)"
                     LabelIRTYPE.Text = .SelectedRows(0).Cells(9).Value.ToString
@@ -625,7 +615,7 @@ Public Class SettingsForm
                     LabelIRINPUTVAT.Text = .SelectedRows(0).Cells(8).Value.ToString
                     ButtonRefund.Text = "Refund php " & grandtotal
                 End With
-            End With
+
         Catch ex As Exception
             AuditTrail.LogToAuditTrail("System", "Settings/loadtransactions(): " & ex.ToString, "Critical")
         End Try
@@ -654,7 +644,7 @@ Public Class SettingsForm
                     If String.IsNullOrWhiteSpace(TextBoxIRREASON.Text) Then
                         MessageBox.Show("Reason for refund is required!", "Refund", MessageBoxButtons.OK, MessageBoxIcon.Information)
                     Else
-                        sql = "SELECT * FROM loc_daily_transaction WHERE created_at >= Now() - INTERVAL 10 MINUTE AND transaction_number = '" & transaction_num & "'"
+                        Dim sql = "SELECT * FROM loc_daily_transaction WHERE created_at >= Now() - INTERVAL 10 MINUTE AND transaction_number = '" & transaction_num & "'"
 
                         Dim cmd As MySqlCommand = New MySqlCommand(sql, LocalhostConn)
                         Dim da As MySqlDataAdapter = New MySqlDataAdapter(cmd)
@@ -1096,8 +1086,8 @@ Public Class SettingsForm
     End Sub
     Private Sub LoadCloudConn()
         Try
-            If ValidLocalConnection = True Then
-                sql = "SELECT C_Server, C_Username, C_Password, C_Database, C_Port FROM loc_settings WHERE settings_id = 1"
+            If ValidLocalConnection Then
+                Dim sql = "SELECT C_Server, C_Username, C_Password, C_Database, C_Port FROM loc_settings WHERE settings_id = 1"
                 Dim cmd As MySqlCommand = New MySqlCommand(sql, LocalhostConn)
                 Dim da As MySqlDataAdapter = New MySqlDataAdapter(cmd)
                 Dim dt As DataTable = New DataTable
@@ -1119,8 +1109,8 @@ Public Class SettingsForm
     End Sub
     Private Sub LoadPrintOptions()
         Try
-            If ValidLocalConnection = True Then
-                sql = "SELECT `printreceipt`, `reprintreceipt`, `printxzread`, `printreturns`, `printcount`, `printsalesreport` FROM loc_settings WHERE settings_id = 1"
+            If ValidLocalConnection Then
+                Dim sql = "SELECT `printreceipt`, `reprintreceipt`, `printxzread`, `printreturns`, `printcount`, `printsalesreport` FROM loc_settings WHERE settings_id = 1"
                 Dim cmd As MySqlCommand = New MySqlCommand(sql, LocalhostConn)
                 Dim da As MySqlDataAdapter = New MySqlDataAdapter(cmd)
                 Dim dt As DataTable = New DataTable
@@ -1224,8 +1214,8 @@ Public Class SettingsForm
     End Sub
     Private Sub LoadAdditionalSettings()
         Try
-            If ValidLocalConnection = True Then
-                sql = "SELECT A_Export_Path, A_Tax, A_SIFormat, A_Terminal_No, A_ZeroRated  FROM loc_settings WHERE settings_id = 1"
+            If ValidLocalConnection Then
+                Dim sql = "SELECT A_Export_Path, A_Tax, A_SIFormat, A_Terminal_No, A_ZeroRated  FROM loc_settings WHERE settings_id = 1"
                 Dim cmd As MySqlCommand = New MySqlCommand(sql, LocalhostConn)
                 Dim da As MySqlDataAdapter = New MySqlDataAdapter(cmd)
                 Dim dt As DataTable = New DataTable
@@ -1266,7 +1256,7 @@ Public Class SettingsForm
     Private Sub LoadDevInfo()
         Try
             If ValidLocalConnection = True Then
-                sql = "SELECT Dev_Company_Name, Dev_Address, Dev_Tin, Dev_Accr_No, Dev_Accr_Date_Issued, Dev_Accr_Valid_Until, Dev_PTU_No, Dev_PTU_Date_Issued, Dev_PTU_Valid_Until FROM loc_settings WHERE settings_id = 1"
+                Dim sql = "SELECT Dev_Company_Name, Dev_Address, Dev_Tin, Dev_Accr_No, Dev_Accr_Date_Issued, Dev_Accr_Valid_Until, Dev_PTU_No, Dev_PTU_Date_Issued, Dev_PTU_Valid_Until FROM loc_settings WHERE settings_id = 1"
                 Dim cmd As MySqlCommand = New MySqlCommand(sql, LocalhostConn)
                 Dim da As MySqlDataAdapter = New MySqlDataAdapter(cmd)
                 Dim dt = New DataTable
@@ -1328,8 +1318,8 @@ Public Class SettingsForm
 
     Private Sub LoadAutoBackup()
         Try
-            If ValidLocalConnection = True Then
-                sql = "SELECT S_BackupInterval, S_BackupDate FROM loc_settings WHERE settings_id = 1"
+            If ValidLocalConnection Then
+                Dim sql = "SELECT S_BackupInterval, S_BackupDate FROM loc_settings WHERE settings_id = 1"
                 Dim cmd As MySqlCommand = New MySqlCommand(sql, LocalhostConn)
                 Dim da As MySqlDataAdapter = New MySqlDataAdapter(cmd)
                 Dim dt = New DataTable
@@ -3003,7 +2993,7 @@ Public Class SettingsForm
                     Dim ConnectionLocal As MySqlConnection = LocalhostConn()
                     Dim ReturnBool As Boolean = False
                     Query = "SELECT counter_value FROM `tbcountertable` WHERE counter_id = 1"
-                    cmd = New MySqlCommand(Query, ConnectionLocal)
+                    Dim cmd = New MySqlCommand(Query, ConnectionLocal)
                     Using reader As MySqlDataReader = cmd.ExecuteReader
                         If reader.HasRows Then
                             ReturnBool = True
@@ -3531,7 +3521,7 @@ Public Class SettingsForm
     Private Sub LoadHeader()
         Try
             Dim ConnectionLocal As MySqlConnection = LocalhostConn()
-            Dim Sql As String = "SELECT * FROM loc_receipt WHERE status = 1 AND type = 'Header'"
+            Dim Sql As String = "SELECT * FROM loc_receipt WHERE status = 'Y' AND type = 'Header'"
             Dim Cmd As MySqlCommand = New MySqlCommand(Sql, ConnectionLocal)
             Dim da As MySqlDataAdapter = New MySqlDataAdapter(Cmd)
             Dim dt As DataTable = New DataTable
@@ -3556,7 +3546,7 @@ Public Class SettingsForm
                 Cmd.Parameters.Add("@1", MySqlDbType.Text).Value = Desc
                 Cmd.Parameters.Add("@2", MySqlDbType.Text).Value = ClientCrewID
                 Cmd.Parameters.Add("@3", MySqlDbType.Text).Value = FullDate24HR()
-                Cmd.Parameters.Add("@4", MySqlDbType.Text).Value = 1
+                Cmd.Parameters.Add("@4", MySqlDbType.Text).Value = "Y"
                 Cmd.ExecuteNonQuery()
                 ToolStripLabelHeaderStatus.Text = "Added successfully!"
                 ToolStripLabelHeaderStatus.ForeColor = Color.DarkGreen
@@ -3609,7 +3599,7 @@ Public Class SettingsForm
                 Dim Cmd As MySqlCommand = New MySqlCommand(Sql, ConnectionLocal)
                 Cmd.Parameters.Add("@1", MySqlDbType.Text).Value = ClientCrewID
                 Cmd.Parameters.Add("@2", MySqlDbType.Text).Value = FullDate24HR()
-                Cmd.Parameters.Add("@3", MySqlDbType.Text).Value = 0
+                Cmd.Parameters.Add("@3", MySqlDbType.Text).Value = "N"
                 Cmd.ExecuteNonQuery()
                 ToolStripLabelHeaderStatus.Text = "Deleted successfully!"
                 ToolStripLabelHeaderStatus.ForeColor = Color.DarkGreen
@@ -3637,7 +3627,7 @@ Public Class SettingsForm
     Private Sub LoadFooter()
         Try
             Dim ConnectionLocal As MySqlConnection = LocalhostConn()
-            Dim Sql As String = "SELECT * FROM loc_receipt WHERE status = 1 And type = 'Footer'"
+            Dim Sql As String = "SELECT * FROM loc_receipt WHERE status = 'Y' And type = 'Footer'"
             Dim Cmd As MySqlCommand = New MySqlCommand(Sql, ConnectionLocal)
             Dim da As MySqlDataAdapter = New MySqlDataAdapter(Cmd)
             Dim dt As DataTable = New DataTable
@@ -3661,7 +3651,7 @@ Public Class SettingsForm
                 Cmd.Parameters.Add("@1", MySqlDbType.Text).Value = Desc
                 Cmd.Parameters.Add("@2", MySqlDbType.Text).Value = ClientCrewID
                 Cmd.Parameters.Add("@3", MySqlDbType.Text).Value = FullDate24HR()
-                Cmd.Parameters.Add("@4", MySqlDbType.Text).Value = 1
+                Cmd.Parameters.Add("@4", MySqlDbType.Text).Value = "Y"
                 Cmd.ExecuteNonQuery()
                 ToolStripLabelFooterStatus.Text = "Added successfully!"
                 ToolStripLabelFooterStatus.ForeColor = Color.DarkGreen
@@ -3714,7 +3704,7 @@ Public Class SettingsForm
                 Dim Cmd As MySqlCommand = New MySqlCommand(Sql, ConnectionLocal)
                 Cmd.Parameters.Add("@1", MySqlDbType.Text).Value = ClientCrewID
                 Cmd.Parameters.Add("@2", MySqlDbType.Text).Value = FullDate24HR()
-                Cmd.Parameters.Add("@3", MySqlDbType.Text).Value = 0
+                Cmd.Parameters.Add("@3", MySqlDbType.Text).Value = "N"
                 Cmd.ExecuteNonQuery()
                 ToolStripLabelFooterStatus.Text = "Deleted successfully!"
                 ToolStripLabelFooterStatus.ForeColor = Color.DarkGreen
@@ -3741,7 +3731,7 @@ Public Class SettingsForm
     Private Sub LoadOthers()
         Try
             Dim ConnectionLocal As MySqlConnection = LocalhostConn()
-            Dim Sql As String = "SELECT * FROM loc_receipt WHERE status = 1 And type IN ('SALES-INVOICE','REFUND-HEADER','REFUND-FOOTER','OFFICIAL-INVOICE','OFFICIAL-REFUND')"
+            Dim Sql As String = "SELECT * FROM loc_receipt WHERE status = 'Y' And type IN ('SALES-INVOICE','REFUND-HEADER','REFUND-FOOTER','OFFICIAL-INVOICE','OFFICIAL-REFUND')"
             Dim Cmd As MySqlCommand = New MySqlCommand(Sql, ConnectionLocal)
             Dim da As MySqlDataAdapter = New MySqlDataAdapter(Cmd)
             Dim dt As DataTable = New DataTable
@@ -3766,7 +3756,7 @@ Public Class SettingsForm
     Private Sub LoadValidity()
         Try
             Dim ConnectionLocal As MySqlConnection = LocalhostConn()
-            Dim Sql As String = "SELECT * FROM loc_receipt WHERE status = 1 And type = 'VALIDITY'"
+            Dim Sql As String = "SELECT * FROM loc_receipt WHERE status = 'Y' And type = 'VALIDITY'"
             Dim Cmd As MySqlCommand = New MySqlCommand(Sql, ConnectionLocal)
             Dim da As MySqlDataAdapter = New MySqlDataAdapter(Cmd)
             Dim dt As DataTable = New DataTable
@@ -3790,7 +3780,7 @@ Public Class SettingsForm
                 Cmd.Parameters.Add("@1", MySqlDbType.Text).Value = Trim(TextBoxValidity.Text)
                 Cmd.Parameters.Add("@2", MySqlDbType.Text).Value = ClientCrewID
                 Cmd.Parameters.Add("@3", MySqlDbType.Text).Value = FullDate24HR()
-                Cmd.Parameters.Add("@4", MySqlDbType.Text).Value = 1
+                Cmd.Parameters.Add("@4", MySqlDbType.Text).Value = "Y"
                 Cmd.ExecuteNonQuery()
                 ToolStripLabelValidityStatus.Text = "Added successfully!"
                 ToolStripLabelValidityStatus.ForeColor = Color.DarkGreen
@@ -3843,7 +3833,7 @@ Public Class SettingsForm
                 Dim Cmd As MySqlCommand = New MySqlCommand(Sql, ConnectionLocal)
                 Cmd.Parameters.Add("@1", MySqlDbType.Text).Value = ClientCrewID
                 Cmd.Parameters.Add("@2", MySqlDbType.Text).Value = FullDate24HR()
-                Cmd.Parameters.Add("@3", MySqlDbType.Text).Value = 0
+                Cmd.Parameters.Add("@3", MySqlDbType.Text).Value = "N"
                 Cmd.ExecuteNonQuery()
                 ToolStripLabelValidityStatus.Text = "Deleted successfully!"
                 ToolStripLabelValidityStatus.ForeColor = Color.DarkGreen
@@ -3869,7 +3859,7 @@ Public Class SettingsForm
     Private Sub LoadRefundFooter()
         Try
             Dim ConnectionLocal As MySqlConnection = LocalhostConn()
-            Dim Sql As String = "SELECT * FROM loc_receipt WHERE status = 1 And type = 'REFUND-FOOTER'"
+            Dim Sql As String = "SELECT * FROM loc_receipt WHERE status = 'Y' And type = 'REFUND-FOOTER'"
             Dim Cmd As MySqlCommand = New MySqlCommand(Sql, ConnectionLocal)
             Dim da As MySqlDataAdapter = New MySqlDataAdapter(Cmd)
             Dim dt As DataTable = New DataTable
@@ -3893,7 +3883,7 @@ Public Class SettingsForm
                 Cmd.Parameters.Add("@1", MySqlDbType.Text).Value = Trim(TextBoxRefundFooter.Text)
                 Cmd.Parameters.Add("@2", MySqlDbType.Text).Value = ClientCrewID
                 Cmd.Parameters.Add("@3", MySqlDbType.Text).Value = FullDate24HR()
-                Cmd.Parameters.Add("@4", MySqlDbType.Text).Value = 1
+                Cmd.Parameters.Add("@4", MySqlDbType.Text).Value = "Y"
                 Cmd.ExecuteNonQuery()
                 ToolStripLabelRFooterStatus.Text = "Added successfully!"
                 ToolStripLabelRFooterStatus.ForeColor = Color.DarkGreen
@@ -3946,7 +3936,7 @@ Public Class SettingsForm
                 Dim Cmd As MySqlCommand = New MySqlCommand(Sql, ConnectionLocal)
                 Cmd.Parameters.Add("@1", MySqlDbType.Text).Value = ClientCrewID
                 Cmd.Parameters.Add("@2", MySqlDbType.Text).Value = FullDate24HR()
-                Cmd.Parameters.Add("@3", MySqlDbType.Text).Value = 0
+                Cmd.Parameters.Add("@3", MySqlDbType.Text).Value = "N"
                 Cmd.ExecuteNonQuery()
                 ToolStripLabelRFooterStatus.Text = "Deleted successfully!"
                 ToolStripLabelRFooterStatus.ForeColor = Color.DarkGreen
@@ -3975,7 +3965,7 @@ Public Class SettingsForm
             Dim Sql As String = ""
             Dim Cmd As MySqlCommand
             If Not String.IsNullOrEmpty(SALES) Then
-                Sql = "SELECT * FROM loc_receipt WHERE status = 1 AND type = 'SALES-INVOICE'"
+                Sql = "SELECT * FROM loc_receipt WHERE status = 'Y' AND type = 'SALES-INVOICE'"
                 Cmd = New MySqlCommand(Sql, ConnectionLocal)
                 Using reader As MySqlDataReader = Cmd.ExecuteReader
                     If reader.HasRows Then
@@ -4001,7 +3991,7 @@ Public Class SettingsForm
             End If
 
             If Not String.IsNullOrEmpty(RHeader) Then
-                Sql = "SELECT * FROM loc_receipt WHERE status = 1 AND type = 'REFUND-HEADER'"
+                Sql = "SELECT * FROM loc_receipt WHERE status = 'Y' AND type = 'REFUND-HEADER'"
                 Cmd = New MySqlCommand(Sql, ConnectionLocal)
                 Using reader As MySqlDataReader = Cmd.ExecuteReader
                     If reader.HasRows Then
@@ -4027,7 +4017,7 @@ Public Class SettingsForm
             End If
 
             If Not String.IsNullOrEmpty(OfficialInvoiceBody) Then
-                Sql = "SELECT * FROM loc_receipt WHERE status = 1 AND type = 'OFFICIAL-INVOICE'"
+                Sql = "SELECT * FROM loc_receipt WHERE status = 'Y' AND type = 'OFFICIAL-INVOICE'"
                 Cmd = New MySqlCommand(Sql, ConnectionLocal)
                 Using reader As MySqlDataReader = Cmd.ExecuteReader
                     If reader.HasRows Then
@@ -4053,7 +4043,7 @@ Public Class SettingsForm
             End If
 
             If Not String.IsNullOrEmpty(OfficialRefundBody) Then
-                Sql = "SELECT * FROM loc_receipt WHERE status = 1 AND type = 'OFFICIAL-REFUND'"
+                Sql = "SELECT * FROM loc_receipt WHERE status = 'Y' AND type = 'OFFICIAL-REFUND'"
                 Cmd = New MySqlCommand(Sql, ConnectionLocal)
                 Using reader As MySqlDataReader = Cmd.ExecuteReader
                     If reader.HasRows Then
@@ -4130,16 +4120,18 @@ Public Class SettingsForm
 
     Private Sub ButtonSaveZeroRated_Click(sender As Object, e As EventArgs) Handles ButtonSaveZeroRated.Click
         Try
-            If Double.Parse(TextBoxS_ZeroRated.Text) > 0 Then
-                Dim ConnectionLocal As MySqlConnection = LocalhostConn()
-                Dim Query As String = "UPDATE loc_settings SET S_ZeroRated_Tax = '" & Trim(TextBoxS_ZeroRated.Text) & "' WHERE settings_id = 1"
-                Dim Command As MySqlCommand = New MySqlCommand(Query, ConnectionLocal)
-                S_ZeroRated_Tax = Trim(TextBoxS_ZeroRated.Text)
-                Command.ExecuteNonQuery()
-                ConnectionLocal.Close()
-                Command.Dispose()
-            Else
-                MsgBox("Zero rated tax must be greater than zero")
+            If Not String.IsNullOrEmpty(TextBoxS_ZeroRated.Text) Then
+                If Double.Parse(TextBoxS_ZeroRated.Text) > 0 Then
+                    Dim ConnectionLocal As MySqlConnection = LocalhostConn()
+                    Dim Query As String = "UPDATE loc_settings SET S_ZeroRated_Tax = '" & Trim(TextBoxS_ZeroRated.Text) & "' WHERE settings_id = 1"
+                    Dim Command As MySqlCommand = New MySqlCommand(Query, ConnectionLocal)
+                    S_ZeroRated_Tax = Trim(TextBoxS_ZeroRated.Text)
+                    Command.ExecuteNonQuery()
+                    ConnectionLocal.Close()
+                    Command.Dispose()
+                Else
+                    MsgBox("Zero rated tax must be greater than zero")
+                End If
             End If
         Catch ex As Exception
             AuditTrail.LogToAuditTrail("System", "Settings/ButtonSaveZeroRated(): " & ex.ToString, "Critical")

@@ -68,10 +68,12 @@ Public Class AuditTrail
         End Try
     End Sub
 
-    Public Sub LogToAuditTrail(GroupName As String, Description As String, Severity As String)
+    Public Sub LogToAuditTrail(GroupName As String, Description As String, Severity As String, Optional ShowMessage As Boolean = True)
         Try
             If Severity = "Critical" Then
-                MessageBox.Show("An error occured. Please contact the System Administrator", "ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                If ShowMessage Then
+                    MessageBox.Show("An error occured. Please contact the System Administrator", "ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                End If
             End If
             If ValidLocalConnection Then
 

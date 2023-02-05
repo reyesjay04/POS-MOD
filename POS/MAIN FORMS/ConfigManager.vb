@@ -24,10 +24,9 @@ Public Class ConfigManager
     Dim TestModeIsOFF As Boolean = True
     Property listOfProducts As New List(Of ProductsCls)
     Property listOfReceiptInfo As New List(Of ReceiptInfoCls)
-    Property MasterList As MasterlistCls
-    Property MasterDevInfo As DevInfoCls
-    Property listOfOutlets As List(Of OutletsCls)
-    Property MasterOutletInfo As MasterlistOutletCls
+    Property MasterList As New MasterlistCls
+    Property listOfOutlets As New List(Of OutletsCls)
+    Property MasterOutletInfo As New MasterlistOutletCls
     Property AccountExist As Boolean
     Property ValidProductKey As Boolean
     Property SyncFrom As DateTime
@@ -253,7 +252,7 @@ Public Class ConfigManager
                 If ValidCloudConnection = True Then
                     Dim ConnectionLocal As MySqlConnection = TestLocalConnection()
                     fields = "C_Server, C_Username, C_Password, C_Database, C_Port"
-                    sql = "Select " & fields & " FROM " & table & " WHERE " & where
+                    Dim sql = "Select " & fields & " FROM " & table & " WHERE " & where
                     Dim cmd As MySqlCommand = New MySqlCommand(sql, ConnectionLocal)
                     Dim da As MySqlDataAdapter = New MySqlDataAdapter(cmd)
                     Dim dt As DataTable = New DataTable
@@ -310,7 +309,7 @@ Public Class ConfigManager
         Try
             If ValidLocalConnection Then
                 Dim ConnectionLocal As MySqlConnection = TestLocalConnection()
-                sql = "SELECT `printreceipt`, `reprintreceipt`, `printxzread`, `printreturns`, `printsalesreport` FROM loc_settings WHERE settings_id = 1"
+                Dim sql = "SELECT `printreceipt`, `reprintreceipt`, `printxzread`, `printreturns`, `printsalesreport` FROM loc_settings WHERE settings_id = 1"
                 Dim cmd As MySqlCommand = New MySqlCommand(sql, ConnectionLocal)
                 Dim da As MySqlDataAdapter = New MySqlDataAdapter(cmd)
                 Dim dt As DataTable = New DataTable
@@ -1071,7 +1070,7 @@ Public Class ConfigManager
                     thread1 = New Thread(AddressOf LoadAdditionalSettings)
                     thread1.Start()
                     threadList.Add(thread1)
-                    thread1 = New Thread(Sub() MasterDevInfo = LoadDevInfo())
+                    thread1 = New Thread(AddressOf LoadDevInfo)
                     thread1.Start()
                     threadList.Add(thread1)
                 End If
@@ -1465,7 +1464,7 @@ Public Class ConfigManager
                 If i = 60 Then
                     Select Case SetProdStats
                         Case SyncCls.ProductsSync.Stats.isReady, SyncCls.ProductsSync.Stats.isFetchInterrupt
-                            threadActivation = New Thread(Sub() listOfProducts = GetProducts())
+                            threadActivation = New Thread(Sub() GetProducts())
                             threadActivation.Start()
                             threadListActivation.Add(threadActivation)
                             For Each t In threadListActivation
@@ -1721,8 +1720,7 @@ Public Class ConfigManager
     End Sub
     Property SetProdStats As SyncCls.ProductsSync.Stats = SyncCls.ProductsSync.Stats.isReady
     Property SetProdLastIndex As New SyncCls.ProductsSync
-    Private Function GetProducts() As List(Of ProductsCls)
-        Dim listofProdcls As New List(Of ProductsCls)
+    Private Sub GetProducts()
         Try
             Dim SqlCount As String = ""
 
@@ -1760,7 +1758,13 @@ Public Class ConfigManager
                          .partners = Reader("partners").ToString,
                          .arrangement = Reader("arrangement").ToString
                         }
-                    listofProdcls.Add(nwListofProd)
+
+                    Dim fndProd = listOfProducts.Exists(Function(x) x.product_id = nwListofProd.product_id)
+
+                    If Not fndProd Then
+                        listOfProducts.Add(nwListofProd)
+                    End If
+
                     SetProdLastIndex.lastFetchID = Reader("product_id")
                 End While
                 CmdCount.Dispose()
@@ -1771,8 +1775,7 @@ Public Class ConfigManager
             rtbLogStats.Text += FullDate24HR() & " :    Failed(Fetching of products data)" & vbNewLine
             SetProdStats = SyncCls.ProductsSync.Stats.isFetchInterrupt
         End Try
-        Return listofProdcls
-    End Function
+    End Sub
     Property SetFormStats As SyncCls.FormulaSync.Stats = SyncCls.FormulaSync.Stats.isReady
     Property SetFormLastIndex As New SyncCls.FormulaSync
     Public Sub GetFormula()
@@ -1882,6 +1885,8 @@ Public Class ConfigManager
 #Region "INSERT DATA"
     Private Sub FillDgvProd()
         Try
+
+            DataGridViewPRODUCTS.Rows.Clear()
             For Each prod As ProductsCls In listOfProducts
                 With prod
                     DataGridViewPRODUCTS.Rows.Add(.product_id, .product_sku, .product_name, .formula_id, .product_barcode, .product_category, .product_price, .product_desc, .product_image, .product_status, .date_modified, .inventory_id, .addontype, .half_batch, .partners, .arrangement)

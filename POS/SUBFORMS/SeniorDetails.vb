@@ -189,4 +189,13 @@ Public Class SeniorDetails
 
         End Try
     End Sub
+
+    Private Sub TextBoxSENIORID_KeyPress(sender As Object, e As KeyPressEventArgs) Handles TextBoxSENIORID.KeyPress
+        Try
+            If InStr(DisallowedCharacters, e.KeyChar) > 0 Then
+                e.Handled = True
+            End If
+        Catch ex As Exception
+        End Try
+    End Sub
 End Class

@@ -334,7 +334,8 @@ Module publicfunctions
                 Dim DailySales = sum(table:="loc_daily_transaction_details WHERE created_at = '" & Format(Now(), "yyyy-MM-dd") & "' AND active = 1  ", tototal:="total")
                 EndingBalance = BeginningBalance + Val(DailySales)
             End If
-            AuditTrail.LogToAuditTrail("System", $"{LogType}: " & SystemLogDesc, "Normal")
+
+            AuditTrail.LogToAuditTrail("System", $"Ending Balance: {LogType} " & EndingBalance, "Normal")
             Shift = ""
             BeginningBalance = 0
             EndingBalance = 0
@@ -489,9 +490,9 @@ Module publicfunctions
                 Dim Sql As String
 
                 If VoidReturn Then
-                    Sql = "SELECT description, type FROM loc_receipt WHERE type IN ('Header','REFUND-HEADER','SALES-INVOICE','OFFICIAL-REFUND','VALIDITY') AND status = 1 ORDER BY id ASC"
+                    Sql = "SELECT description, type FROM loc_receipt WHERE type IN ('Header','REFUND-HEADER','SALES-INVOICE','OFFICIAL-REFUND','VALIDITY') AND status = 'Y' ORDER BY id ASC"
                 Else
-                    Sql = "SELECT description, type FROM loc_receipt WHERE type IN ('Header','SALES-INVOICE','OFFICIAL-INVOICE','VALIDITY') AND status = 1 ORDER BY id ASC"
+                    Sql = "SELECT description, type FROM loc_receipt WHERE type IN ('Header','SALES-INVOICE','OFFICIAL-INVOICE','VALIDITY') AND status = 'Y' ORDER BY id ASC"
                 End If
 
                 Dim Cmd As MySqlCommand = New MySqlCommand(Sql, ConnectionLocal)
@@ -607,7 +608,7 @@ Module publicfunctions
             Else
 
                 Dim ConnectionLocal As MySqlConnection = LocalhostConn()
-                Dim Sql As String = "SELECT description, type FROM loc_receipt WHERE type IN ('Header') AND status = 1 ORDER BY id ASC"
+                Dim Sql As String = "SELECT description, type FROM loc_receipt WHERE type IN ('Header') AND status = 'Y' ORDER BY id ASC"
                 Dim Cmd As MySqlCommand = New MySqlCommand(Sql, ConnectionLocal)
                 Dim Da As MySqlDataAdapter = New MySqlDataAdapter(Cmd)
                 Dim Dt As DataTable = New DataTable
@@ -1724,7 +1725,7 @@ Module publicfunctions
                 BodySpacing = 32
             End If
 
-            Dim sql As String = "SELECT * FROM loc_receipt WHERE type = 'Footer' AND status = 1"
+            Dim sql As String = "SELECT * FROM loc_receipt WHERE type = 'Footer' AND status = 'Y'"
             Dim cmd As MySqlCommand = New MySqlCommand(sql, LocalhostConn())
             Dim da As MySqlDataAdapter = New MySqlDataAdapter(cmd)
             Dim dt As DataTable = New DataTable
@@ -1738,7 +1739,7 @@ Module publicfunctions
                 RECEIPTLINECOUNT += 10
             Next
 
-            sql = "SELECT * FROM loc_receipt WHERE type = 'VALIDITY' AND status = 1"
+            sql = "SELECT * FROM loc_receipt WHERE type = 'VALIDITY' AND status = 'Y'"
             cmd = New MySqlCommand(sql, LocalhostConn())
             da = New MySqlDataAdapter(cmd)
             dt = New DataTable
@@ -1750,7 +1751,7 @@ Module publicfunctions
                 RECEIPTLINECOUNT += 10
             Next
             If VoidReturn Then
-                sql = "SELECT * FROM loc_receipt WHERE type = 'REFUND-FOOTER' AND status = 1"
+                sql = "SELECT * FROM loc_receipt WHERE type = 'REFUND-FOOTER' AND status = 'Y'"
                 cmd = New MySqlCommand(sql, LocalhostConn())
                 da = New MySqlDataAdapter(cmd)
                 dt = New DataTable

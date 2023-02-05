@@ -556,26 +556,26 @@ Public Class Loading
     End Sub
     Private Sub Temptinventory()
         Try
-            sql = "INSERT INTO loc_inv_temp_data (`store_id`, `formula_id`, `product_ingredients`, `sku`, `stock_primary`, `stock_secondary`, `stock_no_of_servings`, `stock_status`, `critical_limit`, `guid`, `created_at`)  SELECT `store_id`, `formula_id`, `product_ingredients`, `sku`, `stock_primary`, `stock_secondary`, `stock_no_of_servings`, `stock_status`, `critical_limit`, `guid` ,(SELECT date_add(date_add(LAST_DAY(NOW()),interval 1 DAY),interval -1 MONTH) AS first_day) FROM loc_pos_inventory"
-            cmd = New MySqlCommand
-            With cmd
-                .CommandText = sql
-                .Connection = LocalhostConn()
-                .ExecuteNonQuery()
-            End With
+            Dim ConnectionLocal As MySqlConnection = LocalhostConn()
+            Using mCmd = New MySqlCommand("", ConnectionLocal)
+                mCmd.CommandText = "INSERT INTO loc_inv_temp_data (`store_id`, `formula_id`, `product_ingredients`, `sku`, `stock_primary`, `stock_secondary`, `stock_no_of_servings`, `stock_status`, `critical_limit`, `guid`, `created_at`)  SELECT `store_id`, `formula_id`, `product_ingredients`, `sku`, `stock_primary`, `stock_secondary`, `stock_no_of_servings`, `stock_status`, `critical_limit`, `guid` ,(SELECT date_add(date_add(LAST_DAY(NOW()),interval 1 DAY),interval -1 MONTH) AS first_day) FROM loc_pos_inventory"
+                mCmd.ExecuteNonQuery()
+                mCmd.Dispose()
+            End Using
+            ConnectionLocal.Close()
         Catch ex As Exception
             AuditTrail.LogToAuditTrail("System", ex.ToString, "Critical")
         End Try
     End Sub
     Private Sub ResetStocks()
         Try
-            sql = "UPDATE `loc_pos_inventory` SET `stock_primary`= 0,`stock_secondary`= 0"
-            cmd = New MySqlCommand
-            With cmd
-                .CommandText = sql
-                .Connection = LocalhostConn()
-                .ExecuteNonQuery()
-            End With
+            Dim ConnectionLocal As MySqlConnection = LocalhostConn()
+            Using mCmd = New MySqlCommand("", ConnectionLocal)
+                mCmd.CommandText = "UPDATE `loc_pos_inventory` SET `stock_primary`= 0,`stock_secondary`= 0"
+                mCmd.ExecuteNonQuery()
+                mCmd.Dispose()
+            End Using
+            ConnectionLocal.Close()
         Catch ex As Exception
             AuditTrail.LogToAuditTrail("System", ex.ToString, "Critical")
         End Try

@@ -61,8 +61,9 @@ Module NEWPOSMODULE
                 End If
                 .TextBoxPRICE.Text = ProductPrice
 
+                GetFormulaid(ProductName, ProductPrice)
+                .TextBoxQTY.Text = 0
             End With
-            GetFormulaid(ProductName, ProductPrice)
         Catch ex As Exception
             AuditTrail.LogToAuditTrail("System", "ModNewPOS/new_product_button_click(): " & ex.ToString, "Critical")
         End Try
@@ -131,7 +132,7 @@ Module NEWPOSMODULE
             Dim CmdCriticalLimit As MySqlCommand
             Dim ListOfIngredients As String
             ListOfIngredients = ""
-            sql = "SELECT product_ingredients, critical_limit, stock_primary, stock_secondary, stock_no_of_servings FROM `loc_pos_inventory` WHERE stock_primary <= critical_limit AND server_inventory_id IN (" & Trim(formula_id) & ");"
+            Dim sql = "SELECT product_ingredients, critical_limit, stock_primary, stock_secondary, stock_no_of_servings FROM `loc_pos_inventory` WHERE stock_primary <= critical_limit AND server_inventory_id IN (" & Trim(formula_id) & ");"
             CmdCriticalLimit = New MySqlCommand(sql, ConnectionLocal)
             DataAdapterCriticalLimit = New MySqlDataAdapter(CmdCriticalLimit)
             DataTableCriticalLimit = New DataTable

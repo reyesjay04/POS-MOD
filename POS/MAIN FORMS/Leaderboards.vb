@@ -19,15 +19,23 @@ Public Class Leaderboards
             LoadChart("SELECT DATE_FORMAT(zreading, '%Y-%m-%d') as zreading, SUM(total) FROM loc_daily_transaction_details WHERE active = 1 AND DATE(CURRENT_DATE) - INTERVAL 7 DAY GROUP BY zreading DESC LIMIT 7", 0)
             LoadProducts()
             loadbestseller()
+
             LoadTransactions()
-            LoadExpenses()
-            LoadTransfers()
-            LoadLogs()
+
         Catch ex As Exception
             AuditTrail.LogToAuditTrail("System", "Leaderboards/Load(): " & ex.ToString, "Critical")
         End Try
     End Sub
-
+    Private Sub TabControl1_SelectedIndexChanged(sender As Object, e As EventArgs) Handles TabControl1.SelectedIndexChanged
+        Select Case TabControl1.SelectedIndex
+            Case 1
+                LoadExpenses()
+            Case 2
+                LoadTransfers()
+            Case 3
+                LoadLogs()
+        End Select
+    End Sub
     Dim threadList As List(Of Thread) = New List(Of Thread)
     Private Sub loadbestseller()
         Try
@@ -217,4 +225,6 @@ Public Class Leaderboards
             AuditTrail.LogToAuditTrail("System", "Leaderboards/RadioButtonLastYear: " & ex.ToString, "Critical")
         End Try
     End Sub
+
+
 End Class

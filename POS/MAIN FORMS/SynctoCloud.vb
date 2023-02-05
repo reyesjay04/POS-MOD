@@ -342,13 +342,12 @@ Public Class SynctoCloud
                     DataGridView2.Rows.Add(row("COUNT(*)"), tablename)
                 Next
             End If
-
+            cmd.Dispose()
+            da.Dispose()
         Catch ex As Exception
             AuditTrail.LogToAuditTrail("System", "Sync/countrows(): " & ex.ToString, "Critical")
         Finally
             ConLocal.Close()
-            cmd.Dispose()
-            da.Dispose()
         End Try
     End Sub
     Private Sub gettablesize(ByVal tablename As String)
@@ -362,12 +361,12 @@ Public Class SynctoCloud
             For Each row As DataRow In dt.Rows
                 DataGridView1.Rows.Add(row("Table"), row("Size in MB"))
             Next
+            cmd.Dispose()
+            da.Dispose()
         Catch ex As Exception
             AuditTrail.LogToAuditTrail("System", "Sync/gettablesize(): " & ex.ToString, "Critical")
         Finally
             ConLocal.Close()
-            cmd.Dispose()
-            da.Dispose()
         End Try
     End Sub
     Private Sub LoadData1()
@@ -1741,7 +1740,7 @@ Public Class SynctoCloud
                     Dim table = " loc_refund_return_details "
                     Dim where = " refret_id = '" & .Rows(i).Cells(0).Value.ToString & "'"
                     Dim fields = "`synced`='Y' "
-                    sql = "UPDATE " & table & " SET " & fields & " WHERE " & where
+                    Dim sql = "UPDATE " & table & " SET " & fields & " WHERE " & where
                     cmdloc = New MySqlCommand(sql, local)
                     cmdloc.ExecuteNonQuery()
                     '====================================================================
@@ -1814,7 +1813,7 @@ Public Class SynctoCloud
                     Dim table = " loc_admin_products "
                     Dim where = " product_id = '" & .Rows(i).Cells(0).Value.ToString & "'"
                     Dim fields = " `synced`='Y' "
-                    sql = "UPDATE " & table & " SET " & fields & " WHERE " & where
+                    Dim sql = "UPDATE " & table & " SET " & fields & " WHERE " & where
                     cmdloc = New MySqlCommand(sql, local)
                     cmdloc.ExecuteNonQuery()
                     '====================================================================
@@ -1881,7 +1880,7 @@ Public Class SynctoCloud
                     Dim table = " loc_transaction_mode_details "
                     Dim where = " mode_id = '" & .Rows(i).Cells(0).Value.ToString & "'"
                     Dim fields = " `synced`='Y' "
-                    sql = "UPDATE " & table & " SET " & fields & " WHERE " & where
+                    Dim sql = "UPDATE " & table & " SET " & fields & " WHERE " & where
                     cmdloc = New MySqlCommand(sql, local)
                     cmdloc.ExecuteNonQuery()
                     '====================================================================
@@ -1948,7 +1947,7 @@ Public Class SynctoCloud
                     Dim table = " loc_deposit "
                     Dim where = " dep_id = '" & .Rows(i).Cells(0).Value.ToString & "'"
                     Dim fields = " `synced`='Y' "
-                    sql = "UPDATE " & table & " SET " & fields & " WHERE " & where
+                    Dim sql = "UPDATE " & table & " SET " & fields & " WHERE " & where
                     cmdloc = New MySqlCommand(sql, local)
                     cmdloc.ExecuteNonQuery()
                     '====================================================================
@@ -2014,7 +2013,7 @@ Public Class SynctoCloud
                     Dim table = " loc_price_request_change "
                     Dim where = " request_id = " & .Rows(i).Cells(0).Value.ToString & ""
                     Dim fields = " `synced`='Y' "
-                    sql = "UPDATE " & table & " SET " & fields & " WHERE " & where
+                    Dim sql = "UPDATE " & table & " SET " & fields & " WHERE " & where
                     cmdloc = New MySqlCommand(sql, local)
                     cmdloc.ExecuteNonQuery()
                     '====================================================================
@@ -2087,7 +2086,7 @@ Public Class SynctoCloud
                     Dim table = " tbcoupon "
                     Dim where = " ID = " & .Rows(i).Cells(0).Value.ToString & ""
                     Dim fields = " `synced`='Y' "
-                    sql = "UPDATE " & table & " SET " & fields & " WHERE " & where
+                    Dim sql = "UPDATE " & table & " SET " & fields & " WHERE " & where
                     cmdloc = New MySqlCommand(sql, local)
                     cmdloc.ExecuteNonQuery()
                     '====================================================================
@@ -2151,7 +2150,7 @@ Public Class SynctoCloud
                     Dim table = " loc_send_bug_report "
                     Dim where = " bug_id = " & .Rows(i).Cells(0).Value.ToString & ""
                     Dim fields = " `synced`='Y' "
-                    sql = "UPDATE " & table & " SET " & fields & " WHERE " & where
+                    Dim sql = "UPDATE " & table & " SET " & fields & " WHERE " & where
                     cmdloc = New MySqlCommand(sql, local)
                     cmdloc.ExecuteNonQuery()
                     '====================================================================
@@ -2217,7 +2216,7 @@ Public Class SynctoCloud
                     Dim table = " loc_senior_details "
                     Dim where = " id = " & .Rows(i).Cells(0).Value.ToString & ""
                     Dim fields = " `synced`='Y' "
-                    sql = "UPDATE " & table & " SET " & fields & " WHERE " & where
+                    Dim sql = "UPDATE " & table & " SET " & fields & " WHERE " & where
                     cmdloc = New MySqlCommand(sql, local)
                     cmdloc.ExecuteNonQuery()
                     '====================================================================

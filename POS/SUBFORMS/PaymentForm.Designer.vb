@@ -105,9 +105,10 @@ Partial Class PaymentForm
         Me.Panel1.Controls.Add(Me.Label10)
         Me.Panel1.Controls.Add(Me.Label9)
         Me.Panel1.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.Panel1.Font = New System.Drawing.Font("Tahoma", 16.0!)
         Me.Panel1.Location = New System.Drawing.Point(0, 0)
         Me.Panel1.Name = "Panel1"
-        Me.Panel1.Size = New System.Drawing.Size(507, 529)
+        Me.Panel1.Size = New System.Drawing.Size(638, 677)
         Me.Panel1.TabIndex = 0
         '
         'TableLayoutPanel1
@@ -121,7 +122,7 @@ Partial Class PaymentForm
         Me.TableLayoutPanel1.Controls.Add(Me.ButtonEX200, 0, 3)
         Me.TableLayoutPanel1.Controls.Add(Me.ButtonEX500, 0, 2)
         Me.TableLayoutPanel1.Controls.Add(Me.ButtonEx1000, 0, 1)
-        Me.TableLayoutPanel1.Location = New System.Drawing.Point(367, 53)
+        Me.TableLayoutPanel1.Location = New System.Drawing.Point(474, 34)
         Me.TableLayoutPanel1.Name = "TableLayoutPanel1"
         Me.TableLayoutPanel1.RowCount = 7
         Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 14.28571!))
@@ -132,7 +133,7 @@ Partial Class PaymentForm
         Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 14.28571!))
         Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 14.28571!))
         Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20.0!))
-        Me.TableLayoutPanel1.Size = New System.Drawing.Size(133, 467)
+        Me.TableLayoutPanel1.Size = New System.Drawing.Size(157, 632)
         Me.TableLayoutPanel1.TabIndex = 256
         '
         'Button1
@@ -146,7 +147,7 @@ Partial Class PaymentForm
         Me.Button1.ForeColor = System.Drawing.Color.FromArgb(CType(CType(74, Byte), Integer), CType(CType(74, Byte), Integer), CType(CType(74, Byte), Integer))
         Me.Button1.Location = New System.Drawing.Point(3, 3)
         Me.Button1.Name = "Button1"
-        Me.Button1.Size = New System.Drawing.Size(127, 60)
+        Me.Button1.Size = New System.Drawing.Size(151, 84)
         Me.Button1.TabIndex = 257
         Me.Button1.Text = "EXACT"
         Me.Button1.UseVisualStyleBackColor = False
@@ -160,9 +161,9 @@ Partial Class PaymentForm
         Me.Button7.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.Button7.Font = New System.Drawing.Font("Tahoma", 11.25!)
         Me.Button7.ForeColor = System.Drawing.Color.FromArgb(CType(CType(74, Byte), Integer), CType(CType(74, Byte), Integer), CType(CType(74, Byte), Integer))
-        Me.Button7.Location = New System.Drawing.Point(3, 399)
+        Me.Button7.Location = New System.Drawing.Point(3, 543)
         Me.Button7.Name = "Button7"
-        Me.Button7.Size = New System.Drawing.Size(127, 65)
+        Me.Button7.Size = New System.Drawing.Size(151, 86)
         Me.Button7.TabIndex = 113
         Me.Button7.Text = "Customer Information"
         Me.Button7.UseVisualStyleBackColor = False
@@ -176,9 +177,9 @@ Partial Class PaymentForm
         Me.ButtonEX50.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.ButtonEX50.Font = New System.Drawing.Font("Tahoma", 11.25!)
         Me.ButtonEX50.ForeColor = System.Drawing.Color.FromArgb(CType(CType(74, Byte), Integer), CType(CType(74, Byte), Integer), CType(CType(74, Byte), Integer))
-        Me.ButtonEX50.Location = New System.Drawing.Point(3, 333)
+        Me.ButtonEX50.Location = New System.Drawing.Point(3, 453)
         Me.ButtonEX50.Name = "ButtonEX50"
-        Me.ButtonEX50.Size = New System.Drawing.Size(127, 60)
+        Me.ButtonEX50.Size = New System.Drawing.Size(151, 84)
         Me.ButtonEX50.TabIndex = 112
         Me.ButtonEX50.Text = "50"
         Me.ButtonEX50.UseVisualStyleBackColor = False
@@ -192,9 +193,9 @@ Partial Class PaymentForm
         Me.ButtonEX100.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.ButtonEX100.Font = New System.Drawing.Font("Tahoma", 11.25!)
         Me.ButtonEX100.ForeColor = System.Drawing.Color.FromArgb(CType(CType(74, Byte), Integer), CType(CType(74, Byte), Integer), CType(CType(74, Byte), Integer))
-        Me.ButtonEX100.Location = New System.Drawing.Point(3, 267)
+        Me.ButtonEX100.Location = New System.Drawing.Point(3, 363)
         Me.ButtonEX100.Name = "ButtonEX100"
-        Me.ButtonEX100.Size = New System.Drawing.Size(127, 60)
+        Me.ButtonEX100.Size = New System.Drawing.Size(151, 84)
         Me.ButtonEX100.TabIndex = 111
         Me.ButtonEX100.Text = "100"
         Me.ButtonEX100.UseVisualStyleBackColor = False
@@ -208,9 +209,9 @@ Partial Class PaymentForm
         Me.ButtonEX200.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.ButtonEX200.Font = New System.Drawing.Font("Tahoma", 11.25!)
         Me.ButtonEX200.ForeColor = System.Drawing.Color.FromArgb(CType(CType(74, Byte), Integer), CType(CType(74, Byte), Integer), CType(CType(74, Byte), Integer))
-        Me.ButtonEX200.Location = New System.Drawing.Point(3, 201)
+        Me.ButtonEX200.Location = New System.Drawing.Point(3, 273)
         Me.ButtonEX200.Name = "ButtonEX200"
-        Me.ButtonEX200.Size = New System.Drawing.Size(127, 60)
+        Me.ButtonEX200.Size = New System.Drawing.Size(151, 84)
         Me.ButtonEX200.TabIndex = 110
         Me.ButtonEX200.Text = "200"
         Me.ButtonEX200.UseVisualStyleBackColor = False
@@ -224,9 +225,9 @@ Partial Class PaymentForm
         Me.ButtonEX500.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.ButtonEX500.Font = New System.Drawing.Font("Tahoma", 11.25!)
         Me.ButtonEX500.ForeColor = System.Drawing.Color.FromArgb(CType(CType(74, Byte), Integer), CType(CType(74, Byte), Integer), CType(CType(74, Byte), Integer))
-        Me.ButtonEX500.Location = New System.Drawing.Point(3, 135)
+        Me.ButtonEX500.Location = New System.Drawing.Point(3, 183)
         Me.ButtonEX500.Name = "ButtonEX500"
-        Me.ButtonEX500.Size = New System.Drawing.Size(127, 60)
+        Me.ButtonEX500.Size = New System.Drawing.Size(151, 84)
         Me.ButtonEX500.TabIndex = 109
         Me.ButtonEX500.Text = "500"
         Me.ButtonEX500.UseVisualStyleBackColor = False
@@ -240,9 +241,9 @@ Partial Class PaymentForm
         Me.ButtonEx1000.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.ButtonEx1000.Font = New System.Drawing.Font("Tahoma", 11.25!)
         Me.ButtonEx1000.ForeColor = System.Drawing.Color.FromArgb(CType(CType(74, Byte), Integer), CType(CType(74, Byte), Integer), CType(CType(74, Byte), Integer))
-        Me.ButtonEx1000.Location = New System.Drawing.Point(3, 69)
+        Me.ButtonEx1000.Location = New System.Drawing.Point(3, 93)
         Me.ButtonEx1000.Name = "ButtonEx1000"
-        Me.ButtonEx1000.Size = New System.Drawing.Size(127, 60)
+        Me.ButtonEx1000.Size = New System.Drawing.Size(151, 84)
         Me.ButtonEx1000.TabIndex = 108
         Me.ButtonEx1000.Text = "1000"
         Me.ButtonEx1000.UseVisualStyleBackColor = False
@@ -252,22 +253,22 @@ Partial Class PaymentForm
         Me.TextBoxDiscType.BackColor = System.Drawing.Color.White
         Me.TextBoxDiscType.BorderStyle = System.Windows.Forms.BorderStyle.None
         Me.TextBoxDiscType.Enabled = False
-        Me.TextBoxDiscType.Font = New System.Drawing.Font("Tahoma", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.TextBoxDiscType.Font = New System.Drawing.Font("Tahoma", 16.0!)
         Me.TextBoxDiscType.ForeColor = System.Drawing.Color.DimGray
-        Me.TextBoxDiscType.Location = New System.Drawing.Point(9, 142)
+        Me.TextBoxDiscType.Location = New System.Drawing.Point(12, 160)
         Me.TextBoxDiscType.Name = "TextBoxDiscType"
         Me.TextBoxDiscType.ReadOnly = True
-        Me.TextBoxDiscType.Size = New System.Drawing.Size(352, 20)
+        Me.TextBoxDiscType.Size = New System.Drawing.Size(456, 26)
         Me.TextBoxDiscType.TabIndex = 113
         Me.TextBoxDiscType.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         '
         'Label5
         '
         Me.Label5.AutoSize = True
-        Me.Label5.Font = New System.Drawing.Font("Tahoma", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label5.Location = New System.Drawing.Point(6, 121)
+        Me.Label5.Font = New System.Drawing.Font("Tahoma", 16.25!)
+        Me.Label5.Location = New System.Drawing.Point(7, 130)
         Me.Label5.Name = "Label5"
-        Me.Label5.Size = New System.Drawing.Size(102, 18)
+        Me.Label5.Size = New System.Drawing.Size(150, 27)
         Me.Label5.TabIndex = 112
         Me.Label5.Text = "Discount Type"
         '
@@ -279,9 +280,9 @@ Partial Class PaymentForm
         Me.Button2.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.Button2.Font = New System.Drawing.Font("Tahoma", 11.25!)
         Me.Button2.ForeColor = System.Drawing.Color.FromArgb(CType(CType(74, Byte), Integer), CType(CType(74, Byte), Integer), CType(CType(74, Byte), Integer))
-        Me.Button2.Location = New System.Drawing.Point(181, 238)
+        Me.Button2.Location = New System.Drawing.Point(240, 290)
         Me.Button2.Name = "Button2"
-        Me.Button2.Size = New System.Drawing.Size(180, 51)
+        Me.Button2.Size = New System.Drawing.Size(225, 70)
         Me.Button2.TabIndex = 111
         Me.Button2.Text = "⟵Backspace"
         Me.Button2.UseVisualStyleBackColor = False
@@ -294,9 +295,9 @@ Partial Class PaymentForm
         Me.ButtonClear.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.ButtonClear.Font = New System.Drawing.Font("Tahoma", 11.25!)
         Me.ButtonClear.ForeColor = System.Drawing.Color.FromArgb(CType(CType(74, Byte), Integer), CType(CType(74, Byte), Integer), CType(CType(74, Byte), Integer))
-        Me.ButtonClear.Location = New System.Drawing.Point(9, 238)
+        Me.ButtonClear.Location = New System.Drawing.Point(8, 290)
         Me.ButtonClear.Name = "ButtonClear"
-        Me.ButtonClear.Size = New System.Drawing.Size(166, 51)
+        Me.ButtonClear.Size = New System.Drawing.Size(226, 70)
         Me.ButtonClear.TabIndex = 110
         Me.ButtonClear.Text = "Clear"
         Me.ButtonClear.UseVisualStyleBackColor = False
@@ -306,12 +307,12 @@ Partial Class PaymentForm
         Me.TextBoxTransactionType.BackColor = System.Drawing.Color.White
         Me.TextBoxTransactionType.BorderStyle = System.Windows.Forms.BorderStyle.None
         Me.TextBoxTransactionType.Enabled = False
-        Me.TextBoxTransactionType.Font = New System.Drawing.Font("Tahoma", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.TextBoxTransactionType.Font = New System.Drawing.Font("Tahoma", 16.0!)
         Me.TextBoxTransactionType.ForeColor = System.Drawing.Color.DimGray
-        Me.TextBoxTransactionType.Location = New System.Drawing.Point(9, 91)
+        Me.TextBoxTransactionType.Location = New System.Drawing.Point(12, 100)
         Me.TextBoxTransactionType.Name = "TextBoxTransactionType"
         Me.TextBoxTransactionType.ReadOnly = True
-        Me.TextBoxTransactionType.Size = New System.Drawing.Size(352, 20)
+        Me.TextBoxTransactionType.Size = New System.Drawing.Size(454, 26)
         Me.TextBoxTransactionType.TabIndex = 109
         Me.TextBoxTransactionType.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         '
@@ -323,9 +324,9 @@ Partial Class PaymentForm
         Me.ButtonNo00.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.ButtonNo00.Font = New System.Drawing.Font("Tahoma", 11.25!)
         Me.ButtonNo00.ForeColor = System.Drawing.Color.FromArgb(CType(CType(74, Byte), Integer), CType(CType(74, Byte), Integer), CType(CType(74, Byte), Integer))
-        Me.ButtonNo00.Location = New System.Drawing.Point(181, 466)
+        Me.ButtonNo00.Location = New System.Drawing.Point(240, 594)
         Me.ButtonNo00.Name = "ButtonNo00"
-        Me.ButtonNo00.Size = New System.Drawing.Size(80, 51)
+        Me.ButtonNo00.Size = New System.Drawing.Size(110, 70)
         Me.ButtonNo00.TabIndex = 82
         Me.ButtonNo00.Text = "00"
         Me.ButtonNo00.UseVisualStyleBackColor = False
@@ -338,9 +339,9 @@ Partial Class PaymentForm
         Me.Buttondot.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.Buttondot.Font = New System.Drawing.Font("Tahoma", 11.25!)
         Me.Buttondot.ForeColor = System.Drawing.Color.FromArgb(CType(CType(74, Byte), Integer), CType(CType(74, Byte), Integer), CType(CType(74, Byte), Integer))
-        Me.Buttondot.Location = New System.Drawing.Point(9, 466)
+        Me.Buttondot.Location = New System.Drawing.Point(8, 594)
         Me.Buttondot.Name = "Buttondot"
-        Me.Buttondot.Size = New System.Drawing.Size(80, 51)
+        Me.Buttondot.Size = New System.Drawing.Size(110, 70)
         Me.Buttondot.TabIndex = 84
         Me.Buttondot.Text = "."
         Me.Buttondot.UseVisualStyleBackColor = False
@@ -348,20 +349,20 @@ Partial Class PaymentForm
         'Label4
         '
         Me.Label4.AutoSize = True
-        Me.Label4.Font = New System.Drawing.Font("Tahoma", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label4.Location = New System.Drawing.Point(6, 67)
+        Me.Label4.Font = New System.Drawing.Font("Tahoma", 16.25!)
+        Me.Label4.Location = New System.Drawing.Point(7, 70)
         Me.Label4.Name = "Label4"
-        Me.Label4.Size = New System.Drawing.Size(123, 18)
+        Me.Label4.Size = New System.Drawing.Size(180, 27)
         Me.Label4.TabIndex = 108
         Me.Label4.Text = "Transaction Type"
         '
         'Label3
         '
         Me.Label3.AutoSize = True
-        Me.Label3.Font = New System.Drawing.Font("Tahoma", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label3.Location = New System.Drawing.Point(264, 172)
+        Me.Label3.Font = New System.Drawing.Font("Tahoma", 16.25!)
+        Me.Label3.Location = New System.Drawing.Point(240, 198)
         Me.Label3.Name = "Label3"
-        Me.Label3.Size = New System.Drawing.Size(57, 18)
+        Me.Label3.Size = New System.Drawing.Size(85, 27)
         Me.Label3.TabIndex = 107
         Me.Label3.Text = "Change"
         '
@@ -373,9 +374,9 @@ Partial Class PaymentForm
         Me.ButtonNo0.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.ButtonNo0.Font = New System.Drawing.Font("Tahoma", 11.25!)
         Me.ButtonNo0.ForeColor = System.Drawing.Color.FromArgb(CType(CType(74, Byte), Integer), CType(CType(74, Byte), Integer), CType(CType(74, Byte), Integer))
-        Me.ButtonNo0.Location = New System.Drawing.Point(95, 466)
+        Me.ButtonNo0.Location = New System.Drawing.Point(124, 594)
         Me.ButtonNo0.Name = "ButtonNo0"
-        Me.ButtonNo0.Size = New System.Drawing.Size(80, 51)
+        Me.ButtonNo0.Size = New System.Drawing.Size(110, 70)
         Me.ButtonNo0.TabIndex = 81
         Me.ButtonNo0.Text = "0"
         Me.ButtonNo0.UseVisualStyleBackColor = False
@@ -383,10 +384,10 @@ Partial Class PaymentForm
         'Label2
         '
         Me.Label2.AutoSize = True
-        Me.Label2.Font = New System.Drawing.Font("Tahoma", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label2.Location = New System.Drawing.Point(6, 7)
+        Me.Label2.Font = New System.Drawing.Font("Tahoma", 16.25!)
+        Me.Label2.Location = New System.Drawing.Point(7, 4)
         Me.Label2.Name = "Label2"
-        Me.Label2.Size = New System.Drawing.Size(114, 18)
+        Me.Label2.Size = New System.Drawing.Size(169, 27)
         Me.Label2.TabIndex = 106
         Me.Label2.Text = "Amount Payable"
         '
@@ -398,9 +399,9 @@ Partial Class PaymentForm
         Me.ButtonNo3.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.ButtonNo3.Font = New System.Drawing.Font("Tahoma", 11.25!)
         Me.ButtonNo3.ForeColor = System.Drawing.Color.FromArgb(CType(CType(74, Byte), Integer), CType(CType(74, Byte), Integer), CType(CType(74, Byte), Integer))
-        Me.ButtonNo3.Location = New System.Drawing.Point(181, 409)
+        Me.ButtonNo3.Location = New System.Drawing.Point(240, 518)
         Me.ButtonNo3.Name = "ButtonNo3"
-        Me.ButtonNo3.Size = New System.Drawing.Size(80, 51)
+        Me.ButtonNo3.Size = New System.Drawing.Size(110, 70)
         Me.ButtonNo3.TabIndex = 80
         Me.ButtonNo3.Text = "3"
         Me.ButtonNo3.UseVisualStyleBackColor = False
@@ -413,9 +414,9 @@ Partial Class PaymentForm
         Me.ButtonNo2.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.ButtonNo2.Font = New System.Drawing.Font("Tahoma", 11.25!)
         Me.ButtonNo2.ForeColor = System.Drawing.Color.FromArgb(CType(CType(74, Byte), Integer), CType(CType(74, Byte), Integer), CType(CType(74, Byte), Integer))
-        Me.ButtonNo2.Location = New System.Drawing.Point(95, 409)
+        Me.ButtonNo2.Location = New System.Drawing.Point(124, 518)
         Me.ButtonNo2.Name = "ButtonNo2"
-        Me.ButtonNo2.Size = New System.Drawing.Size(80, 51)
+        Me.ButtonNo2.Size = New System.Drawing.Size(110, 70)
         Me.ButtonNo2.TabIndex = 79
         Me.ButtonNo2.Text = "2"
         Me.ButtonNo2.UseVisualStyleBackColor = False
@@ -423,10 +424,10 @@ Partial Class PaymentForm
         'Label1
         '
         Me.Label1.AutoSize = True
-        Me.Label1.Font = New System.Drawing.Font("Tahoma", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label1.Location = New System.Drawing.Point(6, 172)
+        Me.Label1.Font = New System.Drawing.Font("Tahoma", 16.25!)
+        Me.Label1.Location = New System.Drawing.Point(7, 198)
         Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(127, 18)
+        Me.Label1.Size = New System.Drawing.Size(186, 27)
         Me.Label1.TabIndex = 105
         Me.Label1.Text = "Amount Tendered"
         '
@@ -438,9 +439,9 @@ Partial Class PaymentForm
         Me.ButtonNo1.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.ButtonNo1.Font = New System.Drawing.Font("Tahoma", 11.25!)
         Me.ButtonNo1.ForeColor = System.Drawing.Color.FromArgb(CType(CType(74, Byte), Integer), CType(CType(74, Byte), Integer), CType(CType(74, Byte), Integer))
-        Me.ButtonNo1.Location = New System.Drawing.Point(9, 409)
+        Me.ButtonNo1.Location = New System.Drawing.Point(8, 518)
         Me.ButtonNo1.Name = "ButtonNo1"
-        Me.ButtonNo1.Size = New System.Drawing.Size(80, 51)
+        Me.ButtonNo1.Size = New System.Drawing.Size(110, 70)
         Me.ButtonNo1.TabIndex = 78
         Me.ButtonNo1.Text = "1"
         Me.ButtonNo1.UseVisualStyleBackColor = False
@@ -452,9 +453,9 @@ Partial Class PaymentForm
         Me.ButtonESC.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.ButtonESC.Font = New System.Drawing.Font("Tahoma", 11.25!)
         Me.ButtonESC.ForeColor = System.Drawing.Color.White
-        Me.ButtonESC.Location = New System.Drawing.Point(267, 466)
+        Me.ButtonESC.Location = New System.Drawing.Point(355, 594)
         Me.ButtonESC.Name = "ButtonESC"
-        Me.ButtonESC.Size = New System.Drawing.Size(94, 51)
+        Me.ButtonESC.Size = New System.Drawing.Size(110, 70)
         Me.ButtonESC.TabIndex = 98
         Me.ButtonESC.Text = "Cancel"
         Me.ButtonESC.UseVisualStyleBackColor = False
@@ -467,9 +468,9 @@ Partial Class PaymentForm
         Me.ButtonNo5.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.ButtonNo5.Font = New System.Drawing.Font("Tahoma", 11.25!)
         Me.ButtonNo5.ForeColor = System.Drawing.Color.FromArgb(CType(CType(74, Byte), Integer), CType(CType(74, Byte), Integer), CType(CType(74, Byte), Integer))
-        Me.ButtonNo5.Location = New System.Drawing.Point(95, 352)
+        Me.ButtonNo5.Location = New System.Drawing.Point(124, 442)
         Me.ButtonNo5.Name = "ButtonNo5"
-        Me.ButtonNo5.Size = New System.Drawing.Size(80, 51)
+        Me.ButtonNo5.Size = New System.Drawing.Size(110, 70)
         Me.ButtonNo5.TabIndex = 76
         Me.ButtonNo5.Text = "5"
         Me.ButtonNo5.UseVisualStyleBackColor = False
@@ -482,9 +483,9 @@ Partial Class PaymentForm
         Me.ButtonNo6.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.ButtonNo6.Font = New System.Drawing.Font("Tahoma", 11.25!)
         Me.ButtonNo6.ForeColor = System.Drawing.Color.FromArgb(CType(CType(74, Byte), Integer), CType(CType(74, Byte), Integer), CType(CType(74, Byte), Integer))
-        Me.ButtonNo6.Location = New System.Drawing.Point(181, 352)
+        Me.ButtonNo6.Location = New System.Drawing.Point(240, 442)
         Me.ButtonNo6.Name = "ButtonNo6"
-        Me.ButtonNo6.Size = New System.Drawing.Size(80, 51)
+        Me.ButtonNo6.Size = New System.Drawing.Size(110, 70)
         Me.ButtonNo6.TabIndex = 74
         Me.ButtonNo6.Text = "6"
         Me.ButtonNo6.UseVisualStyleBackColor = False
@@ -496,9 +497,9 @@ Partial Class PaymentForm
         Me.ButtonSubmitPayment.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.ButtonSubmitPayment.Font = New System.Drawing.Font("Tahoma", 11.25!)
         Me.ButtonSubmitPayment.ForeColor = System.Drawing.Color.White
-        Me.ButtonSubmitPayment.Location = New System.Drawing.Point(267, 295)
+        Me.ButtonSubmitPayment.Location = New System.Drawing.Point(355, 366)
         Me.ButtonSubmitPayment.Name = "ButtonSubmitPayment"
-        Me.ButtonSubmitPayment.Size = New System.Drawing.Size(94, 165)
+        Me.ButtonSubmitPayment.Size = New System.Drawing.Size(110, 222)
         Me.ButtonSubmitPayment.TabIndex = 97
         Me.ButtonSubmitPayment.Text = "Check Out"
         Me.ButtonSubmitPayment.UseVisualStyleBackColor = False
@@ -511,9 +512,9 @@ Partial Class PaymentForm
         Me.ButtonNo4.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.ButtonNo4.Font = New System.Drawing.Font("Tahoma", 11.25!)
         Me.ButtonNo4.ForeColor = System.Drawing.Color.FromArgb(CType(CType(74, Byte), Integer), CType(CType(74, Byte), Integer), CType(CType(74, Byte), Integer))
-        Me.ButtonNo4.Location = New System.Drawing.Point(9, 352)
+        Me.ButtonNo4.Location = New System.Drawing.Point(8, 442)
         Me.ButtonNo4.Name = "ButtonNo4"
-        Me.ButtonNo4.Size = New System.Drawing.Size(80, 51)
+        Me.ButtonNo4.Size = New System.Drawing.Size(110, 70)
         Me.ButtonNo4.TabIndex = 75
         Me.ButtonNo4.Text = "4"
         Me.ButtonNo4.UseVisualStyleBackColor = False
@@ -523,12 +524,12 @@ Partial Class PaymentForm
         Me.TextBoxCHANGE.BackColor = System.Drawing.Color.White
         Me.TextBoxCHANGE.BorderStyle = System.Windows.Forms.BorderStyle.None
         Me.TextBoxCHANGE.Enabled = False
-        Me.TextBoxCHANGE.Font = New System.Drawing.Font("Tahoma", 18.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.TextBoxCHANGE.Font = New System.Drawing.Font("Tahoma", 20.0!, System.Drawing.FontStyle.Bold)
         Me.TextBoxCHANGE.ForeColor = System.Drawing.Color.DimGray
-        Me.TextBoxCHANGE.Location = New System.Drawing.Point(231, 195)
+        Me.TextBoxCHANGE.Location = New System.Drawing.Point(245, 228)
         Me.TextBoxCHANGE.Name = "TextBoxCHANGE"
         Me.TextBoxCHANGE.ReadOnly = True
-        Me.TextBoxCHANGE.Size = New System.Drawing.Size(130, 29)
+        Me.TextBoxCHANGE.Size = New System.Drawing.Size(220, 33)
         Me.TextBoxCHANGE.TabIndex = 96
         Me.TextBoxCHANGE.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         '
@@ -540,9 +541,9 @@ Partial Class PaymentForm
         Me.ButtonNo8.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.ButtonNo8.Font = New System.Drawing.Font("Tahoma", 11.25!)
         Me.ButtonNo8.ForeColor = System.Drawing.Color.FromArgb(CType(CType(74, Byte), Integer), CType(CType(74, Byte), Integer), CType(CType(74, Byte), Integer))
-        Me.ButtonNo8.Location = New System.Drawing.Point(95, 295)
+        Me.ButtonNo8.Location = New System.Drawing.Point(124, 366)
         Me.ButtonNo8.Name = "ButtonNo8"
-        Me.ButtonNo8.Size = New System.Drawing.Size(80, 51)
+        Me.ButtonNo8.Size = New System.Drawing.Size(110, 70)
         Me.ButtonNo8.TabIndex = 73
         Me.ButtonNo8.Text = "8"
         Me.ButtonNo8.UseVisualStyleBackColor = False
@@ -555,9 +556,9 @@ Partial Class PaymentForm
         Me.ButtonNo9.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.ButtonNo9.Font = New System.Drawing.Font("Tahoma", 11.25!)
         Me.ButtonNo9.ForeColor = System.Drawing.Color.FromArgb(CType(CType(74, Byte), Integer), CType(CType(74, Byte), Integer), CType(CType(74, Byte), Integer))
-        Me.ButtonNo9.Location = New System.Drawing.Point(181, 295)
+        Me.ButtonNo9.Location = New System.Drawing.Point(240, 366)
         Me.ButtonNo9.Name = "ButtonNo9"
-        Me.ButtonNo9.Size = New System.Drawing.Size(80, 51)
+        Me.ButtonNo9.Size = New System.Drawing.Size(110, 70)
         Me.ButtonNo9.TabIndex = 77
         Me.ButtonNo9.Text = "9"
         Me.ButtonNo9.UseVisualStyleBackColor = False
@@ -567,12 +568,12 @@ Partial Class PaymentForm
         Me.TextBoxTOTALPAY.BackColor = System.Drawing.Color.White
         Me.TextBoxTOTALPAY.BorderStyle = System.Windows.Forms.BorderStyle.None
         Me.TextBoxTOTALPAY.Enabled = False
-        Me.TextBoxTOTALPAY.Font = New System.Drawing.Font("Tahoma", 18.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.TextBoxTOTALPAY.Font = New System.Drawing.Font("Tahoma", 20.0!, System.Drawing.FontStyle.Bold)
         Me.TextBoxTOTALPAY.ForeColor = System.Drawing.Color.DimGray
-        Me.TextBoxTOTALPAY.Location = New System.Drawing.Point(9, 28)
+        Me.TextBoxTOTALPAY.Location = New System.Drawing.Point(12, 34)
         Me.TextBoxTOTALPAY.Name = "TextBoxTOTALPAY"
         Me.TextBoxTOTALPAY.ReadOnly = True
-        Me.TextBoxTOTALPAY.Size = New System.Drawing.Size(352, 29)
+        Me.TextBoxTOTALPAY.Size = New System.Drawing.Size(453, 33)
         Me.TextBoxTOTALPAY.TabIndex = 94
         Me.TextBoxTOTALPAY.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         '
@@ -584,9 +585,9 @@ Partial Class PaymentForm
         Me.ButtonNo7.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.ButtonNo7.Font = New System.Drawing.Font("Tahoma", 11.25!)
         Me.ButtonNo7.ForeColor = System.Drawing.Color.FromArgb(CType(CType(74, Byte), Integer), CType(CType(74, Byte), Integer), CType(CType(74, Byte), Integer))
-        Me.ButtonNo7.Location = New System.Drawing.Point(9, 295)
+        Me.ButtonNo7.Location = New System.Drawing.Point(8, 366)
         Me.ButtonNo7.Name = "ButtonNo7"
-        Me.ButtonNo7.Size = New System.Drawing.Size(80, 51)
+        Me.ButtonNo7.Size = New System.Drawing.Size(110, 70)
         Me.ButtonNo7.TabIndex = 72
         Me.ButtonNo7.Text = "7"
         Me.ButtonNo7.UseVisualStyleBackColor = False
@@ -595,12 +596,12 @@ Partial Class PaymentForm
         '
         Me.TextBoxMONEY.BackColor = System.Drawing.Color.White
         Me.TextBoxMONEY.BorderStyle = System.Windows.Forms.BorderStyle.None
-        Me.TextBoxMONEY.Font = New System.Drawing.Font("Tahoma", 18.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.TextBoxMONEY.Font = New System.Drawing.Font("Tahoma", 20.0!, System.Drawing.FontStyle.Bold)
         Me.TextBoxMONEY.ForeColor = System.Drawing.Color.DimGray
-        Me.TextBoxMONEY.Location = New System.Drawing.Point(9, 195)
+        Me.TextBoxMONEY.Location = New System.Drawing.Point(9, 228)
         Me.TextBoxMONEY.MaxLength = 10
         Me.TextBoxMONEY.Name = "TextBoxMONEY"
-        Me.TextBoxMONEY.Size = New System.Drawing.Size(216, 29)
+        Me.TextBoxMONEY.Size = New System.Drawing.Size(226, 33)
         Me.TextBoxMONEY.TabIndex = 95
         Me.TextBoxMONEY.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         '
@@ -608,57 +609,57 @@ Partial Class PaymentForm
         '
         Me.Label8.AutoSize = True
         Me.Label8.Font = New System.Drawing.Font("Tahoma", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label8.Location = New System.Drawing.Point(9, 148)
+        Me.Label8.Location = New System.Drawing.Point(11, 172)
         Me.Label8.Name = "Label8"
-        Me.Label8.Size = New System.Drawing.Size(358, 16)
+        Me.Label8.Size = New System.Drawing.Size(456, 16)
         Me.Label8.TabIndex = 253
-        Me.Label8.Text = "__________________________________________________"
+        Me.Label8.Text = "________________________________________________________________"
         '
         'Label7
         '
         Me.Label7.AutoSize = True
         Me.Label7.Font = New System.Drawing.Font("Tahoma", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label7.Location = New System.Drawing.Point(9, 97)
+        Me.Label7.Location = New System.Drawing.Point(9, 112)
         Me.Label7.Name = "Label7"
-        Me.Label7.Size = New System.Drawing.Size(358, 16)
+        Me.Label7.Size = New System.Drawing.Size(456, 16)
         Me.Label7.TabIndex = 252
-        Me.Label7.Text = "__________________________________________________"
+        Me.Label7.Text = "________________________________________________________________"
         '
         'Label6
         '
         Me.Label6.AutoSize = True
         Me.Label6.Font = New System.Drawing.Font("Tahoma", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label6.Location = New System.Drawing.Point(9, 43)
+        Me.Label6.Location = New System.Drawing.Point(9, 53)
         Me.Label6.Name = "Label6"
-        Me.Label6.Size = New System.Drawing.Size(358, 16)
+        Me.Label6.Size = New System.Drawing.Size(456, 16)
         Me.Label6.TabIndex = 251
-        Me.Label6.Text = "__________________________________________________"
+        Me.Label6.Text = "________________________________________________________________"
         '
         'Label10
         '
         Me.Label10.AutoSize = True
         Me.Label10.Font = New System.Drawing.Font("Tahoma", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label10.Location = New System.Drawing.Point(231, 210)
+        Me.Label10.Location = New System.Drawing.Point(242, 247)
         Me.Label10.Name = "Label10"
-        Me.Label10.Size = New System.Drawing.Size(134, 16)
+        Me.Label10.Size = New System.Drawing.Size(225, 16)
         Me.Label10.TabIndex = 255
-        Me.Label10.Text = "__________________"
+        Me.Label10.Text = "_______________________________"
         '
         'Label9
         '
         Me.Label9.AutoSize = True
         Me.Label9.Font = New System.Drawing.Font("Tahoma", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label9.Location = New System.Drawing.Point(9, 210)
+        Me.Label9.Location = New System.Drawing.Point(10, 247)
         Me.Label9.Name = "Label9"
-        Me.Label9.Size = New System.Drawing.Size(218, 16)
+        Me.Label9.Size = New System.Drawing.Size(225, 16)
         Me.Label9.TabIndex = 254
-        Me.Label9.Text = "______________________________"
+        Me.Label9.Text = "_______________________________"
         '
         'PaymentForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(507, 529)
+        Me.ClientSize = New System.Drawing.Size(638, 677)
         Me.Controls.Add(Me.Panel1)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None
         Me.Name = "PaymentForm"

@@ -10,7 +10,7 @@ Public Class PanelReasonCat
             If TextBoxReasonsCat.Text <> "" Then
                 If StockAdjustment.AddOrUpdate = False Then
                     Dim sql = "INSERT INTO `loc_transfer_data`(`transfer_cat`, `crew_id`, `created_at`, `created_by`, `updated_at`, `active`) VALUES (@1,@2,@3,@4,@5,@6)"
-                    cmd = New MySqlCommand(sql, LocalhostConn)
+                    Dim cmd = New MySqlCommand(sql, LocalhostConn)
                     cmd.Parameters.Add("@1", MySqlDbType.Text).Value = TextBoxReasonsCat.Text
                     cmd.Parameters.Add("@2", MySqlDbType.Text).Value = ClientCrewID
                     cmd.Parameters.Add("@3", MySqlDbType.Text).Value = FullDate24HR()
@@ -24,7 +24,7 @@ Public Class PanelReasonCat
                     StockAdjustment.FillComboboxReason()
                 Else
                     Dim sql = "UPDATE `loc_transfer_data` SET `transfer_cat`=@1, `crew_id`=@2, `created_at`=@3, `created_by`=@4, `updated_at`=@5, `active`=@6 WHERE transfer_id = " & TransferID
-                    cmd = New MySqlCommand(sql, LocalhostConn)
+                    Dim cmd = New MySqlCommand(sql, LocalhostConn)
                     cmd.Parameters.Add("@1", MySqlDbType.Text).Value = TextBoxReasonsCat.Text
                     cmd.Parameters.Add("@2", MySqlDbType.Text).Value = ClientCrewID
                     cmd.Parameters.Add("@3", MySqlDbType.Text).Value = FullDate24HR()
